@@ -1,0 +1,251 @@
+﻿<UserControl x:Class="TradingMaster.Control.CodeComboBox"
+             xmlns:local="clr-namespace:TradingMaster.Control"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="48" d:DesignWidth="148" Focusable="True">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
+        <local:MinusValueConverter  x:Key="MinusValue"/>
+        <local:FontSizeConverter  x:Key="FontSizeConverter"/>
+        <local:ButtonWidthConverter  x:Key="ButtonWidthConverter"/>
+
+        <Style TargetType="{x:Type TextBox}" x:Key="codeStyle">
+            <!--<Setter Property="SnapsToDevicePixels"
+          Value="True" />
+            <Setter Property="OverridesDefaultStyle"
+          Value="True" />
+            <Setter Property="KeyboardNavigation.TabNavigation"
+          Value="None" />
+            <Setter Property="FocusVisualStyle"
+          Value="{x:Null}" />-->
+
+
+            <Setter Property="AllowDrop"
+          Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                        <Border Name="Border"
+                CornerRadius="1"
+                Padding="2"
+                BorderThickness="1">
+                            <Border.Background>
+                                <SolidColorBrush Color="White" />
+                            </Border.Background>
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#96B0CD" />
+                            </Border.BorderBrush>
+                            <ScrollViewer Margin="0"
+                        x:Name="PART_ContentHost" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="ComboBoxToggleButtonEx" TargetType="ToggleButton">
+            <Grid>
+                <Border Name="Border" Cursor="IBeam"
+                CornerRadius="1"
+                Padding="2"
+                BorderThickness="1">
+                    <Border.Background>
+                        <SolidColorBrush Color="White" />
+                    </Border.Background>
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="#96B0CD" />
+                    </Border.BorderBrush>
+                </Border>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+            <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+        </ControlTemplate>
+
+        <FontFamily x:Key="fontResource">微软雅黑</FontFamily>
+        
+        <Style TargetType="Button" x:Key="order">
+            <Setter Property="Foreground" Value="#023D62"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="{DynamicResource fontResource}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" CornerRadius="3" BorderThickness="1">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#ACACAC" Offset="0.0"/>
+                                    <GradientStop Color="#BDBDBD" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="White" Offset="0.0"/>
+                                    <GradientStop Color="#CFCFCF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border>
+                                <Grid>
+                                    <Rectangle Name="innerRect" RadiusX="1" RadiusY="1" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" StrokeThickness="1">
+                                        <Rectangle.Stroke>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="White" Offset="0.0"/>
+                                                <GradientStop Color="#DCDCDC" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Stroke>
+                                    </Rectangle>
+                                    <ContentPresenter x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <ContentPresenter.ContentTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <TextBlock Text="{Binding}" Foreground="White" FontStretch="UltraExpanded">
+                                                             <TextBlock.RenderTransform>
+                                                                <TranslateTransform X="1" Y="1" />
+                                                            </TextBlock.RenderTransform>
+                                                    </TextBlock>
+                                                    <TextBlock Text="{Binding}" FontStretch="UltraExpanded"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ContentPresenter.ContentTemplate>
+                                    </ContentPresenter>
+                                </Grid>
+                            </Border>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Effect" TargetName="innerRect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#A1CCFF"  ShadowDepth="0" BlurRadius="5"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Stroke" TargetName="innerRect">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#A1CCFF"></SolidColorBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="true">
+
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="#0066FF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CodeComboStyle" TargetType="ComboBox" >
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="MinHeight" Value="20"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type ComboBoxItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                                    <Border x:Name="BorderInner" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                                        <Button Tag="{TemplateBinding Tag}" FontSize="{TemplateBinding Content,Converter={StaticResource FontSizeConverter}}" VerticalContentAlignment="Center" Margin="1" Height="20" Width="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=ComboBox},Path=ActualWidth,Converter={StaticResource ButtonWidthConverter}}" Content="{TemplateBinding Content}" Style="{StaticResource order}" Click="Button_Click"></Button>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <TextBox VerticalContentAlignment="Center" Width="{TemplateBinding ActualWidth}" x:Name="PART_EditableTextBox" TextChanged="PART_EditableTextBox_TextChanged" Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" FontWeight="{TemplateBinding FontWeight}" Style="{StaticResource codeStyle}"   HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="True" Visibility="Visible" IsReadOnly="{TemplateBinding IsReadOnly}" PreviewMouseLeftButtonDown="PART_EditableTextBox_MouseLeftButtonDown" PreviewMouseLeftButtonUp="PART_EditableTextBox_PreviewMouseLeftButtonUp" PreviewKeyDown="PART_EditableTextBox_PreviewKeyDown" />
+                            <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide" Opened="Popup_Opened" Closed="Popup_Closed">
+                                <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder" Background="White" BorderThickness="1" BorderBrush="#96B0CD"/>
+                                    <ScrollViewer Margin="0,0,0,0" SnapsToDevicePixels="True">
+                                        <WrapPanel Name="ContainerPanel" Orientation="Horizontal" Margin="0,1,0,1" IsItemsHost="True" Width="{TemplateBinding ActualWidth, Converter={StaticResource MinusValue}}" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="true">
+                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=PART_EditableTextBox}"/>
+                            </Trigger>
+                            
+                            <Trigger Property="Tag" Value="FURTHER">
+                                <Setter TargetName="ContainerPanel" Property="Orientation" Value="Vertical"/>
+                            </Trigger>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </Trigger>
+                            <Trigger Property="IsEditable" Value="true">
+                                <Setter Property="IsTabStop" Value="false"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Tag" Value="FURTHER">
+                    <Setter Property="ItemContainerStyle">
+                        <Setter.Value>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                                            <Border x:Name="BorderInner" BorderBrush="Black"  BorderThickness="0" Background="Transparent">
+                                                <TextBlock Margin="5,1,0,1" FontFamily="{DynamicResource fontResource}" FontSize="13" FontWeight="Bold" Foreground="#023D62" Name="txt" Text="{TemplateBinding Content}" Width="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=ComboBox},Path=ActualWidth}" HorizontalAlignment="Stretch"></TextBlock>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="true">
+                                                    <Setter Property="Background" Value="#3399FF" TargetName="BorderInner"></Setter>
+                                                </Trigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="Tag" Value="ZL"/>
+                                                        <Condition Property="IsMouseOver" Value="false"/>
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Foreground" Value="#00A0FF" TargetName="txt"></Setter>
+                                                </MultiTrigger>
+                                                
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="Tag" Value="ZL"/>
+                                                        <Condition Property="IsMouseOver" Value="true"/>
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Foreground" Value="White" TargetName="txt"></Setter>
+                                                </MultiTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <ComboBox IsEditable="true" Focusable="true" HorizontalAlignment="Stretch" Name="codeCBX" VerticalAlignment="Stretch" Style="{StaticResource CodeComboStyle}"/>
+    </Grid>
+</UserControl>

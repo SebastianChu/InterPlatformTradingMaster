@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="TradingMaster.Control.SystemTips"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" MinHeight="300" Width="800">
+    <Grid x:Name="grdMain">
+        <DataGrid x:Name="dgSystemMessage" Style="{StaticResource DataGridOtherStyle }" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                  BorderThickness="1" ColumnHeaderStyle="{StaticResource ThemeColumnHeaderStyle}" Margin="0"
+                  CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" SelectionMode="Extended"
+                  RowStyle="{StaticResource GridViewRowOtherStyle}">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="miAutoAdjustColumnWidth"  Header="自动调整列宽" Click="miAutoAdjustColumnWidth_Click"/>
+                    <MenuItem Click="ExportDataMenuItem_Click" Tag="日志记录" Header="导出列表"></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn  Header="编号" Width="60" Binding="{Binding Path=MessageID}" Visibility="Collapsed"/>
+                <DataGridTextColumn  Header="级别" Width="50" Binding="{Binding Path=MessageLevel}"/>
+                <DataGridTextColumn  Header="类别" Width="80" Binding="{Binding Path=MessageClass}"/>
+                <DataGridTextColumn  Header="时间" Width="200" Binding="{Binding Path=FeedbackTime}"/>
+                <DataGridTextColumn  Header="信息" MinWidth="400" Binding="{Binding Path=FeedbackMessage}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,435 @@
+﻿<UserControl x:Class="TradingMaster.Control.PositionsInquiry"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TradingMaster"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="0" IsTabStop="False">
+    <UserControl.Resources>
+        <local:MarginConverter x:Key="marginconverter"/>
+        <Style TargetType="Button">
+            <Setter Property="FontWeight" Value="Black"/>
+        </Style>
+        <Style x:Key="DsykCellStyle"  TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource BuySellCellStyle}">
+
+            <Setter Property="HorizontalAlignment" Value="Stretch">
+            </Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="BorderBrush" Value="{Binding DataContext.CurrentClientStyleUI.OtherContentBackgroundBrush, ElementName=grdMain}"/>
+            <Setter Property="BorderThickness" Value="0 0 1 1"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Border  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Ccyk, Converter={StaticResource pftconverter}}" Value="1">
+                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Ccyk, Converter={StaticResource pftconverter}}" Value="0">
+                    <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Ccyk, Converter={StaticResource pftconverter}}" Value="-1">
+                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                </DataTrigger>
+
+                <Trigger Property="IsSelected" Value="True">
+                    <!--<Setter Property="Background" Value="{Binding DataContext.CurrentClientStyleUI.OtherSelectedBackgroundBrush, ElementName=grdMain}"/>-->
+                    <!--<Setter Property="BorderBrush" Value="{Binding DataContext.CurrentClientStyleUI.OtherContentBackgroundBrush, ElementName=grdMain}"/>-->
+                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                    <Setter Property="BorderBrush" Value="{DynamicResource selRowBackColor}"/>                    
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="FdykCellStyle"  TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource BuySellCellStyle}">
+            <Setter Property="HorizontalAlignment" Value="Stretch">
+            </Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="BorderBrush" Value="{Binding DataContext.CurrentClientStyleUI.OtherContentBackgroundBrush, ElementName=grdMain}"/>
+            <Setter Property="BorderThickness" Value="0 0 1 1"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Border  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Fdyk, Converter={StaticResource pftconverter}}" Value="1">
+                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Fdyk, Converter={StaticResource pftconverter}}" Value="0">
+                    <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Fdyk, Converter={StaticResource pftconverter}}" Value="-1">
+                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                </DataTrigger>
+
+                <Trigger Property="IsSelected" Value="True">
+                    <!--<Setter Property="Background" Value="{Binding DataContext.CurrentClientStyleUI.OtherSelectedBackgroundBrush, ElementName=grdMain}"/>-->
+                    <!--<Setter Property="BorderBrush" Value="{Binding DataContext.CurrentClientStyleUI.OtherContentBackgroundBrush, ElementName=grdMain}"/>-->
+                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                    <Setter Property="BorderBrush" Value="{DynamicResource selRowBackColor}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="QqszCellStyle"  TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource BuySellCellStyle}">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding OptionMarketCap, Converter={StaticResource pftconverter}}" Value="1">
+                    <Setter Property="Foreground" Value="{Binding DataContext.CurrentClientStyleUI.UpColorBrush, ElementName=grdMain}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding OptionMarketCap, Converter={StaticResource pftconverter}}" Value="0">
+                    <Setter Property="Foreground" Value="Black"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding OptionMarketCap, Converter={StaticResource pftconverter}}" Value="-1">
+                    <Setter Property="Foreground" Value="{Binding DataContext.CurrentClientStyleUI.DownColorBrush, ElementName=grdMain}"/>
+                </DataTrigger>
+
+                <Trigger Property="IsSelected" Value="True">
+                    <!--<Setter Property="Background" Value="{Binding DataContext.CurrentClientStyleUI.OtherSelectedBackgroundBrush, ElementName=grdMain}"/>-->
+                    <!--<Setter Property="BorderBrush" Value="{Binding DataContext.CurrentClientStyleUI.OtherContentBackgroundBrush, ElementName=grdMain}"/>-->
+                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                    <Setter Property="BorderBrush" Value="{DynamicResource selRowBackColor}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="QljsfCellStyle"  TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource BuySellCellStyle}">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Premium, Converter={StaticResource pftconverter}}" Value="1">
+                    <Setter Property="Foreground" Value="{Binding DataContext.CurrentClientStyleUI.UpColorBrush, ElementName=grdMain}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Premium, Converter={StaticResource pftconverter}}" Value="0">
+                    <Setter Property="Foreground" Value="{Binding DataContext.CurrentClientStyleUI.UpColorBrush, ElementName=grdMain}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Premium, Converter={StaticResource pftconverter}}" Value="-1">
+                    <Setter Property="Foreground" Value="{Binding DataContext.CurrentClientStyleUI.DownColorBrush, ElementName=grdMain}"/>
+                </DataTrigger>
+
+                <Trigger Property="IsSelected" Value="True">
+                    <!--<Setter Property="Background" Value="{Binding DataContext.CurrentClientStyleUI.OtherSelectedBackgroundBrush, ElementName=grdMain}"/>-->
+                    <!--<Setter Property="BorderBrush" Value="{Binding DataContext.CurrentClientStyleUI.OtherContentBackgroundBrush, ElementName=grdMain}"/>-->
+                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                    <Setter Property="BorderBrush" Value="{DynamicResource selRowBackColor}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource ExtendBackground}"/>
+        <!--<Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource TradeDatagridStyle}"/>-->
+    </UserControl.Resources>
+    <Grid x:Name="grdMain">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="dgPositionsInq"  Style="{StaticResource ThemeDatagridStyle }" 
+                              ColumnHeaderStyle="{StaticResource ThemeColumnHeaderStyle}" 
+                              CellStyle="{StaticResource DefaultGridViewCellOtherStyle}"
+                              RowStyle="{StaticResource GridViewRowOtherStyle}" SelectionMode="Extended" ContextMenuOpening="dgPositionsInq_ContextMenuOpening" 
+                  MouseDoubleClick="PositionsInquiry_MouseDoubleClick" BorderThickness="1" PreviewMouseLeftButtonDown="gridPositionsInq_MouseLeftButtonDown" PreviewKeyUp="gridPositionsInq_PreviewKeyUp" >
+            <!--ItemsSource ="{Binding  PositionCollection_Total}"-->
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="miSjfs" Click="btnSjfs_Click" Header="对价反手"></MenuItem>
+                    <Separator Margin="0"/>
+                    <MenuItem Click="miAutoAdjustColumnWidth_Click" Header="自动调整列宽"></MenuItem>
+                    <MenuItem Click="ExportDataMenuItem_Click" Tag="持仓" Header="数据导出"></MenuItem>
+                    <!--<MenuItem x:Name="miStyleSetting" Header="表格列设置" />-->
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="代码" CellStyle="{StaticResource CellStyle_Code}" Width="auto" Binding="{Binding Path=Code}"></DataGridTextColumn>
+                <DataGridTextColumn Header="名称" CellStyle="{StaticResource CellStyle_Default}" Width="auto" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="买卖" CellStyle="{StaticResource DefaultGridBuySellCellStyle}" MinWidth="40" Width="Auto" Binding="{Binding Path=BuySell, Converter= {StaticResource bssuconverter}}"  ></DataGridTextColumn>
+                <DataGridTextColumn x:Name="colTotalOpen" Header="总持仓" Width="Auto" Binding="{Binding Path=TotalPosition}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource CenterAlignmentHQCellStyle}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                            <Setter Property="DataContext" Value="{Binding}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Name="InnerGrid" Background="{TemplateBinding Background}" MouseEnter="InnerGrid_MouseEnter">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center">
+                                            </ContentPresenter>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn x:Name="colHistoryOpen" Header="昨仓" Width="Auto" Binding="{Binding Path=YesterdayPosition}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource CenterAlignmentHQCellStyle}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                            <Setter Property="DataContext" Value="{Binding}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Name="InnerGrid" Background="{TemplateBinding Background}" MouseEnter="InnerGrid1_MouseEnter">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center">
+                                            </ContentPresenter>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn x:Name="colTodayOpen"  Header="今仓" Width="Auto" Binding="{Binding Path=TodayPosition}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource CenterAlignmentHQCellStyle}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                            <Setter Property="DataContext" Value="{Binding}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Name="InnerGrid" Background="{TemplateBinding Background}" MouseEnter="InnerGrid2_MouseEnter">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center">
+                                            </ContentPresenter>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn x:Name="colCanClose" Header="可平" Width="Auto" Binding="{Binding Path=CanCloseCount}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource CenterAlignmentHQCellStyle}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                            <Setter Property="DataContext" Value="{Binding}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Name="InnerGrid" Background="{TemplateBinding Background}" MouseEnter="InnerGrid3_MouseEnter">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center">
+                                            </ContentPresenter>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="持仓均价" Width="80" SortMemberPath="AvgPositionPrice">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="AvgPositionPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="开仓均价" Width="80" SortMemberPath="AvgPx">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="AvgPx"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="持仓盈亏" Width="auto" Binding="{Binding Path=Ccyk, StringFormat='#,##0.00'}" CellStyle="{StaticResource DsykCellStyle}"></DataGridTextColumn>
+                <DataGridTextColumn Header="浮动盈亏" Width="auto" Binding="{Binding Path=Fdyk, StringFormat='#,##0.00'}" CellStyle="{StaticResource FdykCellStyle}" >
+                </DataGridTextColumn>
+                <!--<DataGridTextColumn Header="期权盈亏" Width="auto" Binding="{Binding Path=OptionProfit, StringFormat='#,##0.00'}" CellStyle="{StaticResource DsykCellStyle}">
+                </DataGridTextColumn>-->
+                <DataGridTextColumn Header="占用保证金" Width="Auto" CellStyle="{StaticResource DefaultGridViewCellOtherStyleRight}" Binding="{Binding Path=OccupyMarginAmt,StringFormat='#,##0.00'}">
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="期权市值" Width="auto" Binding="{Binding Path=OptionMarketCap, StringFormat='#,##0.00'}" CellStyle="{StaticResource QqszCellStyle}"></DataGridTextColumn>
+                <!--<DataGridTextColumn Header="权利金收付" Width="auto" Binding="{Binding Path=Premium, StringFormat='#,##0.00'}" CellStyle="{StaticResource QljsfCellStyle}"></DataGridTextColumn>-->
+                <!--<DataGridTextColumn Header="投保" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="60" Binding="{Binding Path=Hedge}"></DataGridTextColumn>-->
+                <DataGridTextColumn Header="交易所" CellStyle="{StaticResource CellStyle_Default}" Width="80"  Binding="{Binding Path=Exchange}"></DataGridTextColumn>
+                <!--<DataGridTextColumn Header="交易编码" Width="80"  Binding="{Binding Path=TradeCode}"></DataGridTextColumn>-->
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid x:Name="dgPositionsInqDetail"  Style="{StaticResource ThemeDatagridStyle }" 
+                              ColumnHeaderStyle="{StaticResource ThemeColumnHeaderStyle}" 
+                              CellStyle="{StaticResource DefaultGridViewCellOtherStyle}" SelectionMode="Extended"
+                              RowStyle="{StaticResource GridViewRowOtherStyle}" PreviewMouseLeftButtonDown="gridPositionsInqDetail_MouseLeftButtonDown" 
+                              MouseDoubleClick="gridPositionsInqDetail_MouseDoubleClick" PreviewKeyUp="gridPositionsInqDetail_PreviewKeyUp"
+                              BorderThickness="1" Visibility="Collapsed">
+            <!--PreviewKeyDown="dgPositionsInqDetail_PreviewKeyDown"-->
+            <!--ItemsSource ="{Binding PositionDetailCollection}"-->
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Click="miAutoAdjustColumnWidth_Click" Header="自动调整列宽"></MenuItem>
+                    <MenuItem Click="ExportDataMenuItem_Click" Tag="持仓明细" Header="数据导出"></MenuItem>
+                    <!--<MenuItem x:Name="miStyleSettingDetal" Header="表格列设置" />-->
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="成交编号" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="80" Binding="{Binding Path=ExecID}"></DataGridTextColumn>
+                <DataGridTextColumn Header="代码" CellStyle="{StaticResource CellStyle_Code}" Width="auto" Binding="{Binding Path=Code}"></DataGridTextColumn>
+                <DataGridTextColumn Header="名称" CellStyle="{StaticResource CellStyle_Default}" Width="auto" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="买卖" CellStyle="{StaticResource DefaultGridBuySellCellStyle}" MinWidth="40" Width="Auto" Binding="{Binding Path=BuySell, Converter= {StaticResource bssuconverter}}"  ></DataGridTextColumn>
+                <DataGridTextColumn x:Name="colTradeHandCount"  Header="手数" Width="Auto" Binding="{Binding Path=TradeHandCount}"></DataGridTextColumn>
+                <DataGridTextColumn x:Name="colAvgPx" Header="开仓价" Width="80" SortMemberPath="AvgPx">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="AvgPx"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn x:Name="colOccupyMarginAmt" CellStyle="{StaticResource DefaultGridViewCellOtherStyleRight}" Header="占用保证金" Width="auto" Binding="{Binding Path=OccupyMarginAmtDouble,StringFormat='#,##0.00'}"></DataGridTextColumn>
+                <DataGridTextColumn Header="持仓类型" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="auto" Binding="{Binding Path=PositionType}"></DataGridTextColumn>
+                <!--<DataGridTextColumn Header="投保" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="60" Binding="{Binding Path=Hedge}"  ></DataGridTextColumn>-->
+                <!--<DataGridTextColumn Header="开仓时间" Width="80" Binding="{Binding Path=OpenAvgPxString}"></DataGridTextColumn>-->                
+                <DataGridTextColumn Header="持仓盈亏" Width="auto" Binding="{Binding Path=Ccyk, StringFormat='#,##0.00'}" CellStyle="{StaticResource DsykCellStyle}" >
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="浮动盈亏" Width="auto" Binding="{Binding Path=Fdyk, StringFormat='#,##0.00'}" CellStyle="{StaticResource FdykCellStyle}">
+                </DataGridTextColumn>
+                <!--<DataGridTextColumn Header="期权盈亏" Width="auto" Binding="{Binding Path=OptionProfit, StringFormat='#,##0.00'}" CellStyle="{StaticResource DsykCellStyle}">
+                </DataGridTextColumn>-->
+                <DataGridTextColumn Header="期权市值" Width="auto" Binding="{Binding Path=OptionMarketCap, StringFormat='#,##0.00'}" CellStyle="{StaticResource QqszCellStyle}"></DataGridTextColumn>
+                <!--<DataGridTextColumn Header="权利金收付" Width="auto" Binding="{Binding Path=Premium, StringFormat='#,##0.00'}" CellStyle="{StaticResource QljsfCellStyle}"></DataGridTextColumn>-->                
+                <DataGridTextColumn Header="昨结算" Width="60" SortMemberPath="PrevSettleMent">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="PrevSettleMent"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="参照价" Width="60" SortMemberPath="INewPrice">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="INewPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="交易所" CellStyle="{StaticResource CellStyle_Default}" Width="auto"  Binding="{Binding Path=Exchange}"></DataGridTextColumn>
+                <!--<DataGridTextColumn Header="交易编码" Width="80"  Binding="{Binding Path=TradeCode}"></DataGridTextColumn>-->
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" Height="30">
+            <RadioButton x:Name="rbPositionTotal" VerticalAlignment="Center" Margin="5 0 0 0" Content="持仓(_S)" IsChecked="True" ></RadioButton>
+            <RadioButton x:Name="rbPositionDetail" VerticalAlignment="Center" Margin="10 0 0 0" Content="持仓明细(_D)"></RadioButton>
+            <!--<RadioButton VerticalAlignment="Center" Margin="10 0 0 0" Content="持仓组合"></RadioButton>-->
+
+            <Button x:Name="btnKjpc" Click="btnKjpc_Click" Margin="20 0 0 0" Width="80" Content="对价平仓(_W)" Style="{DynamicResource btnDefault}" Height="23"></Button>
+            <Button x:Name="btnSjpc" Click="btnSjpc_Click" Margin="20 0 0 0" Width="80" Content="市价平仓(_X)" Style="{DynamicResource btnDefault}" Height="23"></Button>
+            <Button x:Name="btnSjfs" Click="btnSjfs_Click" Margin="20 0 0 0" Width="80" Content="对价反手(_V)" Style="{DynamicResource btnDefault}" Height="23"></Button>
+            <!--<Button x:Name="btnFresh" Click="btnFresh_Click" Margin="20 0 0 0" Width="70" Content="刷新(_Q)"  Style="{DynamicResource btnDefault}" Height="23"></Button>-->
+            <Button x:Name="btnExecOpt" Click="btnExecOpt_Click" Margin="20 0 0 0" Width="80" Content="快捷行权(_K)" Style="{DynamicResource btnDefault}" Height="23"></Button>
+            <Button x:Name="btnCombAct" Click="btnCombAct_Click" Margin="20 0 0 0" Width="70" Content="组合(_M)"  Style="{DynamicResource btnDefault}" Height="23"></Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

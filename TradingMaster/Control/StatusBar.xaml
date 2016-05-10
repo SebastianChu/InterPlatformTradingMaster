@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="TradingMaster.Control.StatusBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Height="32" d:DesignWidth="1400">
+    <!--xmlns:l="clr-namespace:TradingMaster.Control"-->
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="Foreground" Value="{DynamicResource StatusBarTextColorNormal}"></Setter>
+            <Style.Triggers>
+                <Trigger Property="Tag" Value="Alert">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusBarTextColorAlert}"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="Trade">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusBarTimeColorNormal}"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="NonTrade">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusBarTimeColorAlert}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <StatusBar Name="statusBar"  VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="7.5*" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="320" />
+            </Grid.ColumnDefinitions>
+            <StatusBarItem Grid.Column="0" Name="Network" HorizontalAlignment="Stretch">
+                <TextBlock x:Name="tbStartTime" MouseLeftButtonDown="txtStartTime_MouseLeftButtonDown"></TextBlock>
+            </StatusBarItem>
+            <!--<Separator Grid.RowSpan="4" Height="5" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" />-->
+            <!--<Separator Margin="0"/>-->
+            <StatusBarItem Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.ColumnSpan="2">
+                <TextBlock x:Name="tbMessge" MouseLeftButtonDown="tbMessge_MouseLeftButtonDown" Text="【查委托】返回成功" Width="1420"/>
+            </StatusBarItem>
+            <!--<Separator/>-->
+            <StatusBarItem Grid.Column="3" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                <!--<Image Name="TxnImage"  Source="/KiiikTransactionClientHS;component/image/Connected.jpg" Height="20" Width="20" />-->
+                <!--<Path x:Name="pathTxn" Fill="Red" Data="M 55,1 L 68,40 L 109,40 L 75,64 L 88,104 L 55,79 L 22,104 L 34,64 L 1,40 L 42,40 L 55,1 z" Height="20" Width="20" Stretch="Uniform"></Path>-->
+                <Image Name="TxnImage"   Source="/TradingMaster;component/image/JY_DISCONN.png" Height="16" Width="16" Stretch="Fill" VerticalAlignment="Center"  />
+                <!--<Image Name="TxnImage"  />-->
+            </StatusBarItem>
+            <!--<Separator/>-->
+            <StatusBarItem  Grid.Column="4" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                <!--<Path x:Name="pathZhutui" Fill="Red" Data="M 55,1 L 68,40 L 109,40 L 75,64 L 88,104 L 55,79 L 22,104 L 34,64 L 1,40 L 42,40 L 55,1 z" Height="20" Width="20" Stretch="Uniform"></Path>-->
+                <!--<StackPanel Orientation="Horizontal">
+                        <Image Name="ZhutuiImage"  Source="/KiiikTransactionClientHS;component/image/Connected.jpg" Height="20" Width="20" />
+                    </StackPanel>-->
+                <!--<Image Name="ZhutuiImage" />-->
+                <Image Name="HQImage"   Source="/TradingMaster;component/image/HQ_DISCONN.png" Height="16" Width="16" Stretch="Fill" VerticalAlignment="Center"  />
+            </StatusBarItem>
+            <!--<Separator/>-->
+            <StatusBarItem  Grid.Column="5" Name="time" Width="325">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="tbShanghaiTime" Text="--:--:--" ToolTip="上期所："></TextBlock>
+                    <TextBlock Text="|" Margin="4 0 4 0"></TextBlock>
+                    <TextBlock x:Name="tbDalianTime" Text="--:--:--" ToolTip="大商所："></TextBlock>
+                    <TextBlock Text="|" Margin="4 0 4 0"></TextBlock>
+                    <TextBlock x:Name="tbZhengzhouTime" Text="--:--:--" ToolTip="郑商所："></TextBlock>
+                    <TextBlock Text="|" Margin="4 0 4 0"></TextBlock>
+                    <TextBlock x:Name="tbZhongjinTime" Text="--:--:--" ToolTip="中金所："></TextBlock>
+                    <TextBlock Text="|" Margin="4 0 4 0"></TextBlock>
+                    <TextBlock x:Name="tbEnergyTime" Text="--:--:--" ToolTip="能源中心："></TextBlock>
+                </StackPanel>
+            </StatusBarItem>
+        </Grid>
+    </StatusBar>
+</UserControl>

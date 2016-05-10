@@ -1,0 +1,161 @@
+﻿<UserControl x:Class="TradingMaster.Control.OptionExecPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:my="clr-namespace:TradingMaster.Control"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontWeight" Value="Black"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <!--<Setter Property="FontSize" Value="{Binding CurrentClientStyleUI.HQFontSize}"/>-->
+            <Setter Property="FontWeight" Value="{Binding CurrentClientStyleUI.HQFontWeightUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <!--<Setter Property="FontSize" Value="{Binding CurrentClientStyleUI.HQFontSize}"/>-->
+            <Setter Property="FontWeight" Value="{Binding CurrentClientStyleUI.HQFontWeightUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <!--<Setter Property="FontSize" Value="{Binding CurrentClientStyleUI.HQFontSize}"/>-->
+            <Setter Property="FontWeight" Value="{Binding CurrentClientStyleUI.HQFontWeightUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+        </Style>
+        <Style TargetType="my:ValueUpDown">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+        </Style>
+        <!--<Style TargetType="xctk:IntegerUpDown">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+        </Style>-->
+
+        <Style TargetType="Grid">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cbBuysell}" Value="0">
+                    <!--<Setter Property="Background" Value="Red"/>-->
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="White" Offset="-0.2"></GradientStop>
+                                <GradientStop Color="#E57171" Offset="0.5"></GradientStop>
+                                <GradientStop Color="White" Offset="1.2"></GradientStop>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cbBuysell}" Value="1">
+                    <!--<Setter Property="Background" Value="Green"/>-->
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="White" Offset="-0.2"></GradientStop>
+                                <GradientStop Color="#FF91EB91" Offset="0.5"></GradientStop>
+                                <GradientStop Color="White" Offset="1.2"></GradientStop>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="54" />
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="120" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="合 约" Grid.Row="1" Grid.Column="0"></TextBlock>
+        <TextBox Margin="0 3 0 4" VerticalAlignment="Center" x:Name="txtCode" Height="25"  FontWeight="Bold" FontSize="14" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" TextChanged="txtCode_TextChanged"/>
+        <TextBlock Margin="12,4,4,4" x:Name="txtCodeName" Grid.Row="1" Grid.Column="2" FontSize="14" FontWeight="Bold" Foreground="Gray" FontFamily="{DynamicResource fontResource}" />
+        
+        <TextBlock Text="指 令" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+        <RadioButton x:Name="rbExec" Grid.Row="2" Grid.Column="1" GroupName="rbExecGroup" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,10,0,10" Width="42" IsChecked="True" PreviewKeyDown="rbExec_KeyDown">
+            <RadioButton.Content>
+                <TextBlock Text="行权" Background="{Binding ElementName=rbExec,Path=Background}"></TextBlock>
+            </RadioButton.Content>
+            <RadioButton.Style>
+                <Style TargetType="RadioButton">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked, ElementName=rbExec}" Value="true">
+                            <Setter Property="Background" Value="#FFFE5E6D"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </RadioButton.Style>
+        </RadioButton>
+        <RadioButton x:Name="rbAbandon" Grid.Row="2" Grid.Column="1" GroupName="rbExecGroup" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="55,10,20,10" PreviewKeyDown="rbAbandon_KeyDown" Width="42">
+            <RadioButton.Content>
+                <TextBlock Text="弃权" Background="{Binding ElementName=rbAbandon,Path=Background}"></TextBlock>
+            </RadioButton.Content>
+            <RadioButton.Style>
+                <Style TargetType="RadioButton">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked, ElementName=rbAbandon}" Value="true">
+                            <Setter Property="Background" Value="#FF6DFF70"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </RadioButton.Style>
+        </RadioButton>
+
+        <TextBlock Text="开 平" Grid.Row="3" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+        <RadioButton x:Name="rbPingcang" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" GroupName="rbKp" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,10,20,10" Width="42" PreviewKeyDown="rbPingcang_KeyDown" IsChecked="True">
+            <RadioButton.Content>
+                <TextBlock Text="平仓" Background="{Binding ElementName=rbPingcang,Path=Background}"></TextBlock>
+            </RadioButton.Content>
+            <RadioButton.Style>
+                <Style TargetType="RadioButton">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked, ElementName=rbPingcang}" Value="true">
+                            <Setter Property="Background" Value="#FFFFDE01">
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </RadioButton.Style>
+        </RadioButton>
+        <RadioButton x:Name="rbPingjin" Grid.Row="3" Grid.Column="1" GroupName="rbKp" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="55,10,20,10" Width="42" PreviewKeyDown="rbPingjin_KeyDown">
+            <RadioButton.Content>
+                <TextBlock Text="平今" Background="{Binding ElementName=rbPingjin,Path=Background}"></TextBlock>
+            </RadioButton.Content>
+            <RadioButton.Style>
+                <Style TargetType="RadioButton">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked, ElementName=rbPingjin}" Value="true">
+                            <Setter Property="Background" Value="#FFFFDE01">
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </RadioButton.Style>
+        </RadioButton>
+
+        <TextBlock Text="手 数" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+        <my:ValueUpDown FontWeight="Bold" FontSize="18" Grid.Row="4" Grid.Column="1" x:Name="iudNum" Minimum="0" Maximum="10000000" VerticalAlignment="Stretch" Height="27" Margin="0 4 0 4"/>
+        <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" Width="auto">
+            <TextBlock Text="≤" FontSize="15" Foreground="Gray" FontWeight="Bold" Width="18" HorizontalAlignment="Center"  Grid.Row="1" Margin="12,6,0,0"></TextBlock>
+            <TextBlock x:Name="tbHandCount" Text="0" FontSize="15" Foreground="Gray" FontWeight="Bold"  Height="30" MinWidth="50" Grid.ColumnSpan="2" Margin="0,6,0,0"></TextBlock>
+        </StackPanel>
+        
+        <Button Content="执  行" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Height="25" Width="160" Margin="14,5,5,5" HorizontalAlignment="Left" FontSize="15" Click="Exec_Click" />
+        <!--<Button Content="取 消" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Height="25" Width="80" Margin="114,5,5,5" HorizontalAlignment="Left"/>-->
+    </Grid>
+</UserControl>

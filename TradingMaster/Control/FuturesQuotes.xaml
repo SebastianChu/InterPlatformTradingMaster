@@ -1,0 +1,1138 @@
+﻿<UserControl x:Class="TradingMaster.Control.FuturesQuotes"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TradingMaster"
+             xmlns:my="clr-namespace:TradingMaster.Control"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" >
+
+    <UserControl.Resources>
+        <local:MultiPriceForegroundConverter x:Key="mpfconverter"/>
+
+        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="HQHeaderAlignmentColumn">
+            <Setter Property="Background" Value="{Binding DataContext.CurrentClientStyleUI.HQHeaderBackgroundBrush, ElementName=grdMain}"/>
+            <Setter Property="Foreground" Value="{Binding DataContext.CurrentClientStyleUI.HQHeaderForegroundBrush, ElementName=grdMain}"/>
+            <Setter Property="BorderThickness" Value="0 0 0.9 0.9"/>
+            <Setter Property="BorderBrush" Value="Silver"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="FontFamily" Value="{Binding DataContext.CurrentClientStyleUI.HQHeaderFontFamilyUI, ElementName=grdMain}"/>
+            <Setter Property="FontSize" Value="{Binding DataContext.CurrentClientStyleUI.HQHeaderFontSize, ElementName=grdMain}"/>
+            <Setter Property="FontWeight" Value="{Binding DataContext.CurrentClientStyleUI.HQHeaderFontWeightUI, ElementName=grdMain}"/>
+            <Setter Property="FontStyle" Value="{Binding DataContext.CurrentClientStyleUI.HQHeaderFontStyleUI, ElementName=grdMain}"/>
+        </Style>
+
+        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="RightHeaderAlignmentColumn" BasedOn="{StaticResource HQHeaderAlignmentColumn}">
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+        </Style>
+
+        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="LeftHeaderAlignmentColumn" BasedOn="{StaticResource HQHeaderAlignmentColumn}">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+
+
+        <Style  TargetType="{x:Type DataGridCell}"  x:Key="DefaultHQCellStyle">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="BorderThickness" Value="0 0 0.5 0"/>
+            <Setter Property="BorderBrush" Value="{Binding DataContext.CurrentClientStyleUI.HQContentBackgroundBrush, ElementName=grdMain}"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter Margin="4 0 4 0"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{Binding DataContext.CurrentClientStyleUI.HQSelectedBackgroundBrush, ElementName=grdMain}"></Setter>
+                    <Setter Property="Foreground" Value="{Binding DataContext.CurrentClientStyleUI.HQContentForegroundBrush, ElementName=grdMain}"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid x:Name="grdMain" Background="{DynamicResource OrderBackground}">
+        <Grid.RowDefinitions >
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="100*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid x:Name="dgRealData" ItemsSource ="{Binding  RealDataCollection}" 
+                                      CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True"
+                                      OpacityMask="Black" Style="{DynamicResource ThemeDatagridStyle}" BorderThickness="1"
+                                      AutoGenerateColumns="False" MouseDoubleClick="grdRealData_MouseDoubleClick"
+                                      HeadersVisibility="All" SelectionMode="Single" SelectionUnit="FullRow" EnableRowVirtualization="False"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                      CanUserSortColumns="True" ColumnHeaderStyle="{DynamicResource ThemeColumnHeaderStyle}"
+                      RowHeaderWidth="0" CellStyle="{StaticResource NewDYDatagridStyleCell}" Grid.Row="1"
+                      PreviewMouseLeftButtonDown="grdRealData_PreviewMouseLeftButtonDown" PreviewKeyDown="dgRealData_PreviewKeyDown" 
+                      Visibility="Visible">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <!--<MenuItem x:Name="miFullViewOrder"  Header="全景式下单" Click="miFullViewOrder_Click"/>
+                    <Separator Margin="0"/>-->
+                    <MenuItem x:Name="miUserCode"  Header="设置自选合约" Click="ShowCodeInfo_Click"/>
+                    <Separator Margin="0"/>
+                    <MenuItem x:Name="miAutoAdjustColumnWidth"  Header="自动调整列宽" Click="miAutoAdjustColumnWidth_Click"/>
+                    <MenuItem x:Name="miExportData" Tag="报价表"  Header="导出列表" Click="miExportData_Click"/>
+                    <!--<MenuItem x:Name="miStyleSetting"  Header="列表格设置" />-->
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.RowHeaderStyle>
+                <Style TargetType="{x:Type DataGridRowHeader}" >
+                    <Setter Property="Width" Value="0"/>
+                    <Setter Property="Background" Value="{Binding DataContext.CurrentClientStyleUI.HQContentBackgroundBrush, ElementName=grdMain}"/>
+                </Style>
+            </DataGrid.RowHeaderStyle>
+            <DataGrid.Columns>
+                <!--合约-->
+                <DataGridTextColumn Header="代码"  x:Name="colContract" Width="60" Binding="{Binding Path=Code}" CellStyle="{StaticResource CellStyle_Code}"/>
+                <!--合约名-->
+                <DataGridTextColumn Header="名称" x:Name="colContractName" Width="auto" Binding="{Binding Path=Name}" CellStyle="{StaticResource CellStyle_Default}"/>
+                <!--最新价-->
+                <DataGridTextColumn Header="最新价 " Width="70" x:Name="colINewPrice">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="INewPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Value="1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="INewPrice"></Binding>
+                                            <Binding Path="LastINewPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="0">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="INewPrice"></Binding>
+                                            <Binding Path="LastINewPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridChangeColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="INewPrice"></Binding>
+                                            <Binding Path="LastINewPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-2">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="INewPrice"></Binding>
+                                            <Binding Path="LastINewPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                                </DataTrigger>
+
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--涨跌幅-->
+                <DataGridTextColumn Header="涨跌幅 " Width="70" Binding="{Binding Path=PriceFluctuationFD, Converter={StaticResource fconverter}, ConverterParameter=P2}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style  TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch">
+                            </Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="1">
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="0">
+                                    <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="-1">
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource ResourceKey=selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--涨跌-->
+                <DataGridTextColumn Header="涨跌 " Width="60">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="PriceFluctuation"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                    <DataGridTextColumn.CellStyle>
+                        <Style  TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch">
+                            </Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="1">
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="0">
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridChangeColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="-1">
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--买量-->
+                <DataGridTextColumn Header="买量" Width="70" Binding="{Binding Path=StBuyCount, Converter={StaticResource fconverter}}" x:Name="colBuyCount">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource CellStyle_Default}">
+                            <Setter Property="Background" Value="{DynamicResource buyBackground}"/>
+                            <Setter Property="DataContext" Value="{Binding}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Name="InnerGrid" Background="{TemplateBinding Background}" MouseEnter="Grid_MouseEnter_Close_Buy">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center">
+                                            </ContentPresenter>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                    <!--<Run Text="双击以"></Run>
+                                                    <Run Text="{Binding Path=StBuyPrice}"></Run>
+                                                    <Run Text="卖出平仓"></Run>
+                                                    <Run Name="hand" Foreground="Red" Text=""></Run>
+                                                    <Run Text="手"></Run>
+                                                    <Run Text="{Binding Path=Code}"></Run>-->
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource buyBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--买价-->
+                <DataGridTextColumn Header="买价 " Width="70" x:Name="colBuyPrice">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="StBuyPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+
+                    <DataGridTextColumn.CellStyle>
+                        <Style  TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch">
+                            </Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}" MouseEnter="Grid_MouseEnter_Open">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                    <Run Text="双击"></Run>
+                                                    <Run Text="{Binding Path=StBuyPrice}"></Run>
+                                                    <Run Text="卖出" Foreground="#13AF13"></Run>
+                                                    <Run Text="开仓" FontSize="13" Foreground="Blue"></Run>
+                                                    <Run Name="hand" Foreground="#13AF13" Text=""></Run>
+                                                    <Run Text="手"></Run>
+                                                    <Run Text="{Binding Path=Code}"></Run>
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="{DynamicResource buyBackground}"/>
+                            <Style.Triggers>
+                                <DataTrigger Value="1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StBuyPrice"></Binding>
+                                            <Binding Path="LastStBuyPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="0">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StBuyPrice"></Binding>
+                                            <Binding Path="LastStBuyPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridChangeColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StBuyPrice"></Binding>
+                                            <Binding Path="LastStBuyPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-2">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StBuyPrice"></Binding>
+                                            <Binding Path="LastStBuyPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource buyBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--卖价-->
+                <DataGridTextColumn Header="卖价 " Width="70" x:Name="colSellPrice">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="StSellPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+
+                    <DataGridTextColumn.CellStyle>
+                        <Style  TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch">
+                            </Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}" MouseEnter="Grid_MouseEnter_Open">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                   <Run Text="双击"></Run>
+                                                    <Run Text="{Binding Path=StSellPrice}"></Run>
+                                                    <Run Text="买入" Foreground="Red"></Run>
+                                                    <Run Text="开仓" FontSize="13" Foreground="Blue"></Run>
+                                                    <Run Name="hand" Foreground="Red" Text=""></Run>
+                                                    <Run Text="手"></Run>
+                                                    <Run Text="{Binding Path=Code}"></Run>
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="{DynamicResource sellBackground}"/>
+                            <Style.Triggers>
+                                <DataTrigger Value="1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StSellPrice"></Binding>
+                                            <Binding Path="LastStSellPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="0">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StSellPrice"></Binding>
+                                            <Binding Path="LastStSellPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridChangeColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StSellPrice"></Binding>
+                                            <Binding Path="LastStSellPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-2">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StSellPrice"></Binding>
+                                            <Binding Path="LastStSellPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                                </DataTrigger>
+
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource sellBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--卖量-->
+                <DataGridTextColumn Header="卖量 " Width="70" Binding="{Binding Path=StSellCount, Converter={StaticResource fconverter}}" x:Name="colSellCount">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource CellStyle_Default}">
+                            <Setter Property="Background" Value="{DynamicResource sellBackground}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}" MouseEnter="Grid_MouseEnter_Close_Sell">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                    <!--<Run Text="双击以"></Run>
+                                                    <Run Text="{Binding Path=StSellPrice}"></Run>
+                                                    <Run Text="买入开仓"></Run>
+                                                    <Run Name="hand" Foreground="Red" Text=""></Run>
+                                                    <Run Text="手"></Run>
+                                                    <Run Text="{Binding Path=Code}"></Run>-->
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource sellBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--成交量-->
+                <DataGridTextColumn Header="成交量 " Width="70" Binding="{Binding Path=Volumn, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"/>
+                <!--持仓量-->
+                <DataGridTextColumn x:Name="colCclPrice" Header="持仓量 " Width="70" Binding="{Binding Path=ChiCangLiang, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"/>
+                <!--涨停价-->
+                <DataGridTextColumn x:Name="colMaxPrice" Header="涨停价" Width="70" CellStyle="{StaticResource CellStyle_Default_Up}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="UpStopPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--跌停价-->
+                <DataGridTextColumn x:Name="colMinPrice" Header="跌停价 " Width="70"  CellStyle="{StaticResource CellStyle_Default_Down}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="DownStopPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--今开盘-->
+                <DataGridTextColumn  x:Name="colJkpPrice" Header="今开盘 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="Open"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--昨收盘-->
+                <DataGridTextColumn x:Name="colZspPrice"  Header="昨收盘 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="PrevClose"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--昨结算-->
+                <DataGridTextColumn x:Name="colZjsPrice"  Header="昨结算 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="PrevSettleMent"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--最高价-->
+                <DataGridTextColumn x:Name="colHightPrice" Header="最高价 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="IMaxPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--最低价-->
+                <DataGridTextColumn x:Name="colLowPrice" Header="最低价 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="IMinPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--现量-->
+                <DataGridTextColumn Header="现量 " Width="70" Binding="{Binding Path=CurrentHand, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"/>
+                <!--成交额-->
+                <DataGridTextColumn Header="成交额 " Width="auto" Binding="{Binding Path=I64Sum, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--交易所-->
+                <DataGridTextColumn Header="交易所" Width="70" Binding="{Binding Path=Market}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--行情更新时间-->
+                <DataGridTextColumn Header="行情更新时间 " Width="auto" Binding="{Binding Path=UpdateTime}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--昨持仓量-->
+                <DataGridTextColumn Header="昨持仓量 " Width="70" Binding="{Binding Path=PreChicang, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--今收盘-->
+                <DataGridTextColumn x:Name="colJspPrice" Header="今收盘 " Width="70" Binding="{Binding Path=IClose, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--结算价-->
+                <DataGridTextColumn x:Name="colJsjPrice" Header="结算价 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="ISettlementPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--当日均价-->
+                <DataGridTextColumn x:Name="colDrjjPrice"  Header="当日均价 " Width="70" CellStyle="{StaticResource CellStyle_Default}" Binding="{Binding Path=AvgPrice,StringFormat=F2}">
+                    <!--<DataGridTextColumn.Binding>
+                            <MultiBinding Converter="{StaticResource mcfconverter}">
+                                <Binding Path="Code"></Binding>
+                                <Binding Path="AvgPrice"></Binding>
+                            </MultiBinding>
+                        </DataGridTextColumn.Binding>-->
+                </DataGridTextColumn>
+                <!--持仓增减-->
+                <DataGridTextColumn Header="持仓增减 " Width="70" Binding="{Binding Path=PositionFluctuation, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid x:Name="dgGroupRealData" ItemsSource ="{Binding  RealDataArbitrageCollection}"
+                                      CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True"
+                                      OpacityMask="Black" Style="{DynamicResource ThemeDatagridStyle}" BorderThickness="0"
+                                      AutoGenerateColumns="False" MouseDoubleClick="grdGroupRealData_MouseDoubleClick"
+                                      HeadersVisibility="All" SelectionMode="Single" SelectionUnit="FullRow" EnableRowVirtualization="False"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                                        SnapsToDevicePixels="True" UseLayoutRounding="True"
+                                      CanUserSortColumns="True" ColumnHeaderStyle="{DynamicResource ThemeColumnHeaderStyle}"
+                      RowHeaderWidth="0" CellStyle="{StaticResource NewDYDatagridStyleCell}" Grid.Row="1"
+                      PreviewMouseLeftButtonDown="grdRealData_PreviewMouseLeftButtonDown" PreviewKeyDown="dgGroupRealData_PreviewKeyDown" 
+                      Visibility="Hidden" >
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="miGroupUserCode"  Header="设置自选合约" Click="ShowCodeInfo_Click"/>
+                    <Separator Margin="0"/>
+                    <MenuItem x:Name="miGroupAutoAdjustColumnWidth"  Header="自动调整列宽" Click="miAutoAdjustColumnWidth_Click"/>
+                    <MenuItem x:Name="miGroupExportData" Tag="报价表"  Header="导出列表" Click="miExportData_Click"/>
+                    <MenuItem x:Name="miGroupStyleSetting"  Header="列表格设置" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.RowHeaderStyle>
+                <Style TargetType="{x:Type DataGridRowHeader}" >
+                    <Setter Property="Width" Value="0"/>
+                    <Setter Property="Background" Value="{Binding DataContext.CurrentClientStyleUI.HQContentBackgroundBrush, ElementName=grdMain}"/>
+                </Style>
+            </DataGrid.RowHeaderStyle>
+
+
+            <DataGrid.Columns>
+                <!--合约1-->
+                <DataGridTextColumn Header=" 代码1"  x:Name="colFirstContract" Width="65" Binding="{Binding Path=Code1}"  CellStyle="{StaticResource CellStyle_Code}"></DataGridTextColumn>
+                <!--合约2-->
+                <DataGridTextColumn Header=" 代码2"  x:Name="colSecondContract" Width="65" Binding="{Binding Path=Code2}" CellStyle="{StaticResource CellStyle_Code}"></DataGridTextColumn>
+                <!--合约名-->
+                <DataGridTextColumn Header=" 组合代码" x:Name="colGroupContractName" Width="160" Binding="{Binding Path=Code}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--最新价-->
+                <DataGridTextColumn Header="最新价 " Width="70"  x:Name="colGroupNewPrice">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="INewPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                    <DataGridTextColumn.CellStyle>
+                        <Style  TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch">
+                            </Setter>
+                            <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+
+                            <Style.Triggers>
+                                <DataTrigger Value="1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="INewPrice"></Binding>
+                                            <Binding Path="LastINewPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="0">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="INewPrice"></Binding>
+                                            <Binding Path="LastINewPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridChangeColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="INewPrice"></Binding>
+                                            <Binding Path="LastINewPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-2">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="INewPrice"></Binding>
+                                            <Binding Path="LastINewPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                                </DataTrigger>
+
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--涨跌幅-->
+                <DataGridTextColumn Header="涨跌幅 " Width="70" Binding="{Binding Path=PriceFluctuationFD, Converter={StaticResource fconverter}, ConverterParameter=P2}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style  TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch">
+                            </Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="1">
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="0">
+                                    <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="-1">
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource ResourceKey=selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--涨跌-->
+                <DataGridTextColumn Header="涨跌 " Width="60">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="PriceFluctuation"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                    <DataGridTextColumn.CellStyle>
+                        <Style  TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch">
+                            </Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="1">
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="0">
+                                    <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PriceFluctuation, Converter={StaticResource pftconverter}}" Value="-1">
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource selRowBackColor}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--买量-->
+                <DataGridTextColumn Header="买量 " Width="70" Binding="{Binding Path=StBuyCount, Converter={StaticResource fconverter}}" x:Name="colGroupBuyCount">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource CellStyle_Default}">
+                            <Setter Property="Background" Value="{DynamicResource buyBackground}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Name="InnerGrid" Background="{TemplateBinding Background}" MouseEnter="Grid_MouseEnter_Close_Buy">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center">
+                                            </ContentPresenter>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                    <!--<Run Text="双击以"></Run>
+                                                    <Run Text="{Binding Path=StBuyPrice}"></Run>
+                                                    <Run Text="卖出平仓"></Run>
+                                                    <Run Name="hand" Foreground="Red" Text=""></Run>
+                                                    <Run Text="手"></Run>
+                                                    <Run Text="{Binding Path=Code}"></Run>-->
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource buyBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--买价-->
+                <DataGridTextColumn Header="买价 " Width="70" x:Name="colGroupBuyPrice">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="StBuyPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+
+                    <DataGridTextColumn.CellStyle>
+                        <Style  TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch">
+                            </Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}" MouseEnter="Grid_MouseEnter_Open">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                    <Run Text="双击"></Run>
+                                                    <Run Text="{Binding Path=StBuyPrice}"></Run>
+                                                    <Run Text="卖出" Foreground="#13AF13"></Run>
+                                                    <Run Text="开仓" FontSize="13" Foreground="Blue"></Run>
+                                                    <Run Name="hand" Foreground="#13AF13" Text=""></Run>
+                                                    <Run Text="手"></Run>
+                                                    <Run Text="{Binding Path=Code}"></Run>
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="{DynamicResource buyBackground}"/>
+                            <Style.Triggers>
+                                <DataTrigger Value="1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StBuyPrice"></Binding>
+                                            <Binding Path="LastStBuyPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="0">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StBuyPrice"></Binding>
+                                            <Binding Path="LastStBuyPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridChangeColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StBuyPrice"></Binding>
+                                            <Binding Path="LastStBuyPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-2">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StBuyPrice"></Binding>
+                                            <Binding Path="LastStBuyPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource buyBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--卖价-->
+                <DataGridTextColumn Header="卖价 " Width="70" x:Name="colGroupSellPrice">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="StSellPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+
+                    <DataGridTextColumn.CellStyle>
+                        <Style  TargetType="{x:Type DataGridCell}" >
+                            <Setter Property="HorizontalAlignment" Value="Stretch">
+                            </Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}" MouseEnter="Grid_MouseEnter_Open">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                   <Run Text="双击"></Run>
+                                                    <Run Text="{Binding Path=StSellPrice}"></Run>
+                                                    <Run Text="买入" Foreground="Red"></Run>
+                                                    <Run Text="开仓" FontSize="13" Foreground="Blue"></Run>
+                                                    <Run Name="hand" Foreground="Red" Text=""></Run>
+                                                    <Run Text="手"></Run>
+                                                    <Run Text="{Binding Path=Code}"></Run>
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="{DynamicResource sellBackground}"/>
+                            <Style.Triggers>
+                                <DataTrigger Value="1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StSellPrice"></Binding>
+                                            <Binding Path="LastStSellPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridUpColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="0">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StSellPrice"></Binding>
+                                            <Binding Path="LastStSellPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridChangeColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-1">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StSellPrice"></Binding>
+                                            <Binding Path="LastStSellPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource DatagridDownColor}"/>
+                                </DataTrigger>
+                                <DataTrigger Value="-2">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource mpfconverter}">
+                                            <Binding Path="StSellPrice"></Binding>
+                                            <Binding Path="LastStSellPrice"></Binding>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Foreground" Value="{DynamicResource gridDefaultColor}"/>
+                                </DataTrigger>
+
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource sellBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--卖量-->
+                <DataGridTextColumn Header="卖量 " Width="70" Binding="{Binding Path=StSellCount, Converter={StaticResource fconverter}}" x:Name="colGroupSellCount">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource CellStyle_Default}">
+                            <Setter Property="Background" Value="{DynamicResource sellBackground}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                        <Grid Background="{TemplateBinding Background}" MouseEnter="Grid_MouseEnter_Close_Sell">
+                                            <Rectangle  Name="innerRect" Style="{DynamicResource ShadowRectangle}"/>
+                                            <ContentPresenter Margin="4 0 4 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                            <Grid.ToolTip>
+                                                <TextBlock FontWeight="Bold">
+                                                    <!--<Run Text="双击以"></Run>
+                                                    <Run Text="{Binding Path=StSellPrice}"></Run>
+                                                    <Run Text="买入开仓"></Run>
+                                                    <Run Name="hand" Foreground="Red" Text=""></Run>
+                                                    <Run Text="手"></Run>
+                                                    <Run Text="{Binding Path=Code}"></Run>-->
+                                                </TextBlock>
+                                            </Grid.ToolTip>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" TargetName="innerRect"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource sellBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <!--成交量-->
+                <DataGridTextColumn Header="成交量 " Width="70" Binding="{Binding Path=Volumn, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"/>
+                <!--持仓量-->
+                <DataGridTextColumn x:Name="colGroupCclPrice" Header="持仓量 " Width="70" Binding="{Binding Path=ChiCangLiang, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"/>
+                <!--涨停价-->
+                <DataGridTextColumn x:Name="colGroupMaxPrice" Header="涨停价 " Width="70" CellStyle="{StaticResource CellStyle_Default_Up}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="UpStopPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--跌停价-->
+                <DataGridTextColumn x:Name="colGroupMinPrice" Header="跌停价 " Width="70" CellStyle="{StaticResource CellStyle_Default_Down}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="DownStopPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--今开盘-->
+                <DataGridTextColumn  x:Name="colGroupJkpPrice" Header="今开盘 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="Open"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--昨收盘-->
+                <DataGridTextColumn x:Name="colGroupZspPrice"  Header="昨收盘 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="PrevSettleMent"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--昨结算-->
+                <DataGridTextColumn x:Name="colGroupZjsPrice"  Header="昨结算 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="PrevSettleMent"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--最高价-->
+                <DataGridTextColumn x:Name="colGroupHightPrice" Header="最高价 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="IMaxPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--最低价-->
+                <DataGridTextColumn x:Name="colGroupLowPrice" Header="最低价 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="IMinPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--现量-->
+                <DataGridTextColumn Header="现量 " Width="70" Binding="{Binding Path=CurrentHand, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--成交额-->
+                <DataGridTextColumn Header="成交额 " Width="70" Binding="{Binding Path=I64Sum, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--交易所-->
+                <DataGridTextColumn Header=" 交易所" Width="70" Binding="{Binding Path=Market}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--行情更新时间-->
+                <DataGridTextColumn Header="行情更新时间 " Width="70" Binding="{Binding Path=UpdateTime}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--昨持仓-->
+                <DataGridTextColumn Header="昨持仓量 " Width="70" Binding="{Binding Path=PreChicang, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--今收盘-->
+                <DataGridTextColumn x:Name="colGroupJspPrice" Header="今收盘 " Width="70" Binding="{Binding Path=IClose, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--结算价-->
+                <DataGridTextColumn x:Name="colGroupJsjPrice" Header="结算价 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="ISettlementPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--当日均价-->
+                <DataGridTextColumn x:Name="colGroupDrjjPrice"  Header="当日均价 " Width="70" CellStyle="{StaticResource CellStyle_Default}">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource mcfconverter}">
+                            <Binding Path="Code"></Binding>
+                            <Binding Path="AvgPrice"></Binding>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <!--持仓增减-->
+                <DataGridTextColumn Header="持仓增减 " Width="70" Binding="{Binding Path=PositionFluctuation, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CenterAlignmentHQCellStyle}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <GridSplitter Name="DeepSplitter" Width="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+        <my:LevelsQuotes x:Name="LvQuotesPanel" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Visibility="Collapsed" Grid.RowSpan="3" Margin="0"/>
+
+        <Border Grid.Row="2" Style="{DynamicResource bottomSettingBorderStyle}" Grid.ColumnSpan="3">
+            <Grid>
+                <CheckBox Margin="4,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="CbxShowLevels" Checked="CbxShowLevels_Checked" Unchecked="CbxShowLevels_Unchecked"/>
+                <Label Content="显示多档行情" HorizontalAlignment="Left" Margin="20,0,0,0"/>
+                <Button Content="行情设置" Height="23" HorizontalAlignment="Left" Name="btnReportSetting" VerticalAlignment="Top" Width="60" Margin="110,3,0,0" Click="btnReportSetting_Click" Style="{DynamicResource btnDefault}" />
+                <Grid Height="30" Style="{DynamicResource blockGrid}" HorizontalAlignment="Left" Margin="180,0,0,0" Name="stackGridBlock" VerticalAlignment="Top" Width="530" Grid.ColumnSpan="3"/>
+                <!--<Button Content="排序" Height="23" HorizontalAlignment="Right" Name="btnZLCodeSort" Visibility="Hidden" VerticalAlignment="Top" Width="50" Margin="0,3,4,0" Click="btnZLCodeSort_Click" Style="{DynamicResource btnDefault}" />-->
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

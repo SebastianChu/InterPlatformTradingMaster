@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <servers>
+    <server type="JY">
+      <host name="东航实盘一" brokerID="7070"  ip="ctp1.kiiik.com"       port="41205" selected="False" />
+      <host name="东航实盘二" brokerID="7070"  ip="ctp2.kiiik.com"       port="41205" selected="False" />
+      <host name="东航实盘三" brokerID="7070"  ip="192.168.101.243"      port="41205" selected="False" />
+      <host name="东航实盘四" brokerID="7070"  ip="116.236.239.136"      port="41205" selected="False" />
+      <host name="东航实盘五" brokerID="7070"  ip="116.236.239.139"      port="41205" selected="False" />
+      <host name="上海电信一" brokerID="7070"  ip="116.236.239.136"      port="41205" selected="False" />
+      <host name="上海联通一" brokerID="7070"  ip="112.64.143.146"       port="41205" selected="False" />
+      <host name="上海电信二" brokerID="7070"  ip="222.66.97.247"        port="41205" selected="False" />
+      <host name="上海联通二" brokerID="7070"  ip="210.13.65.102"        port="41206" selected="False" />
+      <host name="郑州电信"   brokerID="7070"  ip="171.8.2.67"           port="41205" selected="False" />
+      <host name="郑州联通"   brokerID="7070"  ip="61.163.100.67"        port="41205" selected="False" />
+      <host name="南汇电信"   brokerID="7070"  ip="180.153.146.45"       port="41205" selected="False" />
+      <host name="杭州电信"   brokerID="7070"  ip="115.236.99.141"       port="41205" selected="False" />
+      <host name="实盘测试"   brokerID="7070"  ip="222.66.97.202"        port="41205" selected="False" />
+      <host name="华西仿真一" brokerID="16377" ip="182.131.17.110"       port="62205" selected="False" />
+      <host name="东航仿真一" brokerID="7070"  ip="192.168.3.190"        port="41205" selected="False" />
+      <host name="东航仿真二" brokerID="7070"  ip="222.66.97.241"        port="41205" selected="True" />
+      <host name="东航sim"    brokerID="0086"  ip="180.168.146.181"      port="10000" selected="False" />
+      <host name="申万实盘三" brokerID="88888" ip="180.168.212.53"       port="41205" selected="False" />
+      <host name="申万实盘四" brokerID="88888" ip="180.168.212.54"       port="41205" selected="False" />
+      <host name="申万实盘七" brokerID="88888" ip="222.73.226.106"       port="41207" selected="False" />
+      <host name="申万仿真二" brokerID="66666" ip="222.66.235.70"        port="21206" selected="False" />
+      <host name="华鑫实盘二" brokerID="10001" ip="180.169.70.182"       port="41205" selected="False" />
+      <host name="新湖实盘一" brokerID="6090"  ip="116.228.171.216"      port="41205" selected="False" />
+      <host name="银河实盘一" brokerID="4040"  ip="yhzx-front1.yhqh.com" port="51205" selected="False" />
+      <host name="银河实盘二" brokerID="4040"  ip="yhzx-front3.yhqh.com" port="52205" selected="False" />
+      <host name="中期实盘一" brokerID="8070"  ip="zjzx-front1.ctp.shcifco.com"       port="41205" selected="False" />
+      <host name="中期实盘五" brokerID="8070"  ip="zjzx-front5.ctp.shcifco.com"       port="41205" selected="False" />
+      <host name="期货模拟一" brokerID="2030"  ip="asp-sim2-front1.financial-trading-platform.com" port="26205" selected="False" />
+      <host name="模拟做市"           brokerID="7070"  ip="192.168.3.182"      port="41205" selected="False" />
+      <host name="华宝A股模拟"        brokerID="2011"  ip="211.144.195.163"    port="44505" selected="False" />
+      <host name="华宝证券LTS一"      brokerID="2011"  ip="101.231.210.1"      port="24505" selected="False" />
+      <host name="华宝证券LTS二"      brokerID="2011"  ip="101.231.210.2"      port="24505" selected="False" />
+      <host name="华宝证券LTS三"      brokerID="2011"  ip="222.66.55.171"      port="24505" selected="False" />
+      <host name="华宝期权模拟"       brokerID="2011"  ip="211.144.195.163"    port="34505" selected="False" />
+      <host name="华宝期权实验室环境" brokerID="2011"  ip="211.144.195.164"    port="24505" selected="False" />
+      <host name="证券模拟一"         brokerID="2011"  ip="ctp24-front1.financial-trading-platform.com"    port="41205" selected="False" />
+      <host name="证券模拟二"         brokerID="2011"  ip="ctp24-front2.financial-trading-platform.com"    port="41205" selected="False" />
+    </server>
+    <server type="HQ">
+      <host name="东航实盘一" brokerID="7070"  ip="ctp1.kiiik.com"     port="41213" selected="False" />
+      <host name="东航实盘二" brokerID="7070"  ip="ctp2.kiiik.com"     port="41213" selected="False" />
+      <host name="东航实盘三" brokerID="7070"  ip="192.168.101.243"    port="41213" selected="False" />
+      <host name="东航实盘四" brokerID="7070"  ip="116.236.239.136"    port="41213" selected="False" />
+      <host name="东航实盘五" brokerID="7070"  ip="116.236.239.139"    port="41213" selected="False" />
+      <host name="上海电信一" brokerID="7070"  ip="116.236.239.136"    port="41213" selected="False" />
+      <host name="上海联通一" brokerID="7070"  ip="112.64.143.146"     port="41213" selected="False" />
+      <host name="上海电信二" brokerID="7070"  ip="222.66.97.247"      port="41213" selected="False" />
+      <host name="上海联通二" brokerID="7070"  ip="210.13.65.102"      port="41214" selected="False" />
+      <host name="郑州电信"   brokerID="7070"  ip="171.8.2.67"         port="41213" selected="False" />
+      <host name="郑州联通"   brokerID="7070"  ip="61.163.100.67"      port="41213" selected="False" />
+      <host name="南汇电信"   brokerID="7070"  ip="180.153.146.45"     port="41213" selected="False" />
+      <host name="杭州电信"   brokerID="7070"  ip="115.236.99.141"     port="41213" selected="False" />
+      <host name="实盘测试"   brokerID="7070"  ip="222.66.97.202"      port="41213" selected="False" />
+      <host name="华西仿真一" brokerID="16377" ip="182.131.17.110"     port="62213" selected="False" />
+      <host name="东航仿真一" brokerID="7070"  ip="192.168.3.190"      port="41213" selected="False" />
+      <host name="东航仿真二" brokerID="7070"  ip="222.66.97.241"      port="41213" selected="True" />
+      <host name="东航sim"    brokerID="0086"  ip="180.168.146.181"    port="10100" selected="False" />
+      <host name="申万实盘一" brokerID="88888" ip="180.168.212.51"     port="41213" selected="False" />
+      <host name="申万实盘二" brokerID="88888" ip="180.168.212.52"     port="41213" selected="False" />
+      <host name="申万仿真二" brokerID="66666" ip="222.66.235.70"      port="21214" selected="False" />
+      <host name="华鑫实盘三" brokerID="10001" ip="180.169.70.183"     port="41213" selected="False" />
+      <host name="新湖实盘二" brokerID="6090"  ip="116.228.171.217"    port="41213" selected="False" />
+      <host name="银河实盘一" brokerID="4040"  ip="yhzx-md1.yhqh.com"  port="51213" selected="False" />
+      <host name="银河实盘二" brokerID="4040"  ip="yhzx-md3.yhqh.com"  port="52213" selected="False" />
+      <host name="中期实盘二" brokerID="8070"  ip="zjzx-md2.ctp.shcifco.com"        port="41213" selected="False" />
+      <host name="中期实盘四" brokerID="8070"  ip="zjzx-md4.ctp.shcifco.com"        port="41213" selected="False" />
+      <host name="期货模拟一" brokerID="2030"  ip="asp-sim2-md1.financial-trading-platform.com" port="26213" selected="False" />
+      <host name="模拟做市"           brokerID="7070"  ip="192.168.3.182"      port="41213" selected="False" />
+      <host name="华宝A股模拟"        brokerID="2011"  ip="211.144.195.163"    port="44513" selected="False" />
+      <host name="华宝证券LTS一"      brokerID="2011"  ip="14.17.75.31"        port="6507"  selected="False" />
+      <host name="华宝证券LTS二"      brokerID="2011"  ip="61.153.209.141"     port="6507"  selected="False" />
+      <host name="华宝证券LTS三"      brokerID="2011"  ip="101.231.210.1"      port="24513"  selected="False" />
+      <host name="华宝证券LTS四"      brokerID="2011"  ip="101.231.210.2"      port="24513"  selected="False" />
+      <host name="华宝Level2一"       brokerID="2011"  ip="101.231.210.1"      port="8800"  selected="False" />
+      <host name="华宝Level2二"       brokerID="2011"  ip="101.231.210.2"      port="8800"  selected="False" />
+      <host name="华宝Level2三"       brokerID="2011"  ip="61.172.250.208"     port="8205"  selected="False" />
+      <host name="华宝Level2四"       brokerID="2011"  ip="61.172.250.209"     port="8205"  selected="False" />
+      <host name="华宝期权模拟"       brokerID="2011"  ip="211.144.195.163"    port="34513" selected="False" />
+      <host name="华宝期权实验室环境" brokerID="2011"  ip="211.144.195.164"    port="24513" selected="False" />
+      <host name="证券模拟三"         brokerID="2011"  ip="ctp24-front3.financial-trading-platform.com" port="41213" selected="False" />
+      <host name="证券模拟四"         brokerID="2011"  ip="ctp24-front4.financial-trading-platform.com" port="41213" selected="False" />
+    </server>
+  </servers>
+</config>

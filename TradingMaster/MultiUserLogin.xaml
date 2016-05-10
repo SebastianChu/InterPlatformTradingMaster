@@ -1,0 +1,51 @@
+﻿<Window x:Class="TradingMaster.MultiUserLogin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        mc:Ignorable="d" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" MinWidth="300"
+        Title="IPTM-跨平台交易登录" Icon="/TradingMaster;component/image/Master.ico" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="240"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <RadioButton Grid.Column="2" x:Name="rbSingleUser" Grid.Row="0" VerticalAlignment="Center" GroupName="rbLogin" HorizontalAlignment="Right"  Margin="0,0,160,0" Checked="rbSingleUser_Checked">
+            <RadioButton.Content>
+                <TextBlock Text="单账户登录" Foreground="{DynamicResource TradeTextBlock}" ></TextBlock>
+            </RadioButton.Content>
+        </RadioButton>
+        <RadioButton Grid.Column="2" x:Name="rbMultiUser" Grid.Row="0" VerticalAlignment="Center" GroupName="rbLogin" HorizontalAlignment="Right" Margin="0,0,40,0" IsChecked="True">
+            <RadioButton.Content>
+                <TextBlock Text="多账户登录" Foreground="{DynamicResource TradeTextBlock}" ></TextBlock>
+            </RadioButton.Content>
+        </RadioButton>
+        
+        <DataGrid x:Name="dgUserSettings" ItemsSource ="{Binding  OrderDataCollection}" Style="{StaticResource ThemeDatagridStyle }"
+                                  ColumnHeaderStyle="{StaticResource ThemeColumnHeaderStyle}" 
+                                  CellStyle="{StaticResource DefaultGridViewCellOtherStyle}"
+                                  RowStyle="{StaticResource GridViewRowOtherStyle}" 
+                                  HeadersVisibility="All" SelectionMode="Extended" RowHeaderWidth="0" BorderThickness="1"  Margin="8,0,8,0"
+                                  Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="选择" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" MinWidth="40" Binding="{Binding Path=OrderID, Mode=TwoWay, UpdateSourceTrigger=Explicit}"></DataGridTextColumn>
+                <DataGridTextColumn Header="账号" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" MinWidth="90" Binding="{Binding Path=InvestorID}"></DataGridTextColumn>
+                <DataGridTextColumn Header="经纪号" CellStyle="{StaticResource CellStyle_Code}" MinWidth="60" SortMemberPath="Code" Binding="{Binding Path=BrokerID,Converter={StaticResource gocconverter}}"></DataGridTextColumn>
+                <DataGridTextColumn Header="柜台系统" CellStyle="{StaticResource CellStyle_Default}" MinWidth="80" Binding="{Binding Path=BackEnd}"></DataGridTextColumn>
+                <DataGridTextColumn Header="密码" CellStyle="{StaticResource CellStyle_Default}" MinWidth="80" Binding="{Binding Path=Password}"></DataGridTextColumn>
+                <DataGridTextColumn Header="交易服务器" CellStyle="{StaticResource DefaultGridBuySellCellStyle}" MinWidth="160" Width="Auto" Binding="{Binding Path=TraderFrontIP, Converter= {StaticResource bssuconverter}}"></DataGridTextColumn>
+                <DataGridTextColumn Header="行情服务器" CellStyle="{StaticResource CellStyle_Default}" MinWidth="160" Binding="{Binding Path=MdFrontIP, Converter= {StaticResource bssuconverter}}"  ></DataGridTextColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Center" Height="30">
+            <Button x:Name="btnLogonAll" Margin="20 0 0 0" Width="80" Content="全部登录(_X)" Click="btnLogonAll_Click" Style="{DynamicResource btnDefault}" Height="23"></Button>
+            <Button x:Name="btnLogon" Margin="20 0 0 0" Width="80" Content="选中登录(_C)" Click="btnLogon_Click" Style="{DynamicResource btnDefault}" Height="23"></Button>
+            <Button x:Name="btnAdd" Margin="20 0 0 0" Width="60" Content=" 添加(_V)" Click="btnAdd_Click" Style="{DynamicResource btnDefault}" Height="23"></Button>
+            <Button x:Name="btnRemove" Margin="20 0 0 0" Width="60" Content="删除(_B)" Click="btnRemove_Click" Style="{DynamicResource btnDefault}" Height="23"></Button>
+        </StackPanel>
+    </Grid>
+</Window>

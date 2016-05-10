@@ -1,0 +1,32 @@
+";LIBRARY        "FemasMdApi"										
+										
+EXPORTS										
+        
+		Connect                         @1
+        GetTradingDay                   @2
+        DisConnect                      @3
+		SubMarketData					@4
+		UnSubMarketData					@5
+		SetHeartbeatTimeout				@6
+        ReqUserLogin                    @7
+        ReqUserLogout                   @8
+		ReqSubscribeTopic				@9
+        ReqQryTopic						@10
+        ReqSubMarketData				@11
+        ReqUnSubMarketData				@12
+
+        RegOnFrontConnected				@13
+        RegOnFrontDisconnected			@14
+        RegOnHeartBeatWarning			@15
+		RegPackageStart					@16
+		RegPackageEnd					@17
+		RegRspError						@18
+        RegRspUserLogin					@19
+        RegRspUserLogout				@20
+		RegRspSubscribeTopic			@21
+		RegRspQryTopic					@22
+		RegRtnDepthMarketData			@23
+        RegRspSubMarketData				@24
+        RegRspUnSubMarketData			@25
+
+;										

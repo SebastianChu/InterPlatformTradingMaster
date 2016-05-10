@@ -1,0 +1,387 @@
+﻿<UserControl x:Class="TradingMaster.Control.NewOrderPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:my="clr-namespace:TradingMaster.Control"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <!--<Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <Setter Property="FontSize" Value="{Binding CurrentClientStyleUI.HQFontSize}"/>
+            <Setter Property="FontWeight" Value="{Binding CurrentClientStyleUI.HQFontWeightUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+        </Style>-->
+        <Style TargetType="Button">
+            <Setter Property="FontWeight" Value="Black"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <!--<Setter Property="FontSize" Value="{Binding CurrentClientStyleUI.HQFontSize}"/>-->
+            <Setter Property="FontWeight" Value="{Binding CurrentClientStyleUI.HQFontWeightUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <!--<Setter Property="FontSize" Value="{Binding CurrentClientStyleUI.HQFontSize}"/>-->
+            <Setter Property="FontWeight" Value="{Binding CurrentClientStyleUI.HQFontWeightUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <!--<Setter Property="FontSize" Value="{Binding CurrentClientStyleUI.HQFontSize}"/>-->
+            <Setter Property="FontWeight" Value="{Binding CurrentClientStyleUI.HQFontWeightUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+        </Style>
+        <Style TargetType="my:ValueUpDown">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+        </Style>
+        <!--<Style TargetType="xctk:IntegerUpDown">
+            <Setter Property="FontFamily" Value="{Binding CurrentClientStyleUI.HQFontFamilyUI}"/>
+            <Setter Property="FontStyle" Value="{Binding CurrentClientStyleUI.HQFontStyleUI}"/>
+        </Style>-->
+
+        <Style TargetType="Grid">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cbBuysell}" Value="0">
+                    <!--<Setter Property="Background" Value="Red"/>-->
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="White" Offset="-0.2"></GradientStop>
+                                <GradientStop Color="#E57171" Offset="0.5"></GradientStop>
+                                <GradientStop Color="White" Offset="1.2"></GradientStop>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SelectedIndex, ElementName=cbBuysell}" Value="1">
+                    <!--<Setter Property="Background" Value="Green"/>-->
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="White" Offset="-0.2"></GradientStop>
+                                <GradientStop Color="#FF91EB91" Offset="0.5"></GradientStop>
+                                <GradientStop Color="White" Offset="1.2"></GradientStop>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid x:Name="gridMain">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="54" />
+                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" x:Name="TriggerRow"/>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3">
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="120" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="合 约" Grid.Row="1"></TextBlock>
+                    <!--<TextBox x:Name="txtCode" FontWeight="Bold" FontSize="14" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="0 0 50 0" Height="32" Width="150" TextChanged="txtCode_TextChanged" PreviewKeyDown="txtCode_KeyDown" MaxLength="20"></TextBox>-->
+                    <!--<my:CodeComboBox StyleTag="order" Margin="0 0 50 0" VerticalAlignment="Center" x:Name="txtCode" Height="32" Width="150" FontWeight="Bold" FontSize="14" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" TextChanged="txtCode_TextChanged" PreviewKeyDown="txtCode_KeyDown" LostFocus="txtCode_LostFocus" />-->
+                    <TextBox Margin="0 3 0 4" VerticalAlignment="Center" x:Name="txtCode" Height="25"  FontWeight="Bold" FontSize="14" Grid.Column="1" Grid.Row="1" TextChanged="txtCode_TextChanged" PreviewKeyDown="txtCode_KeyDown" LostFocus="txtCode_LostFocus" VerticalContentAlignment="Center"/>
+                    <TextBlock Margin="12,4,4,4" x:Name="txtCodeName" Grid.Column="2" FontSize="14" FontWeight="Bold" Foreground="Gray" FontFamily="{DynamicResource fontResource}" />
+                </Grid>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54" />
+                        <ColumnDefinition Width="120" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="买 卖" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                    <RadioButton x:Name="rbBuy" Grid.Column="1" GroupName="rbBuySell" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Width="42" IsChecked="True" PreviewKeyDown="rbBuy_KeyDown">
+                        <RadioButton.Content>
+                            <TextBlock Text="买入" Background="{Binding ElementName=rbBuy,Path=Background}"></TextBlock>
+                        </RadioButton.Content>
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=rbBuy}" Value="true">
+                                        <Setter Property="Background" Value="#FFFE5E6D">
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+                    <RadioButton x:Name="rbSell" Grid.Column="1" GroupName="rbBuySell" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="52,0,20,0" PreviewKeyDown="rbSell_KeyDown" Width="42">
+                        <RadioButton.Content>
+                            <TextBlock Text="卖出" Background="{Binding ElementName=rbSell,Path=Background}"></TextBlock>
+                        </RadioButton.Content>
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=rbSell}" Value="true">
+                                        <Setter Property="Background" Value="#FF6DFF70">
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+
+                    <!--<ComboBox x:Name="cbBuysell" Grid.Column="1" MouseDoubleClick="cbBuysell_MouseDoubleClick" KeyDown="cbBuysell_KeyDown"></ComboBox>-->
+                </Grid>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3">
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54" />
+                        <ColumnDefinition Width="180" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="开 平" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                    <RadioButton x:Name="rbKaicang" Grid.Column="1" GroupName="rbKp"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Width="42" IsChecked="True" PreviewKeyDown="rbKaicang_KeyDown">
+                        <RadioButton.Content>
+                            <TextBlock Text="开仓" Background="{Binding ElementName=rbKaicang,Path=Background}"></TextBlock>
+                        </RadioButton.Content>
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=rbKaicang}" Value="true">
+                                        <Setter Property="Background" Value="#FFFFDE01">
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+                    <RadioButton x:Name="rbPingjin" Grid.Column="1" GroupName="rbKp" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="52,0,20,0" Width="42" PreviewKeyDown="rbPingjin_KeyDown">
+                        <RadioButton.Content>
+                            <TextBlock Text="平今" Background="{Binding ElementName=rbPingjin,Path=Background}"></TextBlock>
+                        </RadioButton.Content>
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=rbPingjin}" Value="true">
+                                        <Setter Property="Background" Value="#FFFFDE01">
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+                    <RadioButton x:Name="rbPingcang" Grid.Column="1" Grid.ColumnSpan="2" GroupName="rbKp" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="99,0,20,0" Width="42" PreviewKeyDown="rbPingcang_KeyDown">
+                        <RadioButton.Content>
+                            <TextBlock Text="平仓" Background="{Binding ElementName=rbPingcang,Path=Background}"></TextBlock>
+                        </RadioButton.Content>
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=rbPingcang}" Value="true">
+                                        <Setter Property="Background" Value="#FFFFDE01">
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+
+                    <!--<ComboBox x:Name="cbKaiping" Grid.Column="1" Grid.Row="3" MouseDoubleClick="cbKaiping_MouseDoubleClick" KeyDown="cbKaiping_KeyDown"></ComboBox>-->
+                </Grid>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" PreviewKeyDown="iudNum_KeyDown">
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54" />
+                        <ColumnDefinition Width="120" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="手 数" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                    <!--<TextBox x:Name="txtNum" Grid.Column="1"></TextBox>-->
+                    <my:ValueUpDown FontWeight="Bold" FontSize="18" Grid.Column="1" x:Name="iudNum" Minimum="0" Maximum="10000000" VerticalAlignment="Stretch" Height="27" Margin="0 4 0 4"/>
+                </Grid>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" PreviewKeyDown="iudNum_KeyDown">
+                <Grid Background="Transparent" Height="32">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54" />
+                        <ColumnDefinition Width="120" />
+                    </Grid.ColumnDefinitions>
+                    <Button Focusable="False" Grid.Row="4" Content="设 置" FontFamily="{DynamicResource fontResource}" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="20" Background="Transparent" Click="Button_Click"  Style="{DynamicResource handButton}"></Button>
+                    <Button FontSize="13" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" FontFamily="{DynamicResource fontResource}" Name="btnHand1" Content="1" Width="40" Height="20"  Margin="0,0,0,0" Background="Transparent" Click="btnHand_Click" Style="{DynamicResource handButton}"></Button>
+                    <Button FontSize="13" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" FontFamily="{DynamicResource fontResource}" Name="btnHand2" Content="10" Width="40" Height="20"  Margin="40,0,0,0" Background="Transparent" Click="btnHand_Click" Style="{DynamicResource handButton}"></Button>
+                    <Button FontSize="13" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" FontFamily="{DynamicResource fontResource}" Name="btnHand3" Content="50%" Width="40" Height="20"  Margin="80,0,0,0" Background="Transparent" Click="btnHand_Click" Style="{DynamicResource handButton}"></Button>
+                </Grid>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" PreviewKeyDown="dudPrice_KeyDown">
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54" />
+                        <ColumnDefinition Width="120" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border x:Name="bdPriceType"  Width="45" Margin="0 0 0 0" Height="20"  BorderThickness="1" BorderBrush="Silver" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock MouseLeftButtonDown="tbPriceType_MouseLeftButtonDown"  x:Name="tbPriceType" Text=" 指定价"></TextBlock>
+                    </Border>
+
+                    <my:ValueUpDown x:Name="dudPrice" Grid.Column="1" VerticalAlignment="Stretch" AllowDrop="False"
+                                            FontWeight="Bold" FontSize="18" ToolTip="价格为0时以市价单发出"
+                                Maximum="1050000"
+                                Minimum="0"
+                                FormatString="F2" Height="27" Margin="0 6 0 6" />
+                                    <!--ValueChanged="dudPrice_ValueChanged"-->
+
+                    <!--<TextBox x:Name="txtPrice" Grid.Column="1"></TextBox>-->
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" >
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--<CheckBox x:Name="chbOrderType" Margin="6 0 0 0" VerticalAlignment="Center" Checked="cbPriceType_Checked" Unchecked="cbPriceType_Checked" Content="指令"/>-->
+                    <TextBlock Text="指 令" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                    <ComboBox x:Name="cbOrderType" Grid.Column="1" Margin="0,5,0,5" Height="25" SelectionChanged="cbOrderType_SelectionChanged" SelectedIndex="0" HorizontalContentAlignment="Right">
+                        <ComboBoxItem>限价</ComboBoxItem>
+                        <!--<ComboBoxItem>竞价</ComboBoxItem>-->
+                        <ComboBoxItem>市价</ComboBoxItem>
+                        <ComboBoxItem>FAK/IOC</ComboBoxItem>
+                        <ComboBoxItem>FOK</ComboBoxItem>
+                        <!--<ComboBoxItem>StopLimit</ComboBoxItem>-->
+                        <!--<ComboBoxItem>MIT</ComboBoxItem>-->
+                        
+                        <!--<ComboBoxItem>最新价+1点</ComboBoxItem>
+                        <ComboBoxItem>最新价+2点</ComboBoxItem>
+                        <ComboBoxItem>最新价+3点</ComboBoxItem>
+                        <ComboBoxItem>买一价+1点</ComboBoxItem>
+                        <ComboBoxItem>买一价+2点</ComboBoxItem>
+                        <ComboBoxItem>买一价+3点</ComboBoxItem>
+                        <ComboBoxItem>卖一价+1点</ComboBoxItem>
+                        <ComboBoxItem>卖一价+2点</ComboBoxItem>
+                        <ComboBoxItem>卖一价+3点</ComboBoxItem>-->
+                    </ComboBox>
+                </Grid>
+            </StackPanel>
+
+            <Grid Background="Transparent" Grid.Column="2" Grid.Row="4" Grid.RowSpan="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3" />
+                    <ColumnDefinition Width="15" />
+                    <ColumnDefinition MinWidth="42" />
+                    <ColumnDefinition Width="60" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="2*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="≤" FontSize="15" Foreground="Gray" FontWeight="Bold" Width="18" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="1"></TextBlock>
+                <TextBlock Text="▔" Foreground="Red" FontSize="16" Height="10"  FontWeight="Normal" Width="18" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="-2,0,38,0">
+                </TextBlock>
+                <TextBlock Text="▲" Foreground="Red" FontSize="12" FontWeight="Bold" Width="18" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="-3,2,38,0">
+                </TextBlock>
+                <TextBlock Text="卖" FontSize="12" FontWeight="Bold" Width="18" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="4">
+                </TextBlock>
+                <TextBlock Text="买" FontSize="12" FontWeight="Bold" Width="18" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="5">
+                </TextBlock>
+                <TextBlock Text="▁" Foreground="Green"  FontSize="16" FontWeight="Normal" Width="18" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2" Margin="-2,-9,38,0">
+                </TextBlock>
+                <TextBlock FontSize="12" Foreground="Green" Text="▼" FontWeight="Bold" Width="18" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2" Margin="-3,-3,38,0">
+                </TextBlock>
+                <TextBlock Grid.Column="2" Grid.Row="0" Height="6"></TextBlock>
+                <TextBlock x:Name="tbHandCount" Text="0" FontSize="15" Foreground="Gray" FontWeight="Bold" Grid.Column="2" Grid.Row="1" Height="32" Grid.ColumnSpan="2"></TextBlock>
+                <TextBlock Grid.Column="2" Grid.Row="2" Height="15"></TextBlock>
+                <TextBlock x:Name="tbMaxPrice" Text="0" FontSize="12" FontWeight="Bold" Grid.Column="2" Grid.Row="3"></TextBlock>
+                <TextBlock x:Name="tbSellPrice" Text="0" FontSize="12" FontWeight="Bold" Grid.Column="2" Grid.Row="4"></TextBlock>
+                <TextBlock x:Name="tbBuyPrice" Text="0" FontSize="12" FontWeight="Bold" Grid.Column="2" Grid.Row="5"></TextBlock>
+                <TextBlock x:Name="tbMinPrice" FontSize="12" Text="0" FontWeight="Bold" Grid.Column="2" Grid.Row="6"></TextBlock>
+
+                <TextBlock x:Name="tbSellCount" Text="/ 0" FontSize="12" FontWeight="Bold" Grid.Column="3" Grid.Row="4"></TextBlock>
+                <TextBlock x:Name="tbBuyCount" Text="/ 0" FontSize="12" FontWeight="Bold" Grid.Column="3" Grid.Row="5"></TextBlock>
+                <!--<TextBox x:Name="txtNum" Grid.Column="1"></TextBox>-->
+            </Grid>
+
+            <StackPanel Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="2" PreviewKeyDown="dudTriggerPrice_KeyDown">
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54" />
+                        <ColumnDefinition Width="120" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="tbTriggerPrice" Text="触发价" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                    <my:ValueUpDown x:Name="dudTriggerPrice" Grid.Column="1" VerticalAlignment="Stretch" AllowDrop="False"
+                                            FontWeight="Bold" FontSize="18" Maximum="1050000" Minimum="0" FormatString="F2" Height="27" Margin="0 6 0 6" />
+                </Grid>
+            </StackPanel>
+
+            <Grid Grid.Row="9" Grid.ColumnSpan="3" Background="Transparent">
+                <Button x:Name="btnXiadan" Content="下   单" Margin="8,3,0,0" Height="30" Width="164" Click="btnXiadan_Click" PreviewKeyDown="btnXiadan_PreviewKeyDown" FontSize="15" FontWeight="Bold" HorizontalAlignment="Left" Style="{DynamicResource btnDefault}"></Button>
+                <Button x:Name="btnMaidan" Content="预埋/条件" Margin="0,6,40,4" Click="btnMaidan_Click" Height="30" Width="75" HorizontalAlignment="Right" Style="{DynamicResource btnDefault}"></Button>
+            </Grid>
+            <Grid Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent">
+                <CheckBox Name="btnNotify" Checked="btnNotify_Checked" Unchecked="btnNotify_Unchecked"  Margin="6,4,0,0"  Width="15" Height="15"  Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" IsChecked="True"/>
+                <TextBlock Text="提示确认" Grid.Row="7" Height="15" Grid.Column="2" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" FontFamily="{DynamicResource fontResource}" Margin="25,4,0,4"/>
+                <CheckBox Name="cbxSplit" Checked="cbxSplit_Checked" Unchecked="cbxSplit_Unchecked"  Margin="106,4,0,0"  Width="15" Height="15"  Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" />
+                <TextBlock Text="批量拆单" Grid.Row="7" Height="15" Grid.Column="2" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" FontFamily="{DynamicResource fontResource}" Margin="125,4,0,4"/>
+            </Grid>
+            <!--<Button x:Name="btnMaidan" Content="预埋/条件" Margin="30,25,6,4" Click="btnMaidan_Click" Grid.Column="2" Grid.Row="6" Height="21" Width="64"></Button>-->
+            <!--<Button x:Name="btnCancel" Content="取消" Grid.Row="6" Height="21" Margin="30,2,6,32" Grid.Column="2" Width="64" Click="btnCancel_Click" />-->
+            <!--<TextBox x:Name="txtUserCode" Grid.Column="1" Grid.Row="2"></TextBox>-->
+        </Grid>
+    </Grid>
+</UserControl>

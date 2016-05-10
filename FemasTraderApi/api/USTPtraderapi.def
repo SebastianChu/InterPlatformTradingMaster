@@ -1,0 +1,78 @@
+";LIBRARY        "FemasTraderApi"										
+										
+EXPORTS										
+        
+		Connect                                 @1
+        GetTradingDay                           @2
+        DisConnect                              @3
+        ReqUserLogin                            @4
+        ReqUserLogout                           @5
+        ReqUserPasswordUpdate                   @6
+        ReqOrderInsert                          @7
+        ReqOrderAction                          @8
+        ReqQuoteInsert                          @9
+        ReqQuoteAction                          @10
+        ReqForQuote                             @11
+        ReqMarginCombAction                     @12
+        ReqQryOrder                             @13
+        ReqQryTrade                             @14
+        ReqQryUserInvestor                      @15
+        ReqQryTradingCode                       @16
+        ReqQryInvestorAccount                   @17
+        ReqQryInstrument                        @18
+        ReqQryExchange                          @19
+        ReqQryInvestorPosition                  @20
+        ReqSubscribeTopic                       @21
+        ReqQryComplianceParam                   @22
+        ReqQryTopic                             @23
+        ReqQryInvestorFee                       @24
+        ReqQryInvestorMargin                    @25
+        ReqQryInvestorCombPosition              @26
+        ReqQryInvestorLegPosition               @27
+        ReqQryExchangeRate                      @28
+
+        RegOnFrontConnected                     @29
+        RegOnFrontDisconnected                  @30
+        RegOnHeartBeatWarning                   @31
+        RegPackageStart                         @32
+        RegPackageEnd                           @33
+        RegRspError                             @34
+        RegRspUserLogin                         @35
+        RegRspUserLogout                        @36
+        RegRspUserPasswordUpdate                @37
+        RegRspOrderInsert                       @38
+        RegRspOrderAction                       @39
+        RegRspQuoteInsert                       @40
+        RegRspQuoteAction                       @41
+        RegRspForQuote                          @42
+        RegRspMarginCombAction                  @43
+        RegRtnFlowMessageCancel                 @44
+        RegRtnTrade                             @45
+        RegRtnOrder                             @46
+        RegErrRtnOrderInsert                    @47
+        RegErrRtnOrderAction                    @48
+        RegRtnInstrumentStatus                  @49
+        RegRtnInvestorAccountDeposit            @50
+        RegRtnQuote                             @51
+        RegErrRtnQuoteInsert                    @52
+        RegRtnForQuote                          @53
+        RegRtnMarginCombinationLeg              @54
+        RegRtnMarginCombAction                  @55
+        RegRspQryOrder                          @56
+        RegRspQryTrade                          @57
+        RegRspQryUserInvestor                   @58
+        RegRspQryTradingCode                    @59
+        RegRspQryInvestorAccount                @60
+        RegRspQryInstrument                     @61
+        RegRspQryExchange                       @62
+        RegRspQryInvestorPosition               @63
+        RegRspSubscribeTopic                    @64
+        RegRspQryComplianceParam                @65
+        RegRspQryTopic                          @66
+        RegRspQryInvestorFee                    @67
+        RegRspQryInvestorMargin                 @68
+        RegRspQryInvestorCombPosition           @69
+        RegRspQryInvestorLegPosition            @70
+        RegRspQryExchangeRate                   @71
+
+;										

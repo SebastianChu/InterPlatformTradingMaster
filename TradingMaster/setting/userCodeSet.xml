@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfUserCodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <UserCodeSet>
+    <Id>f26b6c0d-48ce-46ca-b84b-01daa2e6c1e8</Id>
+    <Name>普通行情</Name>
+    <IsDefault>true</IsDefault>
+    <FileName>CodeInfo.dat</FileName>
+    <IsArbitrage>false</IsArbitrage>
+    <IsZhuli>false</IsZhuli>
+  </UserCodeSet>
+  <UserCodeSet>
+    <Id>17785229-ce9f-4744-92e1-9abafc77e6d0</Id>
+    <Name>组合行情</Name>
+    <IsDefault>true</IsDefault>
+    <FileName>GroupCodeInfo.dat</FileName>
+    <IsArbitrage>true</IsArbitrage>
+    <IsZhuli>false</IsZhuli>
+  </UserCodeSet>
+  <!--<UserCodeSet>
+    <Id>8ac2a757-76c4-4904-a24d-571be6cda578</Id>
+    <Name>主力合约</Name>
+    <IsDefault>true</IsDefault>
+    <FileName>ZhuliCode.dat</FileName>
+    <IsArbitrage>false</IsArbitrage>
+    <IsZhuli>true</IsZhuli>
+  </UserCodeSet>-->
+</ArrayOfUserCodeSet>

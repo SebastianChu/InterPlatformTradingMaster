@@ -1,0 +1,589 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8FCA2024-263A-412A-853C-AC88C23C6E46}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TradingMaster</RootNamespace>
+    <AssemblyName>TradingMaster</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>image\Master.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>dll\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="ApiStruct\CtpTraderApi.cs" />
+    <Compile Include="ApiStruct\FemasMdApi.cs" />
+    <Compile Include="ApiStruct\FemasStruct.cs" />
+    <Compile Include="ApiStruct\FemasTraderApi.cs" />
+    <Compile Include="BackgroundDataServer.cs" />
+    <Compile Include="Control\BankAmountQry.xaml.cs">
+      <DependentUpon>BankAmountQry.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\ChooseContract.xaml.cs">
+      <DependentUpon>ChooseContract.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\DefaultHandNum.xaml.cs">
+      <DependentUpon>DefaultHandNum.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\FuturesQuotes.xaml.cs">
+      <DependentUpon>FuturesQuotes.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Control\InterTranfer.xaml.cs">
+      <DependentUpon>InterTranfer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\LevelsQuotes.xaml.cs">
+      <DependentUpon>LevelsQuotes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\OptionExecPanel.xaml.cs">
+      <DependentUpon>OptionExecPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\OptionExecutionRecord.xaml.cs">
+      <DependentUpon>OptionExecutionRecord.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\OptionQuotes.xaml.cs">
+      <DependentUpon>OptionQuotes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\OrderAffirmWindow.xaml.cs">
+      <DependentUpon>OrderAffirmWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\ParkedAndConditionOrderPanel.xaml.cs">
+      <DependentUpon>ParkedAndConditionOrderPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\PreviousOrder.xaml.cs">
+      <DependentUpon>PreviousOrder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\QuoteOrder.xaml.cs">
+      <DependentUpon>QuoteOrder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\TransferRecord.xaml.cs">
+      <DependentUpon>TransferRecord.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CtpDataServer.cs" />
+    <Compile Include="DataStruct\BankManager.cs" />
+    <Compile Include="DataStruct\BankStruct.cs" />
+    <Compile Include="CodeSet\CodeSetManager.cs" />
+    <Compile Include="CodeSet\Contract.cs" />
+    <Compile Include="CodeSet\Species.cs" />
+    <Compile Include="CodeSet\SpeciesLikeSPGroup.cs" />
+    <Compile Include="CodeSet\TradingTime.cs" />
+    <Compile Include="CommonStaticMemeber.cs" />
+    <Compile Include="CommonUtil.cs" />
+    <Compile Include="Control\AllOrder.xaml.cs">
+      <DependentUpon>AllOrder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\CapitalDetail.xaml.cs">
+      <DependentUpon>CapitalDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\CapitalQuery.xaml.cs">
+      <DependentUpon>CapitalQuery.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\ChangePass.xaml.cs">
+      <DependentUpon>ChangePass.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\CheckableMessageBox.xaml.cs">
+      <DependentUpon>CheckableMessageBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\CodeComboBox.xaml.cs">
+      <DependentUpon>CodeComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DataStruct\CommissionStruct.cs" />
+    <Compile Include="DataStruct\LogOnOff.cs" />
+    <Compile Include="DataStruct\MarginStruct.cs" />
+    <Compile Include="DataStruct\OptionRealData.cs" />
+    <Compile Include="DataStruct\ServerStruct.cs" />
+    <Compile Include="DataStruct\SettlementStruct.cs" />
+    <Compile Include="DataStruct\UserCodeSet.cs" />
+    <Compile Include="FemasDataServer.cs" />
+    <Compile Include="JYData\ExecOrderData.cs" />
+    <Compile Include="JYData\OrderInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="JYData\QuoteOrderData.cs" />
+    <Compile Include="Login.xaml.cs">
+      <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\NewOrderPanel.xaml.cs">
+      <DependentUpon>NewOrderPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\OrderReplyMessageBox.xaml.cs">
+      <DependentUpon>OrderReplyMessageBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\PositionsInquiry.xaml.cs">
+      <DependentUpon>PositionsInquiry.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\StatementsInquiry.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>StatementsInquiry.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\StatusBar.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>StatusBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\SystemTips.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>SystemTips.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\TransactionInquiry.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>TransactionInquiry.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\ValueUpDown.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>ValueUpDown.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DataStruct\DefaultCodeHandInstance.cs" />
+    <Compile Include="DataStruct\JYRealData.cs" />
+    <Compile Include="DataStruct\RealData.cs" />
+    <Compile Include="DataStruct\SystemMessage.cs" />
+    <Compile Include="DisplayRealData.cs" />
+    <Compile Include="ExecQueue.cs" />
+    <Compile Include="JYData\CapitalInfo.cs" />
+    <Compile Include="JYData\DataContainer.cs" />
+    <Compile Include="JYData\ExchangeTime.cs" />
+    <Compile Include="JYData\Q7JYOrderData.cs" />
+    <Compile Include="JYData\Q7PosInfoDetail.cs" />
+    <Compile Include="JYData\Q7PosInfoTotal.cs" />
+    <Compile Include="JYData\SynQueue.cs" />
+    <Compile Include="JYData\TradeInfo.cs" />
+    <Compile Include="MultiUserLogin.xaml.cs">
+      <DependentUpon>MultiUserLogin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OptionCalculator.cs" />
+    <Compile Include="PasswordBroker.cs" />
+    <Compile Include="StatementOrderAffirm.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>StatementOrderAffirm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ApiStruct\CtpStruct.cs" />
+    <Compile Include="TradeDataClient.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="ValueConverter.cs" />
+    <Page Include="Control\AllOrder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\BankAmountQry.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\CapitalDetail.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\CapitalQuery.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\ChangePass.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\CheckableMessageBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\ChooseContract.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\CodeComboBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\DefaultHandNum.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\FuturesQuotes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\InterTranfer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\LevelsQuotes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\OptionExecPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\OptionExecutionRecord.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\OptionQuotes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\OrderAffirmWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\ParkedAndConditionOrderPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\PreviousOrder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\QuoteOrder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\TransferRecord.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Login.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\NewOrderPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\OrderReplyMessageBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\PositionsInquiry.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Control\StatementsInquiry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\StatusBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\SystemTips.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\TransactionInquiry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\ValueUpDown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dictionary1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="MultiUserLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatementOrderAffirm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApiStruct\CtpMdApi.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Content Include="USTPmduserapi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="USTPtraderapi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <Content Include="ICSharpCode.SharpZipLib.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\AppStore22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\arrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\arrowUp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Calculator.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\CalculatorMini.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Calendar22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\CandleLine22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Chat22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\CLOSE_NORMAL.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\CLOSE_OVER.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\CTP22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Deposit.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Fresh.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Fund.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Futures22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\HomePage22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Lock.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\logo-MainContract.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\MAX_NORMAL.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\MAX_OVER.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\MIN_NORMAL.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\MIN_OVER.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Mood.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Option.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Options22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\PinCloseEx2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\PinCloseEx_Bar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\PinCloseWarning.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\PinCloseWarning_Bar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\PinMenuEx2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\QuoteChart22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\RESTORE_NORMAL.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\RESTORE_OVER.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Security22px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Skin.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Suanpan.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Unlock.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\好友.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\我.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\最新.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\笑脸.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="thostmduserapi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="thosttraderapi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\btn_down.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\btn_down_s.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\btn_left.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\btn_left_s.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\btn_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\btn_right_s.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\btn_up.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\btn_up_s.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\HQ_Conn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\HQ_DISCONN.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\JY_Conn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\JY_DISCONN.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\Master.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\SpinDown.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="image\SpinUp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="setting\Products.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="setting\ServerSettings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="setting\style.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="setting\userCodeSet.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

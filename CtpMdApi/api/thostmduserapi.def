@@ -1,0 +1,27 @@
+";LIBRARY        "CtpMdApi"										
+										
+EXPORTS										
+        
+        Connect							@1
+        GetTradingDay					@2
+        DisConnect						@3
+        ReqUserLogin					@4
+        ReqUserLogout					@5
+        SubscribeMarketData				@6
+        UnSubscribeMarketData			@7
+        SubscribeForQuoteRsp			@8
+        UnSubscribeForQuoteRsp			@9
+
+        RegOnFrontConnected				@10
+        RegOnFrontDisconnected			@11
+        RegOnHeartBeatWarning			@12
+        RegRspUserLogin					@13
+        RegRspUserLogout				@14
+		RegRspError						@15
+        RegRspSubMarketData				@16
+        RegRspUnSubMarketData			@17
+        RegRtnDepthMarketData			@18
+        RegRspSubForQuoteRsp			@19
+        RegRspUnSubForQuoteRsp			@20
+        RegRtnForQuoteRsp				@21
+;										

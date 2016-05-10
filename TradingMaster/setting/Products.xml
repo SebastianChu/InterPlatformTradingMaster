@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<markets>
+  <market name="CCFX" code="CCFX" chinesename="中金" marketType="17408" exchange="CCFX" marketLabel="中金市场" type="QH" tradingtime="(0910,0914)|0915,1130|1300,1515" timezoneID="China Standard Time">
+    <product code="CVX" />
+    <product code="IC" />
+    <product code="IH" />
+    <product code="IF" basecurrency="CNY" multiplier="300" tick="0.2" englishname="StockIndex" monthregex="0,M,Q,Q" expiredate="15" yearcharcount="2"/>
+    <product code="TF" basecurrency="CNY" multiplier="10000" tick="0.002" chinesename="国债" englishname="NationalDebt" monthregex="0Q,Q,Q,Q" expiredate="8" yearcharcount="2"/>
+    <product code="HO" RelatedCode="IH" />
+    <product code="IO" RelatedCode="IF" />
+  </market>
+  <market name="XSGE" code="XSGE" chinesename="上海" marketType="16896" exchange="XSGE" marketLabel="上海市场" type="QH" tradingtime="(0855,0859)|0900,1015|1030,1130|1330,1500" timezoneID="China Standard Time">
+    <product code="ag" basecurrency="CNY" multiplier="15" tick="1" chinesename="白银" englishname="Silver" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2" tradingtime="(-2055,-2059)|-2100,0230|0900,1015|1030,1130|1330,1500"/>
+    <product code="al" basecurrency="CNY" multiplier="5" tick="5" chinesename="铝" englishname="Aluminum" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2"/>
+    <product code="au" basecurrency="CNY" multiplier="1000" tick="0.05" chinesename="黄金" englishname="Gold" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2" tradingtime="(-2055,-2059)|-2100,0230|0900,1015|1030,1130|1330,1500"/>
+    <product code="bu" basecurrency="CNY" multiplier="10" tick="2" chinesename="沥青" englishname="Asphalt" monthmax="12" monthregex="0,M,M,M,M,M,Q" expiredate="15" yearcharcount="2"/>
+    <product code="cu" basecurrency="CNY" multiplier="5" tick="10" chinesename="铜" englishname="Copper" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2"/>
+    <product code="fu" basecurrency="CNY" multiplier="50" tick="1" chinesename="燃油" englishname="" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2"/>
+    <product code="hc" basecurrency="CNY" multiplier="10" tick="2" chinesename="热轧板" englishname="hot rolled coils" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2"/>
+    <product code="pb" basecurrency="CNY" multiplier="5" tick="5" chinesename="铅" englishname="Lead" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2"/>
+    <product code="rb" basecurrency="CNY" multiplier="10" tick="1" chinesename="螺纹" englishname="SteelBar" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2"/>
+    <product code="ru" basecurrency="CNY" multiplier="10" tick="5" chinesename="天胶" englishname="NativeRubber" monthmax="12" monthregex="0,M" excludemonth="2,12" expiredate="15" yearcharcount="2"/>
+    <product code="wr" basecurrency="CNY" multiplier="10" tick="1" chinesename="线材" englishname="Wire" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2"/>
+    <product code="zn" basecurrency="CNY" multiplier="5" tick="5" chinesename="锌" englishname="Zinc" monthmax="12" monthregex="0,M" expiredate="15" yearcharcount="2"/>
+  </market>
+  <market name="XDCE" code="XDCE" chinesename="大连" marketType="16640" exchange="XDCE" marketLabel="大连市场" type="QH" tradingtime="(0855,0859)|0900,1015|1030,1130|1330,1500" timezoneID="China Standard Time">
+    <product code="a" basecurrency="CNY" multiplier="10" tick="1" chinesename="豆一" englishname="Soybean1" monthmax="9" monthregex="0S,S" expiredate="12" yearcharcount="2"/>
+    <product code="b" basecurrency="CNY" multiplier="10" tick="1" chinesename="豆二" englishname="Soybean2" monthmax="6" monthregex="0S,S" expiredate="12" yearcharcount="2"/>
+    <product code="c" basecurrency="CNY" multiplier="10" tick="1" chinesename="玉米" englishname="Corn" monthmax="6" monthregex="0S,S" expiredate="12" yearcharcount="2"/>
+    <product code="i" basecurrency="CNY" multiplier="100" tick="1" chinesename="铁矿石" englishname="IronOre" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="2"/>
+    <product code="j" basecurrency="CNY" multiplier="100" tick="1" chinesename="焦炭" englishname="Coke" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="2"/>
+    <product code="l" basecurrency="CNY" multiplier="5" tick="5" chinesename="聚乙烯" englishname="PE" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="2"/>
+    <product code="m" basecurrency="CNY" multiplier="10" tick="1" chinesename="豆粕" englishname="BeanDregs" monthmax="12" monthregex="0,M" expiredate="12" excludemonth="2,4,6,10" yearcharcount="2"/>
+    <product code="p" basecurrency="CNY" multiplier="10" tick="2" chinesename="棕榈油" englishname="PalmOil" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="2"/>
+    <product code="v" basecurrency="CNY" multiplier="5" tick="5" chinesename="PVC" englishname="PVC" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="2"/>
+    <product code="y" basecurrency="CNY" multiplier="10" tick="2" chinesename="豆油" englishname="BeanOil" monthmax="12" monthregex="0,M" expiredate="12" excludemonth="2,4,6,10" yearcharcount="2"/>
+    <product code="bb" basecurrency="CNY" multiplier="500" tick="0.05" chinesename="胶合板" englishname="GluedBoard" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="2"/>
+    <product code="fb" basecurrency="CNY" multiplier="500" tick="0.05" chinesename="纤维板" englishname="BeaverBoard" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="2"/>
+    <product code="jd" basecurrency="CNY" multiplier="10" tick="1" chinesename="鸡蛋" englishname="FreshEggs" monthmax="12" monthregex="0,M" expiredate="12" excludemonth="7,8" yearcharcount="2"/>
+    <product code="jm" basecurrency="CNY" multiplier="60" tick="1" chinesename="焦煤" englishname="Coal" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="2"/>
+    <product code="pp" basecurrency="CNY" multiplier="5" tick="1" chinesename="聚丙烯" englishname="Polypropylene" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="2"/>
+  </market>
+  <market name="XZCE" code="XZCE" chinesename="郑州" marketType="17152" exchange="XZCE" marketLabel="郑州市场" type="QH" tradingtime="(0855,0859)|0900,1015|1030,1130|1330,1500" timezoneID="China Standard Time">
+    <product code="CF" basecurrency="CNY" multiplier="50" tick="5" chinesename="棉花" englishname="Cotton" monthmax="6" monthregex="0S,S" expiredate="12" yearcharcount="1"/>
+    <product code="FG" basecurrency="CNY" multiplier="20" tick="1" chinesename="玻璃" englishname="PlateGlass" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="1"/>
+    <product code="LR" basecurrency="CNY" multiplier="20" tick="1" chinesename="晚稻" englishname="LaterRice" monthmax="6" monthregex="0S,S" expiredate="12" yearcharcount="1"/>
+    <product code="ME" basecurrency="CNY" multiplier="50" tick="1" chinesename="甲醇" englishname="Methanol" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="1"/>
+    <product code="MA" basecurrency="CNY" multiplier="10" tick="1" chinesename="小甲醇" englishname="Methanol" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="1"/>
+    <product code="OI" basecurrency="CNY" multiplier="10" tick="2" chinesename="菜籽油" englishname="RapOil" monthmax="6" monthregex="0S,S" expiredate="12" yearcharcount="1"/>
+    <product code="PM" basecurrency="CNY" multiplier="50" tick="1" chinesename="普麦" englishname="Wheat" monthmax="6" monthregex="0S,S" expiredate="12" yearcharcount="1"/>
+    <product code="RI" basecurrency="CNY" multiplier="20" tick="1" chinesename="早籼稻" englishname="EarlyRice" monthmax="6" monthregex="0S,S" expiredate="12" yearcharcount="1"/>
+    <product code="RM" basecurrency="CNY" multiplier="10" tick="1" chinesename="菜粕" englishname="RapeSeedDregs" monthmax="12" monthregex="0M,M" excludemonth="2,4,6,10,12" expiredate="12" yearcharcount="1"/>
+    <product code="RS" basecurrency="CNY" multiplier="10" tick="1" chinesename="菜籽" englishname="RapeSeed" monthmax="12" monthregex="0,M" excludemonth="1,2,3,4,5,6,10,12" expiredate="12" yearcharcount="1"/>
+    <product code="SF" basecurrency="CNY" multiplier="5" tick="2" chinesename="硅铁" englishname="Silicoiron" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="1"/>
+    <product code="SM" basecurrency="CNY" multiplier="5" tick="2" chinesename="硅锰" englishname="Silicomanganese" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="1"/>
+    <product code="SR" basecurrency="CNY" multiplier="10" tick="1" chinesename="白糖" englishname="WhiteSugar" monthmax="9" monthregex="0S,S" expiredate="12" yearcharcount="1"/>
+    <product code="TA" basecurrency="CNY" multiplier="5" tick="2" chinesename="PTA" englishname="PTA" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="1"/>
+    <product code="TC" basecurrency="CNY" multiplier="200" tick="0.2" chinesename="动力煤" englishname="SteamCoal" monthmax="12" monthregex="0,M" expiredate="12" yearcharcount="1"/>
+    <product code="WH" basecurrency="CNY" multiplier="20" tick="1" chinesename="强麦" englishname="HighGlutenWheat" monthmax="6" monthregex="0S,S" expiredate="12" yearcharcount="1"/>
+    <product code="JR" basecurrency="CNY" multiplier="20" tick="1" chinesename="粳稻" englishname="Wheat" monthmax="6" monthregex="0S,S" expiredate="12" yearcharcount="1"/>
+  </market>
+</markets>
+
+
+

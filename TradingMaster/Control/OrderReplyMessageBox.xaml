@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="TradingMaster.Control.OrderReplyMessageBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Width="380" MinHeight="60">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontWeight" Value="Black"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1.5*" MinWidth="150"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="tbMessage"  HorizontalAlignment="Left" Margin =" 50 5 5 30"  VerticalAlignment="Top"  Width="300" FontSize="12"
+                   Text=""  Grid.ColumnSpan="4"></TextBlock>
+        <TextBox BorderThickness="1" IsReadOnly="True" Margin="15 0 15 0"  Grid.ColumnSpan="4" Grid.Column="0" Height="2" Grid.Row="1"></TextBox>
+        <CheckBox x:Name="chkConfirmSubmit"  Grid.Column="2" Grid.Row="2" Content="不再显示下单信息" HorizontalAlignment="Center" VerticalAlignment="Center"></CheckBox>
+        <CheckBox x:Name="chkConfirmTransact"  Grid.Column="2" Grid.Row="2" Content="不再显示成交信息" HorizontalAlignment="Center" VerticalAlignment="Center"></CheckBox>
+        <CheckBox x:Name="chkConfirmCancel"  Grid.Column="2" Grid.Row="2" Content="不再显示撤单信息" HorizontalAlignment="Center" VerticalAlignment="Center"></CheckBox>
+        <Button x:Name="btnOk"  Grid.Column="3" Grid.Row="2" Height="20" Width="70" Content="确认" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnOk_Click"></Button>
+        <Button x:Name="btnPrevious"  Grid.Column="0" Grid.Row="2" Height="20" Width="70" Content="上一条" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnPrevious_Click"></Button>
+        <Button x:Name="btnNext"  Grid.Column="1" Grid.Row="2" Height="20" Width="70" Content="下一条" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnNext_Click"></Button>
+    </Grid>
+</UserControl>

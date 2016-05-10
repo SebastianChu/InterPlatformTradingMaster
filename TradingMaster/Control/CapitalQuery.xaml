@@ -1,0 +1,172 @@
+﻿<UserControl x:Class="TradingMaster.Control.CapitalQuery"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TradingMaster"
+             mc:Ignorable="d" 
+             >
+    <UserControl.Resources>
+        <local:MultiValuePlusConverter x:Key="mvpconverter"/>
+    </UserControl.Resources>
+    <Grid x:Name="grdCapital" Background="#FF6D6D6D" HorizontalAlignment="Stretch" ShowGridLines="False" >
+        <Grid.Resources>
+            <Style TargetType="TextBlock" x:Key="exceptionTB">
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                <!--<Setter Property="HorizontalContentAlignment" Value="Left"></Setter>-->
+                <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+                <!--<Setter Property="VerticalContentAlignment" Value="Center"></Setter>-->
+                <!--<Setter Property="BorderThickness" Value="0"></Setter>-->
+                <Setter Property="FontSize" Value="12"></Setter>
+                <Setter Property="Foreground" Value="White"></Setter>
+                <Setter Property="Background" Value="#FF6D6D6D"></Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="100*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="1" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="静态权益" Grid.Row="1" Grid.Column="1"></TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="1" Margin="4 0 4 0">
+            <Run Text="{Binding StaticEquity,StringFormat=N0, Mode=OneWay}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="平仓盈亏" Grid.Row="1" Grid.Column="3"></TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="3" Margin="4 0 4 0">
+            <Run Text="{Binding Dspy,StringFormat=N0}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="4" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="持仓盈亏" Grid.Row="1" Grid.Column="5"></TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="5" Margin="4 0 4 0">
+            <Run Text="{Binding Dsfy,StringFormat=N0}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="6" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="权利金" Grid.Row="1" Grid.Column="7"></TextBlock>
+        <TextBlock  Grid.Row="2" Grid.Column="7" Margin="4 0 4 0">
+            <Run Text="{Binding Royalty,StringFormat=N0, Mode=OneWay}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>        
+        <TextBlock Grid.Row="1" Grid.Column="8" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="动态权益" Grid.Row="1" Grid.Column="9"></TextBlock>
+        <TextBlock  Grid.Row="2" Grid.Column="9" Margin="4 0 4 0">
+            <Run Text="{Binding DynamicEquity,StringFormat=N0, Mode=OneWay}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="10" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="占用保证金" Grid.Row="1" Grid.Column="11"></TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="11" Margin="4 0 4 0">
+            <Run Text="{Binding Bond,StringFormat=N0}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="12" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="下单冻结" Grid.Row="1" Grid.Column="13"></TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="13" Margin="4 0 4 0">
+            <Run Text="{Binding Frozen,StringFormat=N0}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="14" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="冻结权利金" Grid.Row="1" Grid.Column="15"></TextBlock>
+        <TextBlock  Grid.Row="2" Grid.Column="15" Margin="4 0 4 0">
+            <Run Text="{Binding FrozenRoyalty,StringFormat=N0}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="16" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="可用资金" Grid.Row="1" Grid.Column="17"></TextBlock>
+        <TextBlock  Grid.Row="2" Grid.Column="17" Foreground="#FFDDBB00" Margin="4 0 4 0">
+            <Run Text="{Binding CaculatedAvailable,StringFormat=N0, Mode=OneWay}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="18" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="10 2 10 2" Text="风险度" Grid.Row="1" Grid.Column="19"></TextBlock>
+        <StackPanel Grid.Row="2" Grid.Column="19" Orientation="Horizontal" Margin="4 0 4 0">
+            <TextBlock Text="{Binding RiskRatio, StringFormat=F2}" FontWeight="Bold" FontSize="14"></TextBlock>
+            <TextBlock Text="%" FontWeight="Bold" FontSize="14"></TextBlock>
+        </StackPanel>
+        <TextBlock Grid.Row="1" Grid.Column="20" Grid.RowSpan="2" Background="White" Width="4"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="期权持仓盈亏" Grid.Row="1" Grid.Column="21"></TextBlock>
+        <TextBlock  Grid.Row="2" Grid.Column="21" Margin="4 0 4 0">
+            <Run Text="{Binding OptionProfit,StringFormat=N0, Mode=OneWay}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="22" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="期权市值" Grid.Row="1" Grid.Column="23"></TextBlock>
+        <TextBlock  Grid.Row="2" Grid.Column="23" Margin="4 0 4 0" >
+            <Run Text="{Binding OptionMarketCap,StringFormat=N0, Mode=OneWay}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="24" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>
+        <TextBlock Margin="8 2 8 2" Text="账户市值" Grid.Row="1" Grid.Column="25"></TextBlock>
+        <TextBlock  Grid.Row="2" Grid.Column="25" Margin="4 0 4 0">
+            <Run Text="{Binding AccountCap,StringFormat=N0, Mode=OneWay}" FontWeight="Bold" FontSize="14"></Run>
+        </TextBlock>
+        <!--<TextBlock Grid.Row="1" Grid.Column="16" Grid.RowSpan="2" Background="White" Width="2"></TextBlock>-->
+        <StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="26"  VerticalAlignment="Center" Orientation="Horizontal" Margin="2 0 0 0">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                </Style>
+            </StackPanel.Resources>
+        </StackPanel>
+        <Border Grid.Column="27" Grid.ColumnSpan="2" BorderThickness="0,1,0,0" Grid.RowSpan="4" >
+                <!--BorderBrush="{DynamicResource CapitalQuery_BackLineBrush}" >-->
+        </Border>
+        <Grid Grid.Column="28" HorizontalAlignment="Left" Margin="0,0,20,0" Grid.RowSpan="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="TextBlock" />
+            </Grid.Resources>
+            <!--<Button Grid.Column="0" Tag="left" Grid.Row="2"  Name="monCenterBtn"   Content="监控中心" Click="monCenterBtn_Click" ></Button>-->
+            <!--<Button Grid.Column="1" Tag="mid" Grid.Row="2"  Name="serviceBtn"   Content="增值服务"  Click="serviceBtn_Click" ></Button>-->
+            <!--<Button Grid.Column="2" Tag="right" Grid.Row="2"  Name="live800Btn"  Content="支持服务" Click="live800Btn_Click" ></Button>-->
+            <Button Grid.Column="0" x:Name="btnQuery" FontSize="13" Height="48" Content="财务" Width="50" Style="{DynamicResource MainCapButtonStyle}" Cursor="Hand"/>
+            <Button Grid.Column="1" x:Name="btnTransfer" FontSize="13" Height="48" Content="转账" Width="50" Style="{DynamicResource MainTransferButtonStyle}" Cursor="Hand"/>
+            <Button Grid.Column="2" Tag="mid" Grid.Row="2"  Name="btnStatement" FontSize="13" Height="48" Content="清算" Width="50" Click="btnStatement_Click" Style="{DynamicResource MainCalButtonStyle}" Cursor="Hand"></Button>
+            <Button Grid.Column="3" Tag="right" Grid.Row="2"  Name="btnUpdPwd" FontSize="13" Height="48" Content="密码" Width="50" Click="btnUpdPwd_Click"  Style="{DynamicResource MainPwdButtonStyle}" Cursor="Hand"></Button>
+            <Button Grid.Column="4" Grid.Row="2"  Name="btnOption" FontSize="13" Height="48" Content="期权" Width="50"  Click="btnOption_Click"  Style="{DynamicResource MainOptionButtonStyle}" Cursor="Hand"></Button>
+            <Button Grid.Column="5" Grid.Row="2"  Name="btnFresh" FontSize="13" Height="48" Content="刷新" Width="50"  Click="btnFresh_Click"  Style="{DynamicResource MainFreshButtonStyle}" Cursor="Hand"></Button>
+        </Grid>
+        <!--<StackPanel Grid.Row="1" Grid.RowSpan="2" Grid.Column="18"  VerticalAlignment="Center" Orientation="Horizontal" Margin="20 0 0 0">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                </Style>
+            </StackPanel.Resources>
+            <Button x:Name="btnStatement" FontWeight="Bold" FontSize="14" Height="40" Content="历史结算单" Width="90" />
+        </StackPanel>-->
+    </Grid>
+</UserControl>
