@@ -1342,7 +1342,7 @@ namespace TradingMaster
                                     if (PosTotalInfoMap.ContainsKey(posTotalInfo))
                                     {
                                         PosTotalInfoMap[posTotalInfo].FreezeCount += orderData.UnTradeHandCount;
-                                        if (orderData.OrderStatus.Contains("未成交"))
+                                        if (orderData.OrderStatus.Contains("未成交") || orderData.OrderStatus.Contains("部分成交"))
                                         {
                                             PosTotalInfoMap[posTotalInfo].CanCloseCount -= orderData.UnTradeHandCount;//?
                                         }
