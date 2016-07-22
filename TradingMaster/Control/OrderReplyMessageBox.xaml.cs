@@ -94,23 +94,23 @@ namespace TradingMaster.Control
             string message = string.Empty;
             if (CommonUtil.GetOrderStatus(orderInfo.OrderStatus) == OrderStatus.Queued)
             {
-                message = string.Format("报单号：{0} 下单成功：{1},{2},{3},{4}手，委托价{5}",
-                    orderInfo.OrderID.Trim(), code, buySell, openClose, orderInfo.CommitHandCount, orderInfo.CommitPrice);
+                message = string.Format("报单号：{0} 下单成功：{1},{2},{3},{4}手，委托价{5}, {6}",
+                    orderInfo.OrderID.Trim(), code, buySell, openClose, orderInfo.CommitHandCount, orderInfo.CommitPrice, orderInfo.Hedge);
             }
             else if (CommonUtil.GetOrderStatus(orderInfo.OrderStatus) == OrderStatus.Chengjiao)
             {
-                message = string.Format("报单号：{0} 成交通知：{1},{2},{3},{4}手，委托价{5}",
-                    orderInfo.OrderID.Trim(), code, buySell, openClose, orderInfo.CommitHandCount, orderInfo.CommitPrice);//成交价
+                message = string.Format("报单号：{0} 成交通知：{1},{2},{3},{4}手，委托价{5}, {6}",
+                    orderInfo.OrderID.Trim(), code, buySell, openClose, orderInfo.CommitHandCount, orderInfo.CommitPrice, orderInfo.Hedge);//成交价
             }
             else if (CommonUtil.GetOrderStatus(orderInfo.OrderStatus) == OrderStatus.Cancelled)
             {
-                message = string.Format("撤单通知：{0},{1},{2},{3}手，委托价{4}",
-                    code, buySell, openClose, orderInfo.CommitHandCount, orderInfo.CommitPrice);
+                message = string.Format("撤单通知：{0},{1},{2},{3}手，委托价{4}, {5}",
+                    code, buySell, openClose, orderInfo.CommitHandCount, orderInfo.CommitPrice, orderInfo.Hedge);
             }
             else if (CommonUtil.GetOrderStatus(orderInfo.OrderStatus) == OrderStatus.Failed)
             {
-                message = string.Format("下单失败：{0},{1},{2},{3}手，委托价{4}",
-                    code, buySell, openClose, orderInfo.CommitHandCount, orderInfo.CommitPrice);
+                message = string.Format("下单失败：{0},{1},{2},{3}手，委托价{4}, {5}",
+                    code, buySell, openClose, orderInfo.CommitHandCount, orderInfo.CommitPrice, orderInfo.Hedge);
             }
             if (!string.IsNullOrEmpty(message))
             {
@@ -413,9 +413,11 @@ namespace TradingMaster.Control
                 message = message + string.Format("\n买开平：{0}", bidOpenClose);
                 message = message + string.Format("\n买量：{0}", orderInfo.BidHandCount);
                 message = message + string.Format("\n买价：{0}", orderInfo.BidPrice);
+                message = message + string.Format("\n买套保：{0}", orderInfo.BidHedge);
                 message = message + string.Format("\n卖开平：{0}", askOpenClose);
                 message = message + string.Format("\n卖量：{0}", orderInfo.AskOpenClose);
                 message = message + string.Format("\n卖价：{0}", orderInfo.AskPrice);
+                message = message + string.Format("\n卖套保：{0}", orderInfo.AskHedge);
                 message = message + string.Format("\n备注：{0}", orderInfo.StatusMsg);
 
                 if (CommonUtil.GetOrderStatus(orderInfo.QuoteStatus) == OrderStatus.Queued)

@@ -21,7 +21,7 @@ namespace TradingMaster.Control
     /// PositionsInquiry.xaml 的交互逻辑
     /// </summary>
     public delegate void PositionDataMouseDoubleClickDelegate(object sender, MouseButtonEventArgs e);
-    public delegate void PositionDataMouseLeftButtonDownDelegate(string buyOrSell, string kp, int num, RealData realData);
+    public delegate void PositionDataMouseLeftButtonDownDelegate(string buyOrSell, string kp, int num, RealData realData, string hedge);
 
     /// <summary>
     /// PositionsInquiry.xaml 的交互逻辑
@@ -77,7 +77,7 @@ namespace TradingMaster.Control
                 }
                 dhPosInfoTotal = dgPositionsInq.SelectedItem as Q7PosInfoTotal;
             }
-            string keyStr = dhPosInfoTotal.InvestorID + dhPosInfoTotal.Code + dhPosInfoTotal.BuySell.Contains("买");
+            string keyStr = dhPosInfoTotal.InvestorID + dhPosInfoTotal.Code + dhPosInfoTotal.BuySell.Contains("买") + dhPosInfoTotal.Hedge;
             return TradeDataClient.GetClientInstance().CancelPositionFreezeOrder(keyStr);
         }
 
@@ -687,7 +687,7 @@ namespace TradingMaster.Control
             //mainWindow.uscOptionHangqing.AddExternalHqingData(realData);
             if (PositionDataMouseLeftButtonDown != null)
             {
-                PositionDataMouseLeftButtonDown(buySell, kp, num, realData);
+                PositionDataMouseLeftButtonDown(buySell, kp, num, realData, record.Hedge);
             }
             //mainWindow.uscOptionHangqing.SelectDataByCode(realData.Code);
         }
@@ -735,7 +735,7 @@ namespace TradingMaster.Control
             //mainWindow.uscOptionHangqing.AddExternalHqingData(realData);
             if (PositionDataMouseLeftButtonDown != null)
             {
-                PositionDataMouseLeftButtonDown(buySell, kp, num, realData);
+                PositionDataMouseLeftButtonDown(buySell, kp, num, realData, record.Hedge);
             }
             //mainWindow.uscOptionHangqing.SelectDataByCode(realData.Code);
         }
@@ -762,7 +762,7 @@ namespace TradingMaster.Control
             }
             else
             {
-                TradeDataClient.GetClientInstance().RequestOrder(posInfoOrder.posInfo.InvestorID, posInfoOrder.posInfo.BackEnd, new RequestContent("NewOrderSingle", new List<object>() { orderCodeIndo, isBuy, posInfoOrder.PositionEffect, posInfoOrder.Price, posInfoOrder.HandCount, isAuto, "", touchMethod, touchCondition, touchPrice, orderType }));
+                TradeDataClient.GetClientInstance().RequestOrder(posInfoOrder.posInfo.InvestorID, posInfoOrder.posInfo.BackEnd, new RequestContent("NewOrderSingle", new List<object>() { orderCodeIndo, isBuy, posInfoOrder.PositionEffect, posInfoOrder.Price, posInfoOrder.HandCount, isAuto, "", touchMethod, touchCondition, touchPrice, orderType, CommonUtil.GetHedgeType(posInfoOrder.posInfo.Hedge) }));
             }
 
             if (open)
@@ -873,7 +873,7 @@ namespace TradingMaster.Control
                                 //同时平今和平昨
                                 messageBox.tbMessage.Text = messageBox.tbMessage.Text + "\n";
                             }
-                            string keyStr = posInfo.InvestorID + posInfo.Code + posInfo.BuySell.Contains("买");
+                            string keyStr = posInfo.InvestorID + posInfo.Code + posInfo.BuySell.Contains("买") + posInfo.Hedge;
                             List<Q7JYOrderData> orderLst = TradeDataClient.GetClientInstance().GetFreezeOrder(keyStr);
                             foreach (Q7JYOrderData order in orderLst)
                             {
@@ -888,8 +888,8 @@ namespace TradingMaster.Control
                                 //同时平今和平昨
                                 messageBox.tbMessage.Text = messageBox.tbMessage.Text + "\n";
                             }
-                            messageBox.tbMessage.Text = string.Format("下单：平今  {0} {1} {2}手 于价格{3}, {4}",
-                                priceOrientation, posInfo.Code, posInfo.TodayPosition, priceClose, CommonUtil.GetOrderTypeString(orderType));
+                            messageBox.tbMessage.Text = string.Format("下单：平今  {0} {1} {2}手 于价格{3}, {4}, {5}",
+                                priceOrientation, posInfo.Code, posInfo.TodayPosition, priceClose, CommonUtil.GetOrderTypeString(orderType), posInfo.Hedge);
 
                             PosInfoOrder pOrder = new PosInfoOrder(posInfo, buySell, priceClose, PosEffect.CloseToday, posInfo.TodayPosition, orderType);
                             posInfoOrderList.Add(pOrder);
@@ -901,8 +901,8 @@ namespace TradingMaster.Control
                                 //同时平今和平昨
                                 messageBox.tbMessage.Text = messageBox.tbMessage.Text + "\n";
                             }
-                            messageBox.tbMessage.Text = messageBox.tbMessage.Text + string.Format("下单：平仓  {0} {1} {2}手 于价格{3}, {4}",
-                                priceOrientation, posInfo.Code, posInfo.YesterdayPosition, priceClose, CommonUtil.GetOrderTypeString(orderType));
+                            messageBox.tbMessage.Text = messageBox.tbMessage.Text + string.Format("下单：平仓  {0} {1} {2}手 于价格{3}, {4}, {5}",
+                                priceOrientation, posInfo.Code, posInfo.YesterdayPosition, priceClose, CommonUtil.GetOrderTypeString(orderType), posInfo.Hedge);
 
                             PosInfoOrder pOrder = new PosInfoOrder(posInfo, buySell, priceClose, PosEffect.Close, posInfo.YesterdayPosition, orderType);
                             posInfoOrderList.Add(pOrder);
@@ -917,7 +917,7 @@ namespace TradingMaster.Control
                         }
                         if (posInfo.FreezeCount > 0)
                         {
-                            string keyStr = posInfo.InvestorID + posInfo.Code + posInfo.BuySell.Contains("买");
+                            string keyStr = posInfo.InvestorID + posInfo.Code + posInfo.BuySell.Contains("买") + posInfo.Hedge;
                             List<Q7JYOrderData> orderLst = TradeDataClient.GetClientInstance().GetFreezeOrder(keyStr);
                             foreach (Q7JYOrderData order in orderLst)
                             {
@@ -925,8 +925,8 @@ namespace TradingMaster.Control
                                     order.OrderID, order.OpenClose, order.BuySell, order.Code, order.CommitHandCount, order.CommitPrice.ToString(), order.Hedge);
                             }
                         }
-                        messageBox.tbMessage.Text = messageBox.tbMessage.Text + string.Format("下单：平仓  {0} {1} {2}手 于价格{3}, {4}",
-                            priceOrientation, posInfo.Code, posInfo.TotalPosition, priceClose, CommonUtil.GetOrderTypeString(orderType));
+                        messageBox.tbMessage.Text = messageBox.tbMessage.Text + string.Format("下单：平仓  {0} {1} {2}手 于价格{3}, {4}, {5}",
+                            priceOrientation, posInfo.Code, posInfo.TotalPosition, priceClose, CommonUtil.GetOrderTypeString(orderType), posInfo.Hedge);
 
                         PosInfoOrder pOrder = new PosInfoOrder(posInfo, buySell, priceClose, PosEffect.Close, posInfo.TotalPosition, orderType);
                         posInfoOrderList.Add(pOrder);
@@ -1204,11 +1204,11 @@ namespace TradingMaster.Control
     {
         public Q7PosInfoTotal posInfo;      //对应的是平仓合计中的哪条记录
 
-        public string BuySell { get; set; }              //"买"或者"卖"
+        public string BuySell { get; set; }            //"买"或者"卖"
         public double Price { get; set; }              //价格
-        public PosEffect PositionEffect { get; set; }         //开仓，平仓，平今
+        public PosEffect PositionEffect { get; set; }  //开仓，平仓，平今
         public int HandCount { get; set; }             //手数
-        public EnumOrderType OrderType { get; set; }
+        public EnumOrderType OrderType { get; set; } 
 
         public PosInfoOrder(Q7PosInfoTotal aPosInfo, string aBuySell, double aPrice, PosEffect aPosEffect, int aHandCount, EnumOrderType aOrderType)
         {

@@ -102,6 +102,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" x:Name="TriggerRow"/>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="20" />
             </Grid.RowDefinitions>
@@ -288,7 +289,7 @@
                     </Grid.RowDefinitions>
                     <!--<CheckBox x:Name="chbOrderType" Margin="6 0 0 0" VerticalAlignment="Center" Checked="cbPriceType_Checked" Unchecked="cbPriceType_Checked" Content="指令"/>-->
                     <TextBlock Text="指 令" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                    <ComboBox x:Name="cbOrderType" Grid.Column="1" Margin="0,5,0,5" Height="25" SelectionChanged="cbOrderType_SelectionChanged" SelectedIndex="0" HorizontalContentAlignment="Right">
+                    <ComboBox x:Name="cbOrderType" Grid.Column="1" Margin="0,5,0,5" Height="25" SelectionChanged="cbOrderType_SelectionChanged" SelectedIndex="0" HorizontalContentAlignment="Right" PreviewKeyDown="cbOrderType_PreviewKeyDown">
                         <ComboBoxItem>限价</ComboBoxItem>
                         <!--<ComboBoxItem>竞价</ComboBoxItem>-->
                         <ComboBoxItem>市价</ComboBoxItem>
@@ -369,11 +370,69 @@
                 </Grid>
             </StackPanel>
 
-            <Grid Grid.Row="9" Grid.ColumnSpan="3" Background="Transparent">
+            <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" Background="Transparent">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54" />
+                        <ColumnDefinition Width="180" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="投 保" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                    <RadioButton x:Name="rbSpeculation" Grid.Column="1" GroupName="rbHedgeGroup"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Width="42" IsChecked="True" PreviewKeyDown="rbSpeculation_PreviewKeyDown">
+                        <RadioButton.Content>
+                            <TextBlock Text="投机" Background="{Binding ElementName=rbSpeculation,Path=Background}"></TextBlock>
+                        </RadioButton.Content>
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=rbSpeculation}" Value="true">
+                                        <Setter Property="Background" Value="#FFFFDE01">
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+                    <RadioButton x:Name="rbHedge" Grid.Column="1" GroupName="rbHedgeGroup" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="52,0,20,0" Width="42" PreviewKeyDown="rbHedge_PreviewKeyDown">
+                        <RadioButton.Content>
+                            <TextBlock Text="套保" Background="{Binding ElementName=rbHedge,Path=Background}"></TextBlock>
+                        </RadioButton.Content>
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=rbHedge}" Value="true">
+                                        <Setter Property="Background" Value="#FFFFDE01">
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+                    <RadioButton x:Name="rbArbitrage" Grid.Column="1" Grid.ColumnSpan="2" GroupName="rbHedgeGroup" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="99,0,20,0" Width="42" PreviewKeyDown="rbArbitrage_PreviewKeyDown">
+                        <RadioButton.Content>
+                            <TextBlock Text="套利" Background="{Binding ElementName=rbArbitrage,Path=Background}"></TextBlock>
+                        </RadioButton.Content>
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, ElementName=rbArbitrage}" Value="true">
+                                        <Setter Property="Background" Value="#FFFFDE01">
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                    </RadioButton>
+                </Grid>
+            </StackPanel>
+
+            <Grid Grid.Row="10" Grid.ColumnSpan="3" Background="Transparent">
                 <Button x:Name="btnXiadan" Content="下   单" Margin="8,3,0,0" Height="30" Width="164" Click="btnXiadan_Click" PreviewKeyDown="btnXiadan_PreviewKeyDown" FontSize="15" FontWeight="Bold" HorizontalAlignment="Left" Style="{DynamicResource btnDefault}"></Button>
                 <Button x:Name="btnMaidan" Content="预埋/条件" Margin="0,6,40,4" Click="btnMaidan_Click" Height="30" Width="75" HorizontalAlignment="Right" Style="{DynamicResource btnDefault}"></Button>
             </Grid>
-            <Grid Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent">
+            <Grid Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent">
                 <CheckBox Name="btnNotify" Checked="btnNotify_Checked" Unchecked="btnNotify_Unchecked"  Margin="6,4,0,0"  Width="15" Height="15"  Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" IsChecked="True"/>
                 <TextBlock Text="提示确认" Grid.Row="7" Height="15" Grid.Column="2" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" FontFamily="{DynamicResource fontResource}" Margin="25,4,0,4"/>
                 <CheckBox Name="cbxSplit" Checked="cbxSplit_Checked" Unchecked="cbxSplit_Unchecked"  Margin="106,4,0,0"  Width="15" Height="15"  Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" />

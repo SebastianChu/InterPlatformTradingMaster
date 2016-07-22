@@ -240,7 +240,7 @@ namespace TradingMaster
         /// <summary>
         /// 投保
         /// </summary>
-        public string _Hedge;
+        private string _Hedge;
         /// <summary>
         /// 投保
         /// </summary>

@@ -52,9 +52,9 @@
                 <DataGridTextColumn Header="成交时间" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="70" Binding="{Binding Path=TradeTime}"></DataGridTextColumn>
                 <DataGridTextColumn Header="报单编号" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="90" Binding="{Binding Path=OrderID}"></DataGridTextColumn>
                 <!--<DataGridTextColumn Header="成交类型" Width="80" ></DataGridTextColumn>-->
-                <!--<DataGridTextColumn Header="投保" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="40" Binding="{Binding Path=Hedge}"></DataGridTextColumn>-->
                 <DataGridTextColumn Header="手续费" Width="80"  Binding="{Binding Path=Charge, StringFormat=F2}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
                 <DataGridTextColumn Header="交易所" CellStyle="{StaticResource CellStyle_Default}" Width="60" Binding="{Binding Path=Exchange}"></DataGridTextColumn>
+                <DataGridTextColumn Header="投保" CellStyle="{StaticResource CellStyle_Default}" Width="auto" Binding="{Binding Path=Hedge}"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid x:Name="TransactionInq"  Style="{StaticResource ThemeDatagridStyle }"
@@ -86,7 +86,7 @@
                 <DataGridTextColumn Header="成交手数" Width="80" Binding="{Binding Path=TradeHandCount}"></DataGridTextColumn>
                 <DataGridTextColumn Header="手续费" Width="80" Binding="{Binding Path=Charge, StringFormat=F2}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
                 <DataGridTextColumn Header="交易所" CellStyle="{StaticResource CellStyle_Default}" Binding="{Binding Path=Exchange}" Width="60" ></DataGridTextColumn>
-                <!--<DataGridTextColumn Header="投保" Width="40" Binding="{Binding Path=Hedge}"></DataGridTextColumn>-->
+                <DataGridTextColumn Header="投保" CellStyle="{StaticResource CellStyle_Default}" Width="auto" Binding="{Binding Path=Hedge}"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
         <!--</ListBox>-->

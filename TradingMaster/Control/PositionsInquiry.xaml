@@ -352,8 +352,8 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="期权市值" Width="auto" Binding="{Binding Path=OptionMarketCap, StringFormat='#,##0.00'}" CellStyle="{StaticResource QqszCellStyle}"></DataGridTextColumn>
                 <!--<DataGridTextColumn Header="权利金收付" Width="auto" Binding="{Binding Path=Premium, StringFormat='#,##0.00'}" CellStyle="{StaticResource QljsfCellStyle}"></DataGridTextColumn>-->
-                <!--<DataGridTextColumn Header="投保" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="60" Binding="{Binding Path=Hedge}"></DataGridTextColumn>-->
                 <DataGridTextColumn Header="交易所" CellStyle="{StaticResource CellStyle_Default}" Width="80"  Binding="{Binding Path=Exchange}"></DataGridTextColumn>
+                <DataGridTextColumn Header="投保" CellStyle="{StaticResource CellStyle_Default}" Width="auto" Binding="{Binding Path=Hedge}"></DataGridTextColumn>
                 <!--<DataGridTextColumn Header="交易编码" Width="80"  Binding="{Binding Path=TradeCode}"></DataGridTextColumn>-->
             </DataGrid.Columns>
         </DataGrid>
@@ -388,7 +388,6 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn x:Name="colOccupyMarginAmt" CellStyle="{StaticResource DefaultGridViewCellOtherStyleRight}" Header="占用保证金" Width="auto" Binding="{Binding Path=OccupyMarginAmtDouble,StringFormat='#,##0.00'}"></DataGridTextColumn>
                 <DataGridTextColumn Header="持仓类型" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="auto" Binding="{Binding Path=PositionType}"></DataGridTextColumn>
-                <!--<DataGridTextColumn Header="投保" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="60" Binding="{Binding Path=Hedge}"  ></DataGridTextColumn>-->
                 <!--<DataGridTextColumn Header="开仓时间" Width="80" Binding="{Binding Path=OpenAvgPxString}"></DataGridTextColumn>-->                
                 <DataGridTextColumn Header="持仓盈亏" Width="auto" Binding="{Binding Path=Ccyk, StringFormat='#,##0.00'}" CellStyle="{StaticResource DsykCellStyle}" >
                 </DataGridTextColumn>
@@ -415,6 +414,7 @@
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="交易所" CellStyle="{StaticResource CellStyle_Default}" Width="auto"  Binding="{Binding Path=Exchange}"></DataGridTextColumn>
+                <DataGridTextColumn Header="投保" CellStyle="{StaticResource CellStyle_Default}" Width="auto" Binding="{Binding Path=Hedge}"  ></DataGridTextColumn>
                 <!--<DataGridTextColumn Header="交易编码" Width="80"  Binding="{Binding Path=TradeCode}"></DataGridTextColumn>-->
             </DataGrid.Columns>
         </DataGrid>

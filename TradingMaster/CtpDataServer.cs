@@ -223,7 +223,7 @@ namespace TradingMaster
         {
             if (_TradeDataReqQueue == null)
             {
-                Util.Log("CtpTraderApi_OnRtnOrder Error: CmdQueue == null");
+                Util.Log("CtpTraderApi_OnRtnTrade Error: TradeDataReqQueue == null");
                 return;
             }
             if (_TradeDataReqQueue.OrdCount() == 0 && !TempOrderFlag)
@@ -829,6 +829,7 @@ namespace TradingMaster
                 maxOper.Count = pQueryMaxOrderVolume.MaxVolume;
                 maxOper.PosEffect = GetPosEffectType (pQueryMaxOrderVolume.OffsetFlag);
                 maxOper.Side = GetSideType(pQueryMaxOrderVolume.Direction);
+                maxOper.HedgeType = GetHedgeType(pQueryMaxOrderVolume.HedgeFlag);
                 ProcessMaxOperation(maxOper);
                 CodeSetManager.MaxOperationHandCountDict[maxOper.CodeInfo] = pQueryMaxOrderVolume.MaxVolume;
             }
@@ -853,8 +854,8 @@ namespace TradingMaster
         void CtpTraderApi_OnRtnOrder(ref CThostFtdcOrderField pOrder)
         {
             Q7JYOrderData jyData = OrderExecutionReport(pOrder);
-            Util.Log(String.Format("OnRtnOrder pOrder: Code {0}, BrokerOrderSeq {1}, OrderSysID {2}, OrderRef {3}, Status {4}",
-                jyData.Code, jyData.BrokerOrderSeq, jyData.OrderID, jyData.OrderRef, jyData.FeedBackInfo));
+            Util.Log(String.Format("OnRtnOrder pOrder: Code {0}, BrokerOrderSeq {1}, OrderSysID {2}, OrderRef {3}, Status {4}, Hedge {5}",
+                jyData.Code, jyData.BrokerOrderSeq, jyData.OrderID, jyData.OrderRef, jyData.FeedBackInfo, jyData.Hedge));
             if (TempOrderFlag) //接收同步的报单回报
             {
                 TempOrderData.Add(jyData);
@@ -880,7 +881,7 @@ namespace TradingMaster
                             && ((item.PositionEffect == PosEffect.Close && !jyData.OpenClose.Contains("平今")) || (item.PositionEffect == PosEffect.CloseToday && jyData.OpenClose.Contains("平今")))
                             )
                         {
-                            string orderPosKey = item.posInfo.InvestorID + item.posInfo.Code + item.BuySell.Contains("买").ToString();
+                            string orderPosKey = item.posInfo.InvestorID + item.posInfo.Code + item.BuySell.Contains("买").ToString() + item.posInfo.Hedge;
                             if (TradeDataClient.GetClientInstance().PosTotalInfoMap.ContainsKey(orderPosKey))
                             {
                                 TradeDataClient.GetClientInstance().PosTotalInfoMap[orderPosKey].FreezeCount -= jyData.UnTradeHandCount;
@@ -890,7 +891,7 @@ namespace TradingMaster
                             {
                                 SIDETYPE isbuy = item.BuySell.Contains("买") ? SIDETYPE.SELL : SIDETYPE.BUY;
                                 PosEffect openClose = item.PositionEffect;
-                                AddToOrderQueue(new RequestContent("NewOrderSingle", new List<object>() { CodeSetManager.GetContractInfo(item.posInfo.Code, CodeSetManager.ExNameToCtp(jyData.Exchange)), isbuy, openClose, item.Price, item.HandCount, 0, "", 0, 0, 0, item.OrderType }));
+                                AddToOrderQueue(new RequestContent("NewOrderSingle", new List<object>() { CodeSetManager.GetContractInfo(item.posInfo.Code, CodeSetManager.ExNameToCtp(jyData.Exchange)), isbuy, openClose, item.Price, item.HandCount, 0, "", 0, 0, 0, item.OrderType, CommonUtil.GetHedgeType(item.posInfo.Hedge) }));
                                 closeItemLst.Add(item);
                                 isClearOrder = true; // Need?
                                 break;
@@ -933,7 +934,7 @@ namespace TradingMaster
                             {
                                 SIDETYPE isBuy = item.BuySell.Contains("买") ? SIDETYPE.SELL : SIDETYPE.BUY;
 
-                                AddToOrderQueue(new RequestContent("NewOrderSingle", new List<object>() { CodeSetManager.GetContractInfo(item.posInfo.Code, CodeSetManager.ExNameToCtp(jyData.Exchange)), isBuy, PosEffect.Open, item.Price, item.HandCount, 0, "", 0, 0, 0, item.OrderType }));
+                                AddToOrderQueue(new RequestContent("NewOrderSingle", new List<object>() { CodeSetManager.GetContractInfo(item.posInfo.Code, CodeSetManager.ExNameToCtp(jyData.Exchange)), isBuy, PosEffect.Open, item.Price, item.HandCount, 0, "", 0, 0, 0, item.OrderType, CommonUtil.GetHedgeType(item.posInfo.Hedge) }));
                                 openItem = item;
                                 break;
                             }
@@ -958,8 +959,8 @@ namespace TradingMaster
         void CtpTraderApi_OnRtnTrade(ref CThostFtdcTradeField pTrade)
         {
             Q7JYOrderData tradedData = TradeExecutionReport(pTrade);
-            Util.Log(String.Format("OnRtnTrade Code {0}, TradeID {1}, OrderSysID {2}, BrokerOrderSeq {3}, Volume {4}",
-                tradedData.Code, tradedData.TradeID, tradedData.OrderID, tradedData.BrokerOrderSeq, tradedData.TradeHandCount));
+            Util.Log(String.Format("OnRtnTrade Code {0}, TradeID {1}, OrderSysID {2}, BrokerOrderSeq {3}, Volume {4}, Hedge {5}",
+                tradedData.Code, tradedData.TradeID, tradedData.OrderID, tradedData.BrokerOrderSeq, tradedData.TradeHandCount, tradedData.Hedge));
             if (TempTradeFlag)
             {
                 TempTradeData.Add(tradedData);
@@ -2235,7 +2236,7 @@ namespace TradingMaster
             return commOptionFlag;
         }
 
-        public int RequsetMaxOperation(Contract codeInfo, SIDETYPE sideType, PosEffect posEffect, double price, Boolean isHedge, int positionHand)
+        public int RequsetMaxOperation(Contract codeInfo, SIDETYPE sideType, PosEffect posEffect, double price, EnumHedgeType hedge, int positionHand)
         {
             Util.Log("请求某个品种可操作的最大手数:" + codeInfo.Code + " " + sideType.ToString() + " " + posEffect.ToString());
             if (codeInfo.Code == "")
@@ -2260,7 +2261,7 @@ namespace TradingMaster
             CThostFtdcQueryMaxOrderVolumeField req = new CThostFtdcQueryMaxOrderVolumeField();
             req.BrokerID = _CtpTraderApi.BrokerID;
             req.Direction = GetCtpSideType(sideType);
-            req.HedgeFlag = EnumThostHedgeFlagType.Speculation;
+            req.HedgeFlag = GetCtpHedgeFlag(hedge);
             req.InstrumentID = codeInfo.Code;
             req.InvestorID = _CtpTraderApi.InvestorID;
             req.OffsetFlag = GetCtpPosEffectType(posEffect);
@@ -2272,7 +2273,7 @@ namespace TradingMaster
             }
             ExecQueue.ReqTime = DateTime.Now;
             int maxQryFlag = _CtpTraderApi.ReqQueryMaxOrderVolume(req);
-            Util.Log("TradeApiCTP CtpDataServer: QueryMaxOrderVolume is Executed: " + codeInfo.Code + " " + sideType.ToString() + " " + posEffect.ToString());
+            Util.Log(String.Format("TradeApiCTP CtpDataServer: QueryMaxOrderVolume is Executed: {0} {1} {2} {3}", codeInfo.Code, sideType.ToString(), posEffect.ToString(), GetHedgeString(req.HedgeFlag)));
             if (maxQryFlag == -1)
             {
                 Util.Log("Warning! Network Connection Error. ReqQueryMaxOrderVolume() = " + maxQryFlag);
@@ -2281,13 +2282,13 @@ namespace TradingMaster
             else if (maxQryFlag == -2)
             {
                 Util.Log("Warning! The number of undealt requests has overlimit the permitted number. ReqQueryMaxOrderVolume() = " + maxQryFlag);
-                AddToTradeDataQryQueue(new RequestContent("RequsetMaxOperation", new List<object>() { codeInfo, sideType, posEffect, price, isHedge, positionHand }));
+                AddToTradeDataQryQueue(new RequestContent("RequsetMaxOperation", new List<object>() { codeInfo, sideType, posEffect, price, hedge, positionHand }));
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("未处理请求超过许可数");
             }
             else if (maxQryFlag == -3)
             {
                 Util.Log("Warning! The number of the requests sent per second has overlimit the permitted number. ReqQueryMaxOrderVolume() = " + maxQryFlag);
-                AddToTradeDataQryQueue(new RequestContent("RequsetMaxOperation", new List<object>() { codeInfo, sideType, posEffect, price, isHedge, positionHand }));
+                AddToTradeDataQryQueue(new RequestContent("RequsetMaxOperation", new List<object>() { codeInfo, sideType, posEffect, price, hedge, positionHand }));
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("每秒发送请求数超过许可数");
             }
             return maxQryFlag;
@@ -2886,7 +2887,7 @@ namespace TradingMaster
         }
 
         public int NewOrderSingle(Contract codeInfo, SIDETYPE side, PosEffect posEffect,
-            double price, int handCount, int isAuto, string orderId, int touchMethod = 0, int touchCondition = 0, double touchPrice = 0, EnumOrderType orderType = EnumOrderType.Limit)
+            double price, int handCount, int isAuto, string orderId, int touchMethod = 0, int touchCondition = 0, double touchPrice = 0, EnumOrderType orderType = EnumOrderType.Limit, EnumHedgeType hedge = EnumHedgeType.Speculation)
         {
             //clientOrderId = 0;
             string ret = "";
@@ -2898,6 +2899,7 @@ namespace TradingMaster
             int orderFlag = 0;
             EnumThostDirectionType sideType = GetCtpSideType(side);
             EnumThostOffsetFlagType offsetType = GetCtpPosEffectType(posEffect);
+            EnumThostHedgeFlagType hedgeFlag = GetCtpHedgeFlag(hedge);
             if (TradingMaster.Properties.Settings.Default.SplitLargeOrderHandCount && handCount > 1)
             {
                 Util.Log("下单: code=" + codeInfo.Code + " side=" + sideType.ToString() + " posEffect=" + posEffect.ToString() + " price=" + price.ToString() + " handCount=" + handCount.ToString() + " isAuto=" + isAuto.ToString() + " orderId=" + orderId + " touchMethod=" + touchMethod.ToString() + " touchCondition=" + touchCondition.ToString() + " touchPrice=" + touchPrice.ToString());
@@ -2905,7 +2907,7 @@ namespace TradingMaster
                 foreach (int i in handLst)
                 {
                     ExecQueue.ReqTime = DateTime.Now;
-                    orderFlag = _CtpTraderApi.OrderInsert(codeInfo.Code, sideType, offsetType, price, i, touchPrice, orderType);
+                    orderFlag = _CtpTraderApi.OrderInsert(codeInfo.Code, sideType, offsetType, price, i, touchPrice, orderType, hedgeFlag);
                     Util.Log("批量拆单: code=" + codeInfo.Code + " side=" + sideType.ToString() + " posEffect=" + posEffect.ToString() + " price=" + price.ToString() + " handCount=" + i.ToString() + " isAuto=" + isAuto.ToString() + " orderId=" + orderId + " touchMethod=" + touchMethod.ToString() + " touchCondition=" + touchCondition.ToString() + " touchPrice=" + touchPrice.ToString());
                     ret = codeInfo.Code + (sideType == EnumThostDirectionType.Buy ? "买" : "卖") + (offsetType == EnumThostOffsetFlagType.Open ? "开" : "平") + handCount.ToString() + "手";
                     if (orderFlag != 0)
@@ -2921,7 +2923,7 @@ namespace TradingMaster
                 {
                     while (codeInfo.MaxMarketOrderVolume > 0 && codeInfo.MaxMarketOrderVolume < handCount)
                     {
-                        orderFlag = _CtpTraderApi.OrderInsert(codeInfo.Code, sideType, offsetType, price, codeInfo.MaxMarketOrderVolume, touchPrice, orderType);
+                        orderFlag = _CtpTraderApi.OrderInsert(codeInfo.Code, sideType, offsetType, price, codeInfo.MaxMarketOrderVolume, touchPrice, orderType, hedgeFlag);
                         Util.Log("下单: code=" + codeInfo.Code + " side=" + sideType.ToString() + " posEffect=" + posEffect.ToString() + " price=" + price.ToString() + " handCount=" + codeInfo.MaxMarketOrderVolume.ToString() + " isAuto=" + isAuto.ToString() + " orderId=" + orderId + " touchMethod=" + touchMethod.ToString() + " touchCondition=" + touchCondition.ToString() + " touchPrice=" + touchPrice.ToString());
                         handCount -= codeInfo.MaxMarketOrderVolume;
                         Thread.Sleep(1000);
@@ -2931,13 +2933,13 @@ namespace TradingMaster
                 {
                     while (codeInfo.MaxLimitOrderVolume > 0 && codeInfo.MaxLimitOrderVolume < handCount)
                     {
-                        orderFlag = _CtpTraderApi.OrderInsert(codeInfo.Code, sideType, offsetType, price, codeInfo.MaxLimitOrderVolume, touchPrice, orderType);
+                        orderFlag = _CtpTraderApi.OrderInsert(codeInfo.Code, sideType, offsetType, price, codeInfo.MaxLimitOrderVolume, touchPrice, orderType, hedgeFlag);
                         Util.Log("下单: code=" + codeInfo.Code + " side=" + sideType.ToString() + " posEffect=" + posEffect.ToString() + " price=" + price.ToString() + " handCount=" + codeInfo.MaxLimitOrderVolume.ToString() + " isAuto=" + isAuto.ToString() + " orderId=" + orderId + " touchMethod=" + touchMethod.ToString() + " touchCondition=" + touchCondition.ToString() + " touchPrice=" + touchPrice.ToString());
                         handCount -= codeInfo.MaxLimitOrderVolume;
                         Thread.Sleep(1000);
                     }
                 }
-                orderFlag = _CtpTraderApi.OrderInsert(codeInfo.Code, sideType, offsetType, price, handCount, touchPrice, orderType);
+                orderFlag = _CtpTraderApi.OrderInsert(codeInfo.Code, sideType, offsetType, price, handCount, touchPrice, orderType, hedgeFlag);
                 Util.Log("下单: code=" + codeInfo.Code + " side=" + sideType.ToString() + " posEffect=" + posEffect.ToString() + " price=" + price.ToString() + " handCount=" + handCount.ToString() + " isAuto=" + isAuto.ToString() + " orderId=" + orderId + " touchMethod=" + touchMethod.ToString() + " touchCondition=" + touchCondition.ToString() + " touchPrice=" + touchPrice.ToString());
                 ret = codeInfo.Code + (sideType == EnumThostDirectionType.Buy ? "买" : "卖") + (offsetType == EnumThostOffsetFlagType.Open ? "开" : "平") + handCount.ToString() + "手";
             }
@@ -4292,6 +4294,55 @@ namespace TradingMaster
             return side;
         }
 
+        private string GetHedgeString(EnumThostHedgeFlagType hedgeFlag)
+        {
+            if (hedgeFlag != EnumThostHedgeFlagType.Speculation)
+            {
+                Util.Log("Warning! HedgeFlag: " + hedgeFlag);
+                if (hedgeFlag == EnumThostHedgeFlagType.Arbitrage)
+                {
+                    return "套利";
+                }
+                else if (hedgeFlag == EnumThostHedgeFlagType.Hedge)
+                {
+                    return "套保";
+                }
+                return "未知";
+            }
+            else
+            {
+                return "投机";
+            }
+        }
+
+        private EnumThostHedgeFlagType GetCtpHedgeFlag(EnumHedgeType hedge)
+        {
+            EnumThostHedgeFlagType hedgeFlag = EnumThostHedgeFlagType.Speculation;
+            if (hedge == EnumHedgeType.Arbitrage)
+            {
+                hedgeFlag = EnumThostHedgeFlagType.Arbitrage;
+            }
+            else if (hedge == EnumHedgeType.Hedge)
+            {
+                hedgeFlag = EnumThostHedgeFlagType.Hedge;
+            }
+            return hedgeFlag;
+        }
+
+        private EnumHedgeType GetHedgeType(EnumThostHedgeFlagType hedgeFlag)
+        {
+            EnumHedgeType hedge = EnumHedgeType.Speculation;
+            if (hedgeFlag == EnumThostHedgeFlagType.Arbitrage)
+            {
+                hedge = EnumHedgeType.Arbitrage;
+            }
+            else if (hedgeFlag == EnumThostHedgeFlagType.Hedge)
+            {
+                hedge = EnumHedgeType.Hedge;
+            }
+            return hedge;
+        }
+
         private PosEffect GetPosEffectType(EnumThostOffsetFlagType offsetType)
         {
             PosEffect posEffect = PosEffect.Unknown;
@@ -4444,27 +4495,11 @@ namespace TradingMaster
                 jyData.OrderRef = pOrder.OrderRef;
                 jyData.RelativeID = pOrder.RelativeOrderSysID;
                 jyData.BackEnd = _BackEnd;
+                jyData.Hedge = GetHedgeString(pOrder.CombHedgeFlag_0);
 
                 if (pOrder.CancelTime.Length > 0)
                 {
                     jyData.UpdateTime = pOrder.CancelTime; //TODO?
-                }
-
-                if (pOrder.CombHedgeFlag_0 != EnumThostHedgeFlagType.Speculation)
-                {
-                    Util.Log("Warning! CombHedgeFlag:" + pOrder.CombHedgeFlag_0);
-                    if (pOrder.CombHedgeFlag_0 == EnumThostHedgeFlagType.Arbitrage)
-                    {
-                        jyData.Hedge = "套利";
-                    }
-                    else if (pOrder.CombHedgeFlag_0 == EnumThostHedgeFlagType.Hedge)
-                    {
-                        jyData.Hedge = "套保";
-                    }
-                }
-                else
-                {
-                    jyData.Hedge = "投机";
                 }
 
                 Contract contract = CodeSetManager.GetContractInfo(jyData.Code, CodeSetManager.ExNameToCtp(jyData.Exchange));
@@ -4500,43 +4535,27 @@ namespace TradingMaster
 
         private Q7JYOrderData TradeExecutionReport(CThostFtdcTradeField pTrade)
         {
-            Q7JYOrderData jyData = new Q7JYOrderData();
+            Q7JYOrderData tradeData = new Q7JYOrderData();
             try
             {
-                jyData.InvestorID = pTrade.InvestorID;
-                jyData.UserID = pTrade.UserID;
-                jyData.OrderID = pTrade.OrderSysID.Trim();
-                jyData.TradeHandCount = pTrade.Volume;
-                jyData.AvgPx = pTrade.Price;
-                jyData.Exchange = CodeSetManager.CtpToExName(pTrade.ExchangeID.Trim());
-                jyData.TradeTime = pTrade.TradeTime.Trim();
-                jyData.TradeID = pTrade.TradeID.Trim();
-                jyData.Code = pTrade.InstrumentID;
-                jyData.BuySell = pTrade.Direction == EnumThostDirectionType.Buy ? "买" : "卖";
-                jyData.OpenClose = GetOffset(pTrade.OffsetFlag);
-                jyData.BackEnd = _BackEnd;
+                tradeData.InvestorID = pTrade.InvestorID;
+                tradeData.UserID = pTrade.UserID;
+                tradeData.OrderID = pTrade.OrderSysID.Trim();
+                tradeData.TradeHandCount = pTrade.Volume;
+                tradeData.AvgPx = pTrade.Price;
+                tradeData.Exchange = CodeSetManager.CtpToExName(pTrade.ExchangeID.Trim());
+                tradeData.TradeTime = pTrade.TradeTime.Trim();
+                tradeData.TradeID = pTrade.TradeID.Trim();
+                tradeData.Code = pTrade.InstrumentID;
+                tradeData.BuySell = pTrade.Direction == EnumThostDirectionType.Buy ? "买" : "卖";
+                tradeData.OpenClose = GetOffset(pTrade.OffsetFlag);
+                tradeData.BackEnd = _BackEnd;
+                tradeData.Hedge = GetHedgeString(pTrade.HedgeFlag);
 
-                if (pTrade.HedgeFlag != EnumThostHedgeFlagType.Speculation)
-                {
-                    Util.Log("Warning! HedgeFlag:" + pTrade.HedgeFlag);
-                    if (pTrade.HedgeFlag == EnumThostHedgeFlagType.Arbitrage)
-                    {
-                        jyData.Hedge = "套利";
-                    }
-                    else if (pTrade.HedgeFlag == EnumThostHedgeFlagType.Hedge)
-                    {
-                        jyData.Hedge = "套保";
-                    }
-                }
-                else
-                {
-                    jyData.Hedge = "投机";
-                }
-
-                Contract contract = CodeSetManager.GetContractInfo(jyData.Code, CodeSetManager.ExNameToCtp(jyData.Exchange));
+                Contract contract = CodeSetManager.GetContractInfo(tradeData.Code, CodeSetManager.ExNameToCtp(tradeData.Exchange));
                 if (contract != null)
                 {
-                    jyData.Name = contract.Name;
+                    tradeData.Name = contract.Name;
                 }
             }
             catch (Exception ex)
@@ -4544,7 +4563,7 @@ namespace TradingMaster
                 Util.Log("exception: " + ex.Message);
                 Util.Log(ex.StackTrace);
             }
-            return jyData;
+            return tradeData;
         }
 
         public void InitiateCommissionRate(Contract cInfo)
@@ -4578,23 +4597,7 @@ namespace TradingMaster
                 posData.AvgPx = pInvestorPosition.UseMargin / pInvestorPosition.Position;//OpenCost
                 posData.Ccyk = pInvestorPosition.PositionProfit;
                 //posData.Exchange = CodeSetManager.CtpToExName(pInvestorPosition.ExchangeID.Trim());
-                if (pInvestorPosition.HedgeFlag != EnumThostHedgeFlagType.Speculation)
-                {
-                    Util.Log("Warning! HedgeFlag:" + pInvestorPosition.HedgeFlag);
-                    if (pInvestorPosition.HedgeFlag == EnumThostHedgeFlagType.Arbitrage)
-                    {
-                        posData.Hedge = "套利";
-                    }
-                    else if (pInvestorPosition.HedgeFlag == EnumThostHedgeFlagType.Hedge)
-                    {
-                        posData.Hedge = "套保";
-                    }
-                }
-                else
-                {
-                    posData.Hedge = "投机";
-                }
-
+                posData.Hedge = GetHedgeString(pInvestorPosition.HedgeFlag);
                 posData.OccupyMarginAmt = pInvestorPosition.UseMargin;
                 posData.TodayPosition = pInvestorPosition.TodayPosition;
                 posData.TotalPosition = pInvestorPosition.Position;
@@ -4633,22 +4636,7 @@ namespace TradingMaster
                 posData.TradeHandCount = pPosDetail.Volume;
                 posData.AvgPx = pPosDetail.OpenPrice;
                 posData.OccupyMarginAmt = pPosDetail.Margin.ToString();
-                if (pPosDetail.HedgeFlag != EnumThostHedgeFlagType.Speculation)
-                {
-                    Util.Log("Warning! HedgeFlag:" + pPosDetail.HedgeFlag);
-                    if (pPosDetail.HedgeFlag == EnumThostHedgeFlagType.Arbitrage)
-                    {
-                        posData.Hedge = "套利";
-                    }
-                    else if (pPosDetail.HedgeFlag == EnumThostHedgeFlagType.Hedge)
-                    {
-                        posData.Hedge = "套保";
-                    }
-                }
-                else
-                {
-                    posData.Hedge = "投机";
-                }
+                posData.Hedge = GetHedgeString(pPosDetail.HedgeFlag);
                 posData.PositionType = GetPosType(pPosDetail.OpenDate);
                 posData.Ccyk = pPosDetail.PositionProfitByDate;
                 posData.Fdyk = pPosDetail.PositionProfitByTrade;
@@ -5522,39 +5510,8 @@ namespace TradingMaster
                 //{
                 //    qData.TradeTime = qOrder.CancelTime; //TODO?
                 //}
-
-                if (qOrder.BidHedgeFlag != EnumThostHedgeFlagType.Speculation)
-                {
-                    Util.Log("Warning! CombHedgeFlag:" + qOrder.BidHedgeFlag);
-                    if (qOrder.BidHedgeFlag == EnumThostHedgeFlagType.Arbitrage)
-                    {
-                        qData.BidHedge = "套利";
-                    }
-                    else if (qOrder.BidHedgeFlag == EnumThostHedgeFlagType.Hedge)
-                    {
-                        qData.BidHedge = "套保";
-                    }
-                }
-                else
-                {
-                    qData.BidHedge = "投机";
-                }
-                if (qOrder.AskHedgeFlag != EnumThostHedgeFlagType.Speculation)
-                {
-                    Util.Log("Warning! CombHedgeFlag:" + qOrder.AskHedgeFlag);
-                    if (qOrder.AskHedgeFlag == EnumThostHedgeFlagType.Arbitrage)
-                    {
-                        qData.AskHedge = "套利";
-                    }
-                    else if (qOrder.AskHedgeFlag == EnumThostHedgeFlagType.Hedge)
-                    {
-                        qData.AskHedge = "套保";
-                    }
-                }
-                else
-                {
-                    qData.AskHedge = "投机";
-                }
+                qData.BidHedge = GetHedgeString(qOrder.BidHedgeFlag);
+                qData.AskHedge = GetHedgeString(qOrder.AskHedgeFlag);
 
                 Contract contract = CodeSetManager.GetContractInfo(qData.Code, CodeSetManager.ExNameToCtp(qData.Exchange));
                 if (contract != null)
@@ -5600,24 +5557,8 @@ namespace TradingMaster
                 }
                 execData.Exchange = CodeSetManager.CtpToExName(pExecOrder.ExchangeID.Trim());
                 execData.StatusMsg = pExecOrder.StatusMsg.Trim();
+                execData.Hedge = GetHedgeString(pExecOrder.HedgeFlag);
                 execData.BackEnd = _BackEnd;
-                if (pExecOrder.HedgeFlag != EnumThostHedgeFlagType.Speculation)
-                {
-                    Util.Log("Warning! CombHedgeFlag:" + pExecOrder.HedgeFlag);
-                    if (pExecOrder.HedgeFlag == EnumThostHedgeFlagType.Arbitrage)
-                    {
-                        execData.Hedge = "套利";
-                    }
-                    else if (pExecOrder.HedgeFlag == EnumThostHedgeFlagType.Hedge)
-                    {
-                        execData.Hedge = "套保";
-                    }
-                }
-                else
-                {
-                    execData.Hedge = "投机";
-                }
-
                 Contract contract = CodeSetManager.GetContractInfo(execData.Code, CodeSetManager.ExNameToCtp(execData.Exchange));
                 if (contract != null)
                 {

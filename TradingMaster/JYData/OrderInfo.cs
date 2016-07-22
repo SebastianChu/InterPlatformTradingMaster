@@ -188,4 +188,14 @@ namespace TradingMaster
         BestToLimit = 12
 
     }
+
+    /// <summary>
+    /// 投机套保套利标志
+    /// </summary>
+    public enum EnumHedgeType
+    {
+        Speculation = 1,
+        Arbitrage = 2,
+        Hedge = 3
+    }
 }

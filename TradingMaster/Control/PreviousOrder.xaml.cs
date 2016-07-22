@@ -101,7 +101,7 @@ namespace TradingMaster.Control
                     if (IsMaiDanHandlable(o))
                     {
                         TradeDataClient.GetClientInstance().RequestOrder(o.InvestorID, BACKENDTYPE.CTP, new RequestContent("NewOrderSingle", new List<object>() 
-                            { CodeSetManager.GetContractInfo(o.Code, CodeSetManager.ExNameToCtp(o.Exchange)), SIDETYPE.BUY, PosEffect.Close, 0, 0, 0, o.OrderID }));
+                            { CodeSetManager.GetContractInfo(o.Code, CodeSetManager.ExNameToCtp(o.Exchange)), SIDETYPE.BUY, PosEffect.Close, 0, 0, 0, o.OrderID, CommonUtil.GetHedgeType(o.Hedge) }));
                     }
                 }
             }

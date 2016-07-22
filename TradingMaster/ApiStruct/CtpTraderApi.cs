@@ -315,7 +315,7 @@ namespace TradingMaster
         /// <param name="Direction">买卖</param>
         /// <param name="Price">价格</param>
         /// <param name="Volume">手数</param>
-        public int OrderInsert(string InstrumentID, EnumThostDirectionType Direction, EnumThostOffsetFlagType OffsetFlag, double Price, int Volume, double touchPrice, EnumOrderType orderType = EnumOrderType.Limit)
+        public int OrderInsert(string InstrumentID, EnumThostDirectionType Direction, EnumThostOffsetFlagType OffsetFlag, double Price, int Volume, double touchPrice, EnumOrderType orderType = EnumOrderType.Limit, EnumThostHedgeFlagType hedge = EnumThostHedgeFlagType.Speculation)
         {
             CThostFtdcInputOrderField pOrder = new CThostFtdcInputOrderField();
             pOrder.BrokerID = this.BrokerID;
@@ -329,7 +329,7 @@ namespace TradingMaster
             pOrder.UserForceClose = (int)EnumThostBoolType.No;
             pOrder.UserID = this.InvestorID;
 
-            pOrder.CombHedgeFlag_0 = EnumThostHedgeFlagType.Speculation;
+            pOrder.CombHedgeFlag_0 = hedge;
             pOrder.InstrumentID = InstrumentID;
             pOrder.CombOffsetFlag_0 = OffsetFlag;
             pOrder.Direction = Direction;

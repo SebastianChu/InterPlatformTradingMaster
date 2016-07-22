@@ -36,5 +36,6 @@ namespace TradingMaster
         public SIDETYPE Side;
         public PosEffect PosEffect;
         public int Count;
+        public EnumHedgeType HedgeType;
     }
 }

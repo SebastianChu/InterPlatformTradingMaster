@@ -175,15 +175,18 @@ namespace TradingMaster.Control
             rbKaicang.Checked += new RoutedEventHandler(rbKaicang_Checked);
             rbPingcang.Checked += new RoutedEventHandler(rbPingcang_Checked);
             rbPingjin.Checked += new RoutedEventHandler(rbPingjin_Checked);
+            rbSpeculation.Checked += new RoutedEventHandler(rbSpeculation_Checked);
+            rbHedge.Checked += new RoutedEventHandler(rbHedge_Checked);
+            rbArbitrage.Checked += new RoutedEventHandler(rbArbitrage_Checked);
 
-            setPriceTextBlockEvent(tbSellPrice);
-            setPriceTextBlockEvent(tbBuyPrice);
-            setPriceTextBlockEvent(tbMaxPrice);
-            setPriceTextBlockEvent(tbMinPrice);
+            SetPriceTextBlockEvent(tbSellPrice);
+            SetPriceTextBlockEvent(tbBuyPrice);
+            SetPriceTextBlockEvent(tbMaxPrice);
+            SetPriceTextBlockEvent(tbMinPrice);
             tbHandCount.MouseLeftButtonDown += new MouseButtonEventHandler(tbHandCount_MouseLeftButtonDown);
         }
 
-        private void setPriceTextBlockEvent(TextBlock tb)
+        private void SetPriceTextBlockEvent(TextBlock tb)
         {
             tb.MouseLeftButtonUp += new MouseButtonEventHandler(tbPrice_MouseLeftButtonUp);
             tb.MouseEnter += new MouseEventHandler(tbPrice_MouseEnter);
@@ -530,7 +533,7 @@ namespace TradingMaster.Control
         /// <param name="kp"></param>
         /// <param name="num"></param>
         /// <param name="realData"></param>
-        public void SetOrderInfoByPositionData(string buyOrSell, string kp, int num, RealData realData)
+        public void SetOrderInfoByPositionData(string buyOrSell, string kp, int num, RealData realData, string hedge)
         {
             if (buyOrSell == "买")
             {
@@ -560,6 +563,19 @@ namespace TradingMaster.Control
             //{
             //    txtMaxPrice.Text = txtMinPrice.Text = string.Empty;
             //}
+            if (hedge.Contains("套保"))
+            {
+                rbHedge.IsChecked = true;
+            }
+            else if (hedge.Contains("套利"))
+            {
+                rbArbitrage.IsChecked = true;
+            }
+            else
+            {
+                rbSpeculation.IsChecked = true;
+            }
+
             txtCode.Text = realData.CodeInfo.Code;
             needUpdatePriceCode = string.Empty;
             iudNum.Value = num;
@@ -572,7 +588,7 @@ namespace TradingMaster.Control
         private void btnMaidan_Click(object sender, RoutedEventArgs e)
         {
             //XiaDan_General(2);
-            string verifyMessage = varifyOrderDataMessage();
+            string verifyMessage = VerifyOrderDataMessage();
             if (verifyMessage == string.Empty)
             {
                 string strCode = txtCode.Text;
@@ -643,7 +659,7 @@ namespace TradingMaster.Control
         /// <param name="isAuto"></param>
         private void OrderInsert_General(int isAuto)
         {
-            string verifyMessage = varifyOrderDataMessage();
+            string verifyMessage = VerifyOrderDataMessage();
             if (verifyMessage == string.Empty)
             {
                 string strCode = txtCode.Text.Trim();
@@ -681,13 +697,15 @@ namespace TradingMaster.Control
                     orderType = CommonUtil.GetOrderType(cbOrderType.SelectedValue.ToString());
                 }
 
+                EnumHedgeType hedge = GetSelectedHedgeType();
+                string strHedge = CommonUtil.GetHedgeString(hedge);
                 if (TradingMaster.Properties.Settings.Default.ConfirmBeforeSendNewOrder == true)
                 {
                     string buySell = rbBuy.IsChecked == true ? "买" : "卖";
                     //string text = new StringBuilder();
                     CheckableMessageBox messageBox = new CheckableMessageBox();
-                    messageBox.tbMessage.Text = string.Format("下单：{0} {1}  {2} {3}手 于价格{4}",
-                        kp, buySell, strCode, handCount, price.ToString());
+                    messageBox.tbMessage.Text = string.Format("下单：{0} {1}  {2} {3}手 于价格{4} {5}",
+                        kp, buySell, strCode, handCount, price.ToString(), strHedge);
 
                     //if (chbOrderType.IsChecked == true && cbOrderType.SelectedItem != null)
                     if (cbOrderType.SelectedItem != null)
@@ -700,8 +718,8 @@ namespace TradingMaster.Control
                         messageBox.tbMessage.Text = messageBox.tbMessage.Text + " (价格为0时以市价单发出)";
                     }
 
-                    string windowTitle = string.Format("确认下单：价格{0},{1} {2}  {3} {4}手",
-                        price.ToString(), kp, buySell, strCode, handCount);
+                    string windowTitle = string.Format("确认下单：价格{0},{1} {2}  {3} {4}手 {5}",
+                        price.ToString(), kp, buySell, strCode, handCount, strHedge);
                     Window confirmWindow = CommonUtil.GetWindow(windowTitle, messageBox, _MainWindow);
 
                     if (confirmWindow.ShowDialog() == true)
@@ -733,7 +751,7 @@ namespace TradingMaster.Control
                             orderPrice = price;
                         }
                         //CtpDataServer.getServerInstance().AddToOrderQueue(new RequestContent("NewOrderSingle", new List<object>() { orderCodeIndo, isBuy, strKp, orderPrice, handCount, isAuto, "", touchMethod, touchCondition, touchPrice, orderType }));
-                        TradeDataClient.GetClientInstance().RequestOrder("", BACKENDTYPE.CTP, new RequestContent("NewOrderSingle", new List<object>() { orderCodeIndo, isBuy, strKp, orderPrice, handCount, isAuto, "", touchMethod, touchCondition, touchPrice, orderType }));
+                        TradeDataClient.GetClientInstance().RequestOrder("", BACKENDTYPE.CTP, new RequestContent("NewOrderSingle", new List<object>() { orderCodeIndo, isBuy, strKp, orderPrice, handCount, isAuto, "", touchMethod, touchCondition, touchPrice, orderType, hedge }));
                     }
                 }
                 else
@@ -763,12 +781,12 @@ namespace TradingMaster.Control
                             {
                                 orderPrice = price;
                             }
-                            TradeDataClient.GetClientInstance().RequestOrder("", BACKENDTYPE.CTP, new RequestContent("NewOrderSingle", new List<object>() { orderCodeIndo, isBuy, strKp, orderPrice, handCount, isAuto, "", touchMethod, touchCondition, touchPrice, orderType }));
+                            TradeDataClient.GetClientInstance().RequestOrder("", BACKENDTYPE.CTP, new RequestContent("NewOrderSingle", new List<object>() { orderCodeIndo, isBuy, strKp, orderPrice, handCount, isAuto, "", touchMethod, touchCondition, touchPrice, orderType, hedge }));
                         }
                     }
                     else
                     {
-                        TradeDataClient.GetClientInstance().RequestOrder("", BACKENDTYPE.CTP, new RequestContent("NewOrderSingle", new List<object>() { orderCodeIndo, isBuy, strKp, price, handCount, isAuto, "", touchMethod, touchCondition, touchPrice, orderType }));
+                        TradeDataClient.GetClientInstance().RequestOrder("", BACKENDTYPE.CTP, new RequestContent("NewOrderSingle", new List<object>() { orderCodeIndo, isBuy, strKp, price, handCount, isAuto, "", touchMethod, touchCondition, touchPrice, orderType, hedge }));
                     }
                 }
             }
@@ -778,7 +796,21 @@ namespace TradingMaster.Control
             }
         }
 
-        private string varifyOrderDataMessage()
+        private EnumHedgeType GetSelectedHedgeType()
+        {
+            EnumHedgeType hedge = EnumHedgeType.Speculation;
+            if (rbArbitrage.IsChecked == true)
+            {
+                hedge = EnumHedgeType.Arbitrage;
+            }
+            else if (rbHedge.IsChecked == true)
+            {
+                hedge = EnumHedgeType.Hedge;
+            }
+            return hedge;
+        }
+
+        private string VerifyOrderDataMessage()
         {
             string verifyMessage = string.Empty;
 
@@ -960,7 +992,7 @@ namespace TradingMaster.Control
 
             if (rbKaicang.IsChecked == true)
             {
-                TradeDataClient.GetClientInstance().RequestTradeData("", BACKENDTYPE.CTP, new RequestContent("RequsetMaxOperation", new List<object>() { orderCodeIndo, isBuy, PosEffect.Open, price, false, 0 }));
+                TradeDataClient.GetClientInstance().RequestTradeData("", BACKENDTYPE.CTP, new RequestContent("RequsetMaxOperation", new List<object>() { orderCodeIndo, isBuy, PosEffect.Open, price, GetSelectedHedgeType(), 0 }));
             }
             else if (rbPingcang.IsChecked == true)
             {
@@ -1044,7 +1076,7 @@ namespace TradingMaster.Control
         public void UpdateMaxOperation(MaxOperation maxOperation)
         {
             //if (rbKaicang.IsChecked == true && txtCode.Text == maxOperation.codeInfo.Code)
-            if (txtCode.Text == maxOperation.CodeInfo.Code)
+            if (txtCode.Text == maxOperation.CodeInfo.Code && maxOperation.HedgeType == GetSelectedHedgeType())
             {
                 tbHandCount.Text = maxOperation.Count.ToString();
             }
@@ -1072,7 +1104,22 @@ namespace TradingMaster.Control
             SetHandCount();
         }
 
+        private void rbSpeculation_Checked(object sender, RoutedEventArgs e)
+        {
+            SetHandCount();
+        }
+
         private void rbPingcang_Checked(object sender, RoutedEventArgs e)
+        {
+            SetHandCount();
+        }
+
+        private void rbHedge_Checked(object sender, RoutedEventArgs e)
+        {
+            SetHandCount();
+        }
+
+        private void rbArbitrage_Checked(object sender, RoutedEventArgs e)
         {
             SetHandCount();
         }
@@ -1197,7 +1244,7 @@ namespace TradingMaster.Control
                 || e.Key == Key.Tab
                 || e.Key == Key.Down)
             {
-                focusToRbBuySell();
+                FocusToRbBuySell();
             }
             else if (e.Key == Key.Up)
             {
@@ -1211,7 +1258,7 @@ namespace TradingMaster.Control
             e.Handled = true;
         }
 
-        private void focusToRbBuySell()
+        private void FocusToRbBuySell()
         {
             if (rbBuy.IsChecked.Value)
             {
@@ -1225,21 +1272,21 @@ namespace TradingMaster.Control
 
         private void rbBuy_KeyDown(object sender, KeyEventArgs e)
         {
-            keyDownByRbBuySell(sender, e);
+            KeyDownByRbBuySell(sender, e);
         }
 
         private void rbSell_KeyDown(object sender, KeyEventArgs e)
         {
-            keyDownByRbBuySell(sender, e);
+            KeyDownByRbBuySell(sender, e);
         }
 
-        private void keyDownByRbBuySell(object sender, KeyEventArgs e)
+        private void KeyDownByRbBuySell(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter
                 || e.Key == Key.Tab
                 || e.Key == Key.Down)
             {
-                focusToRbKp();
+                FocusToRbKp();
             }
             else if (e.Key == Key.Up)
             {
@@ -1272,7 +1319,7 @@ namespace TradingMaster.Control
             e.Handled = true;
         }
 
-        private void focusToRbKp()
+        private void FocusToRbKp()
         {
             if (rbKaicang.IsChecked.Value)
             {
@@ -1290,10 +1337,10 @@ namespace TradingMaster.Control
 
         private void rbKaicang_KeyDown(object sender, KeyEventArgs e)
         {
-            keyDownByRbKp(sender, e);
+            KeyDownByRbKp(sender, e);
         }
 
-        private void keyDownByRbKp(object sender, KeyEventArgs e)
+        private void KeyDownByRbKp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter
                 || e.Key == Key.Tab
@@ -1303,7 +1350,7 @@ namespace TradingMaster.Control
             }
             else if (e.Key == Key.Up)
             {
-                focusToRbBuySell();
+                FocusToRbBuySell();
             }
             else if (e.Key == Key.Right)
             {
@@ -1358,12 +1405,12 @@ namespace TradingMaster.Control
 
         private void rbPingjin_KeyDown(object sender, KeyEventArgs e)
         {
-            keyDownByRbKp(sender, e);
+            KeyDownByRbKp(sender, e);
         }
 
         private void rbPingcang_KeyDown(object sender, KeyEventArgs e)
         {
-            keyDownByRbKp(sender, e);
+            KeyDownByRbKp(sender, e);
         }
 
         private void iudNum_KeyDown(object sender, KeyEventArgs e)
@@ -1382,7 +1429,7 @@ namespace TradingMaster.Control
             }
             else if (e.Key == Key.Up)
             {
-                focusToRbKp();
+                FocusToRbKp();
             }
             else if (e.Key == Key.Left)
             {
@@ -1412,7 +1459,8 @@ namespace TradingMaster.Control
                 || e.Key == Key.Down
                 || e.Key == Key.Tab)
             {
-                btnXiadan.Focus();
+                //btnXiadan.Focus();
+                cbOrderType.Focus();
             }
             else if (e.Key == Key.Up)
             {
@@ -1471,7 +1519,21 @@ namespace TradingMaster.Control
             if (e.Key == Key.Up
                 || e.Key == Key.Left)
             {
-                dudPrice.Focus();
+                //dudPrice.Focus();
+                if (rbSpeculation.IsChecked == true)
+                {
+                    rbSpeculation.Focus();
+                }
+                else if (rbHedge.IsChecked == true)
+                {
+                    rbHedge.Focus();
+                }
+                else if (rbArbitrage.IsChecked == true)
+                {
+                    rbArbitrage.Focus();
+                }
+                e.Handled = true;
+                return;
             }
             else if (e.Key == Key.Tab
                 || e.Key == Key.Down)
@@ -1479,6 +1541,7 @@ namespace TradingMaster.Control
                 txtCode.Focus();
                 e.Handled = true;
             }
+
             if (e.Key == Key.Right)
             {
                 iudNum.Focus();
@@ -1737,6 +1800,91 @@ namespace TradingMaster.Control
             //{
             //    _MainWindow.uscPositionsInquiry.btnSjfs.IsEnabled = true;
             //}
+        }
+
+        private void rbSpeculation_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            KeyDownByRbHedge(sender, e);
+        }
+
+        private void rbHedge_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            KeyDownByRbHedge(sender, e);
+        }
+
+        private void rbArbitrage_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            KeyDownByRbHedge(sender, e);
+        }
+
+        private void KeyDownByRbHedge(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter
+                || e.Key == Key.Tab
+                || e.Key == Key.Down)
+            {
+                btnXiadan.Focus();
+            }
+            else if (e.Key == Key.Up)
+            {
+                cbOrderType.Focus();
+            }
+            else if (e.Key == Key.Right)
+            {
+                RadioButton rbNext = rbHedge;
+
+                if (sender == rbHedge)
+                {
+                    rbNext = rbArbitrage;
+                }
+                else if (sender == rbArbitrage)
+                {
+                    rbNext = rbSpeculation;
+                }
+                rbNext.Focus();
+                rbNext.IsChecked = true;
+            }
+            else if (e.Key == Key.Left)
+            {
+                RadioButton rbNext = rbHedge;
+
+                if (sender == rbHedge)
+                {
+                    rbNext = rbSpeculation;
+                }
+                else if (sender == rbSpeculation)
+                {
+                    rbNext = rbArbitrage;
+                }
+                rbNext.Focus();
+                rbNext.IsChecked = true;
+            }
+            e.Handled = true;
+        }
+
+        private void cbOrderType_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up && cbOrderType.SelectedIndex <= 0 || e.Key == Key.Left)
+            {
+                dudPrice.Focus();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Down && cbOrderType.SelectedIndex >= cbOrderType.Items.Count - 1 || e.Key == Key.Right)
+            {
+                if (rbSpeculation.IsChecked == true)
+                {
+                    rbSpeculation.Focus();
+                }
+                else if (rbHedge.IsChecked == true)
+                {
+                    rbHedge.Focus();
+                }
+                else if (rbArbitrage.IsChecked == true)
+                {
+                    rbArbitrage.Focus();
+                }
+                e.Handled = true;
+            }
         }
     }
 }

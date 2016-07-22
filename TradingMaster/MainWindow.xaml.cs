@@ -311,7 +311,7 @@ namespace TradingMaster
                             }
                             TradeDataClient.GetClientInstance().RequestOrder(ord2.InvestorID, BACKENDTYPE.CTP, new RequestContent("NewOrderSingle",
                                 new List<object>() { orderCodeInfo, isBuy ? SIDETYPE.BUY : SIDETYPE.SELL,
-                                strKp, price, ord2.HandCount, 0, "", 0, 0, 0, orderType }));
+                                strKp, price, ord2.HandCount, 0, "", 0, 0, 0, orderType, CommonUtil.GetHedgeType(ord2.Hedge) }));
                         }
                     }
                 }
@@ -955,9 +955,9 @@ namespace TradingMaster
             _HasShowedRisk = true;
         }
 
-        void uscPositionsInquiry_PositionDataMouseLeftButtonDown(string buyOrSell, string kp, int num, RealData realData)
+        void uscPositionsInquiry_PositionDataMouseLeftButtonDown(string buyOrSell, string kp, int num, RealData realData, string hedge)
         {
-            uscNewOrderPanel.SetOrderInfoByPositionData(buyOrSell, kp, num, realData);
+            uscNewOrderPanel.SetOrderInfoByPositionData(buyOrSell, kp, num, realData, hedge);
             uscExecOrderPanel.SetExecOrderInfoByPositionData(buyOrSell, kp, num, realData);
         }
 

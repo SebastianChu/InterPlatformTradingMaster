@@ -45,6 +45,19 @@
                         </Style>
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>-->
+                <DataGridTextColumn Header="买投保" Width="auto" Binding="{Binding Path=BidHedge}" >
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DefaultGridViewCellOtherStyle}">
+                            <Setter Property="Background" Value="{DynamicResource buyBackground}"/>
+                            <Setter Property="DataContext" Value="{Binding}"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource buyBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="买开平" Width="60" Binding="{Binding Path=BidOpenClose, Converter= {StaticResource bssuconverter}}" >
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DefaultGridViewCellOtherStyle}">
@@ -124,6 +137,19 @@
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="卖开平" Width="60" Binding="{Binding Path=AskOpenClose, Converter= {StaticResource bssuconverter}}"  >
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DefaultGridViewCellOtherStyle}">
+                            <Setter Property="Background" Value="{DynamicResource sellBackground}"/>
+                            <Setter Property="DataContext" Value="{Binding}"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource sellBackground_Sel}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="卖投保" Width="auto" Binding="{Binding Path=AskHedge}" >
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DefaultGridViewCellOtherStyle}">
                             <Setter Property="Background" Value="{DynamicResource sellBackground}"/>

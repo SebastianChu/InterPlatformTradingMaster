@@ -76,9 +76,9 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>-->
-                <!--<DataGridTextColumn Header="投保" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="60" Binding="{Binding Path=Hedge}"/>-->
                 <DataGridTextColumn Header="报单类型" CellStyle="{StaticResource CellStyle_Default}" Width="80" Binding="{Binding Path=OrderType}"></DataGridTextColumn>
                 <DataGridTextColumn Header="交易所" CellStyle="{StaticResource CellStyle_Default}" Width="60"  Binding="{Binding Path=Exchange}"></DataGridTextColumn>
+                <DataGridTextColumn Header="投保" CellStyle="{StaticResource CellStyle_Default}" Width="auto" Binding="{Binding Path=Hedge}"/>
                 <DataGridTextColumn Header="相关报单编号" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="auto" Binding="{Binding Path=RelativeID}"></DataGridTextColumn>
                 <!--<DataGridTextColumn Header="报单价格条件" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="auto" Binding="{Binding Path=OrderType}"  ></DataGridTextColumn>-->
                 <!--<DataGridTextColumn Header="有效期类型" CellStyle="{StaticResource DefaultGridViewCellOtherStyleLeft}" Width="auto" Binding="{Binding Path=EffectiionType}"></DataGridTextColumn>-->

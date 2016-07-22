@@ -1314,7 +1314,7 @@ namespace TradingMaster
                         foreach (Q7PosInfoTotal posInfoTotal in _MainWindow.PositionCollection_Total)
                         {
                             posInfoTotal.FreezeCount = 0;
-                            string key = posInfoTotal.InvestorID + posInfoTotal.Code + posInfoTotal.BuySell.Contains("买").ToString();
+                            string key = posInfoTotal.InvestorID + posInfoTotal.Code + posInfoTotal.BuySell.Contains("买").ToString()+ posInfoTotal.Hedge;
                             if (!_FreezeOrder.ContainsKey(key))
                             {
                                 _FreezeOrder.Add(key, new List<Q7JYOrderData>());
@@ -1332,7 +1332,7 @@ namespace TradingMaster
                         foreach (Q7JYOrderData orderData in jyOrderData)
                         {
                             _MainWindow.OrderDataCollection.Add(orderData);
-                            string posTotalInfo = orderData.InvestorID + orderData.Code + (!orderData.BuySell.Contains("买")).ToString();
+                            string posTotalInfo = orderData.InvestorID + orderData.Code + (!orderData.BuySell.Contains("买")).ToString() + orderData.Hedge;
                             if (orderData.OrderStatus.Contains("未成交") || orderData.OrderStatus.Contains("部分成交") || orderData.OrderStatus.Contains("未触发"))
                             {
                                 _MainWindow.PendingCollection.Add(orderData);
@@ -1765,7 +1765,7 @@ namespace TradingMaster
 
             foreach (Q7JYOrderData MXItem in _MainWindow.TradeCollection_MX)
             {
-                string tempkey = MXItem.InvestorID + "_" + MXItem.Code + "_" + MXItem.BuySell + "_" + MXItem.OpenClose;
+                string tempkey = MXItem.InvestorID + "_" + MXItem.Code + "_" + MXItem.BuySell + "_" + MXItem.OpenClose + "_" + MXItem.Hedge;
                 if (dicCode.ContainsKey(tempkey))
                 {
                     Q7JYOrderData codeItem = dicCode[tempkey];
@@ -2168,7 +2168,7 @@ namespace TradingMaster
                         Dictionary<string, Q7PosInfoTotal> posSumDic = new Dictionary<string, Q7PosInfoTotal>();
                         foreach (Q7PosInfoTotal record in posInfoSumsLst)
                         {
-                            string tempkey = record.Code + "_" + record.BuySell;
+                            string tempkey = record.InvestorID + "_" + record.Code + "_" + record.BuySell + "_" + record.Hedge;
                             if (posSumDic.ContainsKey(tempkey))
                             {
                                 Q7PosInfoTotal posItem = posSumDic[tempkey];
@@ -2206,7 +2206,7 @@ namespace TradingMaster
                                 {
                                     posItem.CanCloseCount -= _FreezeExecOrderHandCount[key];
                                 }
-                                string posTotalInfo = posItem.InvestorID + record.Code + (record.BuySell.Contains("买")).ToString();
+                                string posTotalInfo = posItem.InvestorID + record.Code + (record.BuySell.Contains("买")).ToString() + posItem.Hedge;
                                 if (PosTotalInfoMap.ContainsKey(posTotalInfo))
                                 {
                                     posItem.CanCloseCount -= PosTotalInfoMap[posTotalInfo].FreezeCount;
@@ -2220,13 +2220,13 @@ namespace TradingMaster
                                     record_rev.CanCloseCount = record_rev.TotalPosition;
                                     _MainWindow.PositionCollection_Total.Add(record_rev);
 
-                                    string key = record_rev.InvestorID + record_rev.Code + record_rev.BuySell.Contains("买").ToString();
+                                    string key = record_rev.InvestorID + record_rev.Code + record_rev.BuySell.Contains("买").ToString() + record.Hedge;
                                     if (record_rev.BuySell.Contains("买") && record_rev.ProductType.Contains("Option") && _FreezeExecOrderHandCount.ContainsKey(key))
                                     {
                                         record_rev.CanCloseCount -= _FreezeExecOrderHandCount[key];
                                     }
 
-                                    string posTotalInfo = record_rev.InvestorID + record.Code + (record.BuySell.Contains("买")).ToString();
+                                    string posTotalInfo = record_rev.InvestorID + record.Code + (record.BuySell.Contains("买")).ToString() + record.Hedge;
                                     if (!PosTotalInfoMap.ContainsKey(posTotalInfo))
                                     {
                                         PosTotalInfoMap[posTotalInfo] = record_rev;

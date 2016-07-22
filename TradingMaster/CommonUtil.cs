@@ -2054,6 +2054,38 @@ namespace TradingMaster
             return strType;
         }
 
+        public static EnumHedgeType GetHedgeType(string hedge)
+        {
+            EnumHedgeType hedgeType = EnumHedgeType.Speculation;
+            if (hedge.Contains("套保"))
+            {
+                hedgeType = EnumHedgeType.Hedge;
+            }
+            else if (hedge.Contains("套利"))
+            {
+                hedgeType = EnumHedgeType.Arbitrage;
+            }
+            return hedgeType;
+        }
+
+        public static string GetHedgeString(EnumHedgeType hedgeType)
+        {
+            string hedgeStr = String.Empty;
+            if (hedgeType == EnumHedgeType.Arbitrage)
+            {
+                hedgeStr = "套利";
+            }
+            else if (hedgeType == EnumHedgeType.Hedge)
+            {
+                hedgeStr = "套保";
+            }
+            else if (hedgeType == EnumHedgeType.Speculation)
+            {
+                hedgeStr = "投机";
+            }
+            return hedgeStr;
+        }
+
         public static List<int> BreakLargeOrderHandCount(int handCount)
         {
             List<int> numLst = new List<int>();
