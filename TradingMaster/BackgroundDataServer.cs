@@ -68,6 +68,7 @@ namespace TradingMaster
         public void AddContract(Contract[] codes)
         {
             if (codes == null) return;
+            //var reqList = codes.ToList().Except(_CodesList);
             _CodesList.Clear();
             foreach (Contract c in codes)
             {
@@ -109,68 +110,75 @@ namespace TradingMaster
             return realData;
         }
 
-        public void ChangeType(RealData tempData)
+        public void ChangeType(Dictionary<Contract, RealData> tempDataDict)
         {
-            if (tempData == null || tempData.CodeInfo == null) return;
-            string tempCodeInfoKey = tempData.CodeInfo.Code + "_" + tempData.CodeInfo.ExchCode;
-            double newPrice = 0;
-            //double buyPrice = 0;
-            //double sellPrice = 0;
-
-            newPrice = Math.Round(tempData.NewPrice, 4);//最新价
-            //buyPrice = Math.Round(tempData.BuyPrice[0], 4);//买价
-            //sellPrice = Math.Round(tempData.SellPrice[0], 4);//卖价
-            if (_CodeDic.ContainsKey(tempCodeInfoKey))
+            Dictionary<Contract, RealData> futuresDataDict = new Dictionary<Contract, RealData>();
+            Dictionary<Contract, RealData> combinationDataDict = new Dictionary<Contract,RealData>();
+            foreach(Contract contract in tempDataDict.Keys)
             {
-                RealData DicData = _CodeDic[tempCodeInfoKey];
-                SetDisplayRealDataValueByRealTimeData(tempData, newPrice, DicData);
+                RealData tempData = tempDataDict[contract];
+                if (tempData == null || tempData.CodeInfo == null) return;
+                string tempCodeInfoKey = tempData.CodeInfo.Code + "_" + tempData.CodeInfo.ExchCode;
+                double newPrice = 0;
+
+                newPrice = Math.Round(tempData.NewPrice, 4);//最新价
+                if (_CodeDic.ContainsKey(tempCodeInfoKey))
+                {
+                    RealData DicData = _CodeDic[tempCodeInfoKey];
+                    SetDisplayRealDataValueByRealTimeData(tempData, newPrice, DicData);
+                }
+                else //if (this._CommObj.RequestingCodes.Contains(tempData.CodeInfo.Code))//只操作正在推送的合约
+                {
+                    RealData reqRealData = new RealData();
+                    SetDisplayRealDataValueByRealTimeData(tempData, newPrice, reqRealData);
+
+                    _CodeDic.Add(tempCodeInfoKey, reqRealData);
+                    RealDataList.Add(reqRealData);
+                }
+
+                if (tempData.CodeInfo.ProductType == "Futures" || tempData.CodeInfo.ProductType == "Combination" || tempData.CodeInfo.ProductType.Contains("Stock") || tempData.CodeInfo.ProductType.Contains("ETF"))
+                {
+                    if(futuresDataDict.ContainsKey(contract))
+                    {
+                        futuresDataDict[contract] = tempData;
+                    }
+                    else
+                    {
+                        futuresDataDict.Add(contract, tempData);
+                    }
+                }
+
+                if (tempData.CodeInfo.ProductType == "Combination")
+                {
+                    if(combinationDataDict.ContainsKey(contract))
+                    {
+                        combinationDataDict[contract] = tempData;
+                    }
+                    else
+                    {
+                        combinationDataDict.Add(contract, tempData);
+                    }
+                }
+
                 if (Application.Current != null)
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        //if (tempData.codeInfo.ProductType == "Futures")
-                        if (tempData.CodeInfo.ProductType == "Futures" || tempData.CodeInfo.ProductType == "Combination" || tempData.CodeInfo.ProductType.Contains("Stock") || tempData.CodeInfo.ProductType.Contains("ETF"))
-                        {
-                            UpdateFuturesDataCollection(tempData);
-                        }
-                        if (tempData.CodeInfo.ProductType == "Combination")
-                        {
-                            UpdateCombinationDataCollection(tempData);
-                        }
-                        UpdateOptionDataCollection(tempData);
-
-                        SetNewOrderPanelInfo(DicData);
-                        SetPositionInfo(DicData);
-                        UpdateLevelsQuotes(DicData);
+                        SetNewOrderPanelInfo(tempData);
+                        UpdateLevelsQuotes(tempData);
                     });
                 }
             }
-            else //if (this._CommObj.RequestingCodes.Contains(tempData.CodeInfo.Code))//只操作正在推送的合约
-            {
-                RealData reqRealData = new RealData();
-                SetDisplayRealDataValueByRealTimeData(tempData, newPrice, reqRealData);
 
-                _CodeDic.Add(tempCodeInfoKey, reqRealData);
-                if (Application.Current != null)
+            if (Application.Current != null)
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    Application.Current.Dispatcher.Invoke((Action)delegate
-                    {
-                        if (tempData.CodeInfo.ProductType == "Futures" || tempData.CodeInfo.ProductType == "Combination" || tempData.CodeInfo.ProductType.Contains("Stock") || tempData.CodeInfo.ProductType.Contains("ETF"))
-                        {
-                            UpdateFuturesDataCollection(tempData);
-                        }
-                        if (tempData.CodeInfo.ProductType == "Combination")
-                        {
-                            UpdateCombinationDataCollection(tempData);
-                        }
-                        UpdateOptionDataCollection(tempData);
-                        
-                        RealDataList.Add(reqRealData);
-                        SetNewOrderPanelInfo(reqRealData);
-                        SetPositionInfo(reqRealData);
-                        UpdateLevelsQuotes(reqRealData);
-                    });
-                }
+                    UpdateFuturesDataCollection(futuresDataDict);
+                    UpdateCombinationDataCollection(combinationDataDict);
+                    UpdateOptionDataCollection(tempDataDict);
+                    SetPositionInfo(tempDataDict);
+                });
             }
             
         }
@@ -224,12 +232,12 @@ namespace TradingMaster
         /// 处理分档行情
         /// </summary>
         /// <param name="m_displayRealData"></param>
-        private void SetNewOrderPanelInfo(RealData m_RealData)
+        private void SetNewOrderPanelInfo(RealData realData)
         {
             MainWindow mainWindow = TradeDataClient.GetClientInstance().getMainWindow();//CtpDataServer.GetUserInstance().getMainWindow();
-            if (mainWindow != null && mainWindow.uscNewOrderPanel.txtCode.Text.Trim() == m_RealData.CodeInfo.Code)
+            if (mainWindow != null && mainWindow.uscNewOrderPanel.txtCode.Text.Trim() == realData.CodeInfo.Code)
             {
-                mainWindow.uscNewOrderPanel.SetExtendsInfo(m_RealData);
+                mainWindow.uscNewOrderPanel.SetExtendsInfo(realData);
 
                 //将行情显示到报价表中
                 //mainWindow.uscOptionHangqing.AddExternalHqingData(m_displayRealData);
@@ -245,9 +253,19 @@ namespace TradingMaster
         /// 处理持仓行情
         /// </summary>
         /// <param name="m_displayRealData"></param>
-        public void SetPositionInfo(RealData m_RealData)
+        public void SetPositionInfo(object realObj)
         {
-            UpdateFDYKForPositions(m_RealData);
+            if (realObj is RealData)
+            {
+                RealData realData = realObj as RealData;
+                Dictionary<Contract, RealData> realDataDict = new Dictionary<Contract, RealData>();
+                realDataDict.Add(realData.CodeInfo, realData);
+                UpdateFDYKForPositions(realDataDict);
+            }
+            else if (realObj is Dictionary<Contract, RealData>)
+            {
+                UpdateFDYKForPositions(realObj as Dictionary<Contract, RealData>);
+            }
         }
 
         /// <summary>
@@ -256,20 +274,17 @@ namespace TradingMaster
         /// 盯市浮盈（昨仓）:(现价（结算价）-昨结算价)*合约乘数*手数
         /// 盯市浮盈（今仓）:(现价（结算价）-开仓均价)*合约乘数*手数
         /// </summary>
-        private void UpdateFDYKForPositions(RealData m_RealData)
+        private void UpdateFDYKForPositions(Dictionary<Contract, RealData> realDataDict)
         {
             _Mutex.WaitOne();
-            if (RealDataList.Count > 0)
+            try
             {
-                try
-                {
-                    UpdateFDYK(m_RealData);
-                }
-                catch (Exception ex)
-                {
-                    Util.Log("exception: " + ex.Message);
-                    Util.Log("exception: " + ex.StackTrace);
-                }
+                UpdateFDYK(realDataDict);
+            }
+            catch (Exception ex)
+            {
+                Util.Log("exception: " + ex.Message);
+                Util.Log("exception: " + ex.StackTrace);
             }
             _Mutex.ReleaseMutex();
         }
@@ -278,210 +293,215 @@ namespace TradingMaster
         /// 根据实时主推更新资金的盈亏数据和持仓的浮动盈亏数据
         /// </summary>
         /// <param name="commRealTimeDatas"></param>
-        private void UpdateFDYK(RealData realData)
+        private void UpdateFDYK(Dictionary<Contract, RealData> realDataDict)
         {
             MainWindow mainWindow = TradeDataClient.GetClientInstance().getMainWindow();//CtpDataServer.GetUserInstance().getMainWindow();
-            double newPrice = realData.NewPrice;   //最新价
-            double prevSettlementPrice = realData.PrevSettlementPrice;  //昨结算
-            double settlementPrice = realData.SettlmentPrice; //现结算
-            double bidPrice = realData.BidPrice[0];
-            double askPrice = realData.AskPrice[0];
 
-            if (newPrice == 0 || realData.Volumn == 0)
+            foreach (Contract contract in realDataDict.Keys)
             {
-                if (prevSettlementPrice > 0)
-                {
-                    newPrice = prevSettlementPrice;
-                }
-                else if (newPrice == 0)
-                {
-                    newPrice = realData.PrevClose;
-                }
-            }
-            if (bidPrice == 0)
-            {
-                bidPrice = newPrice;
-            }
-            if (askPrice == 0)
-            {
-                askPrice = newPrice;
-            }
-            
-            double hycs = realData.CodeInfo.Hycs;
-            decimal fluct = realData.CodeInfo.Fluct;
+                RealData realData = realDataDict[contract];
+                double newPrice = realData.NewPrice;   //最新价
+                double prevSettlementPrice = realData.PrevSettlementPrice;  //昨结算
+                double settlementPrice = realData.SettlmentPrice; //现结算
+                double bidPrice = realData.BidPrice[0];
+                double askPrice = realData.AskPrice[0];
 
-            if (mainWindow != null)
-            {
-                foreach (Q7PosInfoDetail detail in mainWindow.PositionDetailCollection)
+                if (newPrice == 0 || realData.Volumn == 0)
                 {
-                    if (detail.Code == realData.CodeInfo.Code)
+                    if (prevSettlementPrice > 0)
                     {
-                        detail.PrevSettleMent = prevSettlementPrice;
-                        if (newPrice == 0)
-                        {
-                            detail.Fdyk = detail.Ccyk = 0;
-                        }
+                        newPrice = prevSettlementPrice;
+                    }
+                    else if (newPrice == 0)
+                    {
+                        newPrice = realData.PrevClose;
+                    }
+                }
+                if (bidPrice == 0)
+                {
+                    bidPrice = newPrice;
+                }
+                if (askPrice == 0)
+                {
+                    askPrice = newPrice;
+                }
 
-                        //更新Detail的数据
-                        if (detail.BuySell.Contains("买"))
+                double hycs = realData.CodeInfo.Hycs;
+                decimal fluct = realData.CodeInfo.Fluct;
+
+                if (mainWindow != null)
+                {
+                    foreach (Q7PosInfoDetail detail in mainWindow.PositionDetailCollection)
+                    {
+                        if (detail.Code == contract.Code)
                         {
-                            detail.INewPrice = bidPrice;
-                            if (CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType != null 
-                                && CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType.Contains("Option"))
+                            detail.PrevSettleMent = prevSettlementPrice;
+                            if (newPrice == 0)
                             {
-                                detail.OptionMarketCap = bidPrice * detail.TradeHandCount * hycs;
-                                if (detail.PositionType.Contains("今"))
+                                detail.Fdyk = detail.Ccyk = 0;
+                            }
+
+                            //更新Detail的数据
+                            if (detail.BuySell.Contains("买"))
+                            {
+                                detail.INewPrice = bidPrice;
+                                if (CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType != null
+                                    && CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType.Contains("Option"))
                                 {
-                                    detail.Premium = -detail.AvgPx * detail.TradeHandCount * hycs;
-                                    //detail.OptionProfit = (newPrice - detail.AvgPx) * detail.TradeHandCount * hycs;
+                                    detail.OptionMarketCap = bidPrice * detail.TradeHandCount * hycs;
+                                    if (detail.PositionType.Contains("今"))
+                                    {
+                                        detail.Premium = -detail.AvgPx * detail.TradeHandCount * hycs;
+                                        //detail.OptionProfit = (newPrice - detail.AvgPx) * detail.TradeHandCount * hycs;
+                                    }
+                                    else
+                                    {
+                                        //detail.OptionProfit = (newPrice - detail.PrevSettleMent) * detail.TradeHandCount * hycs;
+                                    }
+                                }
+
+                                if (detail.PositionType == "今仓")
+                                {
+                                    detail.Ccyk = (bidPrice - detail.AvgPx) * detail.TradeHandCount * hycs;
+                                    detail.Fdyk = detail.Ccyk;
                                 }
                                 else
                                 {
-                                    //detail.OptionProfit = (newPrice - detail.PrevSettleMent) * detail.TradeHandCount * hycs;
+                                    detail.Ccyk = (bidPrice - prevSettlementPrice) * detail.TradeHandCount * hycs;
+                                    detail.Fdyk = (bidPrice - detail.AvgPx) * detail.TradeHandCount * hycs;
                                 }
-                            }
-
-                            if (detail.PositionType == "今仓")
-                            {
-                                detail.Ccyk = (bidPrice - detail.AvgPx) * detail.TradeHandCount * hycs;
-                                detail.Fdyk = detail.Ccyk;
                             }
                             else
                             {
-                                detail.Ccyk = (bidPrice - prevSettlementPrice) * detail.TradeHandCount * hycs;
-                                detail.Fdyk = (bidPrice - detail.AvgPx) * detail.TradeHandCount * hycs;
-                            }
-                        }
-                        else
-                        {
-                            detail.INewPrice = askPrice;
-                            if (CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType != null 
-                                && CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType.Contains("Option"))
-                            {
-                                detail.OptionMarketCap = -askPrice * detail.TradeHandCount * hycs;
-                                if (detail.PositionType.Contains("今"))
+                                detail.INewPrice = askPrice;
+                                if (CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType != null
+                                    && CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType.Contains("Option"))
                                 {
-                                    detail.Premium = detail.AvgPx * detail.TradeHandCount * hycs;
-                                    //detail.OptionProfit = -(newPrice - detail.AvgPx) * detail.TradeHandCount * hycs;
+                                    detail.OptionMarketCap = -askPrice * detail.TradeHandCount * hycs;
+                                    if (detail.PositionType.Contains("今"))
+                                    {
+                                        detail.Premium = detail.AvgPx * detail.TradeHandCount * hycs;
+                                        //detail.OptionProfit = -(newPrice - detail.AvgPx) * detail.TradeHandCount * hycs;
+                                    }
+                                    else
+                                    {
+                                        //detail.OptionProfit = -(newPrice - detail.PrevSettleMent) * detail.TradeHandCount * hycs;
+                                    }
+                                }
+
+                                if (detail.PositionType == "今仓")
+                                {
+                                    detail.Ccyk = (detail.AvgPx - askPrice) * detail.TradeHandCount * hycs;
+                                    detail.Fdyk = detail.Ccyk;
                                 }
                                 else
                                 {
-                                    //detail.OptionProfit = -(newPrice - detail.PrevSettleMent) * detail.TradeHandCount * hycs;
+                                    detail.Ccyk = (prevSettlementPrice - askPrice) * detail.TradeHandCount * hycs;
+                                    detail.Fdyk = (detail.AvgPx - askPrice) * detail.TradeHandCount * hycs;
                                 }
-                            }
-
-                            if (detail.PositionType == "今仓")
-                            {
-                                detail.Ccyk = (detail.AvgPx - askPrice) * detail.TradeHandCount * hycs;
-                                detail.Fdyk = detail.Ccyk;
-                            }
-                            else
-                            {
-                                detail.Ccyk = (prevSettlementPrice - askPrice) * detail.TradeHandCount * hycs;
-                                detail.Fdyk = (detail.AvgPx - askPrice) * detail.TradeHandCount * hycs;
                             }
                         }
                     }
-                }
 
-                foreach (Q7PosInfoTotal posTotal in mainWindow.PositionCollection_Total)
-                {
-                    if (posTotal.Code == realData.CodeInfo.Code)
+                    foreach (Q7PosInfoTotal posTotal in mainWindow.PositionCollection_Total)
                     {
-                        double yesterdayDsyk = 0;
-                        double todayDsyk = 0;
-                        double yesterdayFdyk = 0;
-                        double todayFdyk = 0;
-                        double todayOpProfit = 0;
-                        double yesterdayOpProfit = 0;
-
-                        if (newPrice != 0)
+                        if (posTotal.Code == realData.CodeInfo.Code)
                         {
-                            if (CodeSetManager.GetContractInfo(posTotal.Code, CodeSetManager.ExNameToCtp(posTotal.Exchange)).ProductType != null 
-                                && CodeSetManager.GetContractInfo(posTotal.Code, CodeSetManager.ExNameToCtp(posTotal.Exchange)).ProductType.Contains("Option"))
-                            {
-                                if (posTotal.BuySell.Contains("买"))
-                                {
-                                    posTotal.OptionMarketCap = bidPrice * posTotal.TotalPosition * hycs;
-                                    posTotal.Premium = -posTotal.TodayOpenAvgPx * posTotal.TodayPosition * hycs; //TODO: TradeHandCount
-                                    //yesterdayOpProfit = (newPrice - posTotal.YesterdayOpenAvgPx) * posTotal.YesterdayPosition * hycs;//yesterdayOpProfit
-                                    //todayOpProfit = (newPrice - posTotal.TodayOpenAvgPx) * posTotal.TodayPosition * hycs;//todayOpProfit
-                                }
-                                else
-                                {
-                                    posTotal.OptionMarketCap = -askPrice * posTotal.TotalPosition * hycs;
-                                    posTotal.Premium = posTotal.TodayOpenAvgPx * posTotal.TodayPosition * hycs; //TODO: TradeHandCount
-                                    //yesterdayOpProfit = (posTotal.YesterdayOpenAvgPx - newPrice) * posTotal.YesterdayPosition * hycs;//yesterdayOpProfit
-                                    //todayOpProfit = (posTotal.TodayOpenAvgPx - newPrice) * posTotal.TodayPosition * hycs;//todayOpProfit
-                                }
-                            }
-                           
-                            //更新Detail的数据
-                            if (posTotal.BuySell.Contains("买"))
-                            {
-                                yesterdayDsyk = (bidPrice - prevSettlementPrice) * posTotal.YesterdayPosition * hycs;
-                                todayDsyk = (bidPrice - posTotal.TodayOpenAvgPx) * posTotal.TodayPosition * hycs;
+                            double yesterdayDsyk = 0;
+                            double todayDsyk = 0;
+                            double yesterdayFdyk = 0;
+                            double todayFdyk = 0;
+                            double todayOpProfit = 0;
+                            double yesterdayOpProfit = 0;
 
-                                yesterdayFdyk = (bidPrice - posTotal.YesterdayOpenAvgPx) * posTotal.YesterdayPosition * hycs;
-                                todayFdyk = todayDsyk;//(newPrice - detail.OpenAvgPx) * detail.TodayOpen * hycs;
-                            }
-                            else
+                            if (newPrice != 0)
                             {
-                                if (CodeSetManager.GetContractInfo(posTotal.Code, CodeSetManager.ExNameToCtp(posTotal.Exchange)).ProductType != null 
+                                if (CodeSetManager.GetContractInfo(posTotal.Code, CodeSetManager.ExNameToCtp(posTotal.Exchange)).ProductType != null
                                     && CodeSetManager.GetContractInfo(posTotal.Code, CodeSetManager.ExNameToCtp(posTotal.Exchange)).ProductType.Contains("Option"))
                                 {
-                                    posTotal.OptionMarketCap = -askPrice * posTotal.TotalPosition * hycs;
-                                    posTotal.Premium = posTotal.TodayOpenAvgPx * posTotal.TodayPosition * hycs; //TODO: TradeHandCount
+                                    if (posTotal.BuySell.Contains("买"))
+                                    {
+                                        posTotal.OptionMarketCap = bidPrice * posTotal.TotalPosition * hycs;
+                                        posTotal.Premium = -posTotal.TodayOpenAvgPx * posTotal.TodayPosition * hycs; //TODO: TradeHandCount
+                                        //yesterdayOpProfit = (newPrice - posTotal.YesterdayOpenAvgPx) * posTotal.YesterdayPosition * hycs;//yesterdayOpProfit
+                                        //todayOpProfit = (newPrice - posTotal.TodayOpenAvgPx) * posTotal.TodayPosition * hycs;//todayOpProfit
+                                    }
+                                    else
+                                    {
+                                        posTotal.OptionMarketCap = -askPrice * posTotal.TotalPosition * hycs;
+                                        posTotal.Premium = posTotal.TodayOpenAvgPx * posTotal.TodayPosition * hycs; //TODO: TradeHandCount
+                                        //yesterdayOpProfit = (posTotal.YesterdayOpenAvgPx - newPrice) * posTotal.YesterdayPosition * hycs;//yesterdayOpProfit
+                                        //todayOpProfit = (posTotal.TodayOpenAvgPx - newPrice) * posTotal.TodayPosition * hycs;//todayOpProfit
+                                    }
                                 }
 
-                                yesterdayDsyk = (prevSettlementPrice - askPrice) * posTotal.YesterdayPosition * hycs;
-                                todayDsyk = (posTotal.TodayOpenAvgPx - askPrice) * posTotal.TodayPosition * hycs;
+                                //更新Detail的数据
+                                if (posTotal.BuySell.Contains("买"))
+                                {
+                                    yesterdayDsyk = (bidPrice - prevSettlementPrice) * posTotal.YesterdayPosition * hycs;
+                                    todayDsyk = (bidPrice - posTotal.TodayOpenAvgPx) * posTotal.TodayPosition * hycs;
 
-                                yesterdayFdyk = (posTotal.YesterdayOpenAvgPx - askPrice) * posTotal.YesterdayPosition * hycs;
-                                todayFdyk = todayDsyk;//((newPrice - detail.OpenAvgPx) * detail.TodayOpen * hycs);
+                                    yesterdayFdyk = (bidPrice - posTotal.YesterdayOpenAvgPx) * posTotal.YesterdayPosition * hycs;
+                                    todayFdyk = todayDsyk;//(newPrice - detail.OpenAvgPx) * detail.TodayOpen * hycs;
+                                }
+                                else
+                                {
+                                    if (CodeSetManager.GetContractInfo(posTotal.Code, CodeSetManager.ExNameToCtp(posTotal.Exchange)).ProductType != null
+                                        && CodeSetManager.GetContractInfo(posTotal.Code, CodeSetManager.ExNameToCtp(posTotal.Exchange)).ProductType.Contains("Option"))
+                                    {
+                                        posTotal.OptionMarketCap = -askPrice * posTotal.TotalPosition * hycs;
+                                        posTotal.Premium = posTotal.TodayOpenAvgPx * posTotal.TodayPosition * hycs; //TODO: TradeHandCount
+                                    }
+
+                                    yesterdayDsyk = (prevSettlementPrice - askPrice) * posTotal.YesterdayPosition * hycs;
+                                    todayDsyk = (posTotal.TodayOpenAvgPx - askPrice) * posTotal.TodayPosition * hycs;
+
+                                    yesterdayFdyk = (posTotal.YesterdayOpenAvgPx - askPrice) * posTotal.YesterdayPosition * hycs;
+                                    todayFdyk = todayDsyk;//((newPrice - detail.OpenAvgPx) * detail.TodayOpen * hycs);
+                                }
+
                             }
-                            
+
+                            posTotal.Ccyk = yesterdayDsyk + todayDsyk;
+                            posTotal.Fdyk = yesterdayFdyk + todayFdyk;
+                            posTotal.OptionProfit = yesterdayOpProfit + todayOpProfit;
+
+                            posTotal.AvgPositionPrice = (posTotal.TodayPosition * posTotal.TodayOpenAvgPx + posTotal.YesterdayPosition * prevSettlementPrice) / posTotal.TotalPosition;
                         }
-
-                        posTotal.Ccyk = yesterdayDsyk + todayDsyk;
-                        posTotal.Fdyk = yesterdayFdyk + todayFdyk;
-                        posTotal.OptionProfit = yesterdayOpProfit + todayOpProfit;
-
-                        posTotal.AvgPositionPrice = (posTotal.TodayPosition * posTotal.TodayOpenAvgPx + posTotal.YesterdayPosition * prevSettlementPrice) / posTotal.TotalPosition;
                     }
-                }
 
-                //更新资金数据
-                double totalDSFY = 0;
-                double totalFdyk = 0;
-                double totalPremium = 0;
-                double totalOptionCap = 0;
-                double totalOptionProfit = 0;
-                foreach (Q7PosInfoTotal detail in mainWindow.PositionCollection_Total)
-                {
-                    if (CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType == "Futures")
+                    //更新资金数据
+                    double totalDSFY = 0;
+                    double totalFdyk = 0;
+                    double totalPremium = 0;
+                    double totalOptionCap = 0;
+                    double totalOptionProfit = 0;
+                    foreach (Q7PosInfoTotal detail in mainWindow.PositionCollection_Total)
                     {
-                        totalDSFY += detail.Ccyk;
-                        totalFdyk += detail.Fdyk;
+                        if (CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType == "Futures")
+                        {
+                            totalDSFY += detail.Ccyk;
+                            totalFdyk += detail.Fdyk;
+                        }
+                        else if (CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType != null
+                            && CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType.Contains("Option"))
+                        {
+                            totalOptionProfit += detail.Ccyk;
+                        }
+                        totalPremium += detail.Premium;
+                        totalOptionCap += detail.OptionMarketCap;
+                        totalOptionProfit += detail.OptionProfit;
                     }
-                    else if (CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType != null 
-                        && CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType.Contains("Option"))
-                    {
-                        totalOptionProfit += detail.Ccyk;
-                    }
-                    totalPremium += detail.Premium;
-                    totalOptionCap += detail.OptionMarketCap;
-                    totalOptionProfit += detail.OptionProfit;
-                }
 
-                if (mainWindow.CapitalDataCollection != null)
-                {
-                    mainWindow.CapitalDataCollection.Dsfy = totalDSFY;
-                    mainWindow.CapitalDataCollection.FloatProfit = totalFdyk;
-                    //mainWindow.CapitalDataCollection.Premium = totalPremium;
-                    mainWindow.CapitalDataCollection.OptionMarketCap = totalOptionCap;
-                    mainWindow.CapitalDataCollection.OptionProfit = totalOptionProfit;
-                    mainWindow.CapitalDataCollection.AccountCap = totalOptionCap + mainWindow.CapitalDataCollection.DynamicEquity;
+                    if (mainWindow.CapitalDataCollection != null)
+                    {
+                        mainWindow.CapitalDataCollection.Dsfy = totalDSFY;
+                        mainWindow.CapitalDataCollection.FloatProfit = totalFdyk;
+                        //mainWindow.CapitalDataCollection.Premium = totalPremium;
+                        mainWindow.CapitalDataCollection.OptionMarketCap = totalOptionCap;
+                        mainWindow.CapitalDataCollection.OptionProfit = totalOptionProfit;
+                        mainWindow.CapitalDataCollection.AccountCap = totalOptionCap + mainWindow.CapitalDataCollection.DynamicEquity;
+                    }
                 }
             }
         }
@@ -544,6 +564,7 @@ namespace TradingMaster
                         if (fCode == item)
                         {
                             isUsed = true;
+                            break;
                         }
                         if (mainWindow.uscOptionHangqing.OptionCodeDict.ContainsKey(fCode))
                         {
@@ -552,6 +573,7 @@ namespace TradingMaster
                                 if (contract == item)
                                 {
                                     isUsed = true;
+                                    break;
                                 }
                             }
                         }
@@ -578,22 +600,24 @@ namespace TradingMaster
             }
         }
 
-        /// <summary>
+         /// <summary>
         /// 期货行情
         /// </summary>
         /// <param name="realData"></param>
-        private void UpdateFuturesDataCollection(RealData realData)
+        private void UpdateFuturesDataCollection(Dictionary<Contract, RealData> realDataDict)
         {
             MainWindow mainWindow = TradeDataClient.GetClientInstance().getMainWindow();//CtpDataServer.GetUserInstance().getMainWindow();
             if (mainWindow != null)
             {
-                //mainWindow.updateFuturesDataByDisplayRealData(m_realData);
                 foreach (var item in mainWindow.RealDataCollection)
                 {
-                    if (item.Code == realData.CodeInfo.Code || item.Code == realData.CodeInfo.Code)
+                    foreach (Contract contract in realDataDict.Keys)
                     {
-                        item.UpdateProperties(realData);
-                        break;
+                        RealData realData = realDataDict[contract];
+                        if (item.Code == contract.Code)
+                        {
+                            item.UpdateProperties(realData);
+                        }
                     }
                 }
             }
@@ -607,7 +631,7 @@ namespace TradingMaster
         /// 组合行情
         /// </summary>
         /// <param name="realData"></param>
-        private void UpdateCombinationDataCollection(RealData realData)
+        private void UpdateCombinationDataCollection(Dictionary<Contract, RealData> realDataDict)
         {
             MainWindow mainWindow = TradeDataClient.GetClientInstance().getMainWindow();//CtpDataServer.GetUserInstance().getMainWindow();
             if (mainWindow != null)
@@ -615,10 +639,42 @@ namespace TradingMaster
                 //mainWindow.updateFuturesDataByDisplayRealData(m_realData);
                 foreach (var item in mainWindow.RealDataArbitrageCollection)
                 {
-                    if (item.Code == realData.CodeInfo.Code || item.Code == realData.CodeInfo.Code)
+                    foreach (Contract contract in realDataDict.Keys)
                     {
-                        item.UpdateProperties(realData);
-                        break;
+                        RealData realData = realDataDict[contract];
+                        if (item.Code == contract.Code)
+                        {
+                            item.UpdateProperties(realData);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Util.Log("Warning!: mainWindow in BackgroundDataServer is NULL! ");
+            }
+        }
+
+        /// <summary>
+        /// 期权行情
+        /// </summary>
+        /// <param name="realDataDict"></param>
+        private void UpdateOptionDataCollection(Dictionary<Contract, RealData> realDataDict)
+        {
+            MainWindow mainWindow = TradeDataClient.GetClientInstance().getMainWindow();//CtpDataServer.GetUserInstance().getMainWindow();
+            if (mainWindow != null)
+            {
+                foreach (var item in mainWindow.OptionRealDataCollection)
+                {
+                    foreach (Contract contract in realDataDict.Keys)
+                    {
+                        RealData tempData = realDataDict[contract];
+                        mainWindow.updateOptionDataByDisplayRealData(tempData);
+                        if (item.Code_C == tempData.CodeInfo.Code || item.Code_P == tempData.CodeInfo.Code)
+                        {
+                            item.UpdateProperties(tempData);
+                            OptionCalculator.Enqueue(item);
+                        }
                     }
                 }
             }
@@ -647,7 +703,6 @@ namespace TradingMaster
                         //    DataContainer.AddRealDataToContainer(m_realData);
                         //}
                         item.UpdateProperties(m_realData);
-                        //OptionCalculator.UpdateGreekLetters(item);
                         OptionCalculator.Enqueue(item);
                         break;
                     }
@@ -698,9 +753,9 @@ namespace TradingMaster
     {
         internal BackgroundDataServer _Owner;
         private object _LockerBackground = new object();
-        private List<string> _RequestingCodes = new List<string>();
+        private HashSet<string> _RequestingCodes = new HashSet<string>();
 
-        public List<string> RequestingCodes
+        public HashSet<string> RequestingCodes
         {
             get { return _RequestingCodes; }
             set { _RequestingCodes = value; }
@@ -721,9 +776,9 @@ namespace TradingMaster
             {
                 foreach (Contract item in codeInfoArr)
                 {
-                    cancelList.Add(item.Code);
                     if (RequestingCodes.Contains(item.Code))
                     {
+                        cancelList.Add(item.Code);
                         RequestingCodes.Remove(item.Code);
                     }
                 }
@@ -732,9 +787,9 @@ namespace TradingMaster
             {
                 foreach (Contract item in codeInfoArr)
                 {
-                    reqList.Add(item.Code);
                     if (!RequestingCodes.Contains(item.Code))
                     {
+                        reqList.Add(item.Code);
                         RequestingCodes.Add(item.Code);
                     }
                 }

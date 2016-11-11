@@ -2090,7 +2090,7 @@ namespace TradingMaster
             DisconnectStruct disStruct = GetDisconnectReport("Trader");
             TradeDataClient.GetClientInstance().RtnMessageEnqueue(disStruct);
             
-            _CtpServerInstance = null;
+            //_CtpServerInstance = null;
             Util.Log("TradeApiCTP CtpDataServer: RequestTradeDataDisConnect: DisConnect starts...");
             try
             {

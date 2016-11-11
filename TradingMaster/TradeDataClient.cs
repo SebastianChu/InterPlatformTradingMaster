@@ -413,16 +413,26 @@ namespace TradingMaster
         private void MarketDataProcess()
         {
             List<object> dataList = _MarketDataQueue.DequeueAll(_TimeOut);
+            Dictionary<Contract, RealData> realDataDic = new Dictionary<Contract, RealData>();
             foreach (object data in dataList)
             {
                 if (data is RealData)
                 {
-                    RealData realData = data as RealData;
-                    if (_MainWindow != null)
+                    RealData tempData = data as RealData;
+                    if (realDataDic.ContainsKey(tempData.CodeInfo))
                     {
-                        _MainWindow.OnReceiveSnapShotOrUpdateCallBack(realData);
+                        realDataDic[tempData.CodeInfo] = tempData;
                     }
+                    else
+                    {
+                        realDataDic.Add(tempData.CodeInfo,tempData);
+                    }
+                    
                 }
+            }
+            if (_MainWindow != null)
+            {
+                _MainWindow.OnReceiveSnapShotOrUpdateCallBack(realDataDic);
             }
         }
 
@@ -1840,6 +1850,7 @@ namespace TradingMaster
                     newPosItem.Exchange = trade.Exchange;
                     newPosItem.OccupyMarginAmt = "-";
                     newPosItem.BackEnd = trade.BackEnd;
+                    newPosItem.Hedge = trade.Hedge;
                     Contract contract = CodeSetManager.GetContractInfo(trade.Code, CodeSetManager.ExNameToCtp(trade.Exchange));
                     if (contract != null)
                     {
@@ -1868,6 +1879,7 @@ namespace TradingMaster
                     newPosItem.Exchange = trade.Exchange;
                     newPosItem.OccupyMarginAmt = "-";
                     newPosItem.BackEnd = trade.BackEnd;
+                    newPosItem.Hedge = trade.Hedge;
                     Contract contract = CodeSetManager.GetContractInfo(trade.Code, CodeSetManager.ExNameToCtp(trade.Exchange));
                     if (contract != null)
                     {
@@ -2241,12 +2253,12 @@ namespace TradingMaster
                                 }
                             }
 
-                            Contract codeInfo = CodeSetManager.GetContractInfo(record.Code, CodeSetManager.ExNameToCtp(record.Exchange));
-                            RealData realData = DataContainer.GetRealDataFromContainer(codeInfo);
-                            if (realData != null)
-                            {
-                                _MainWindow.HQBackgroundRealData.SetPositionInfo(realData);
-                            }
+                            //Contract codeInfo = CodeSetManager.GetContractInfo(record.Code, CodeSetManager.ExNameToCtp(record.Exchange));
+                            //RealData realData = DataContainer.GetRealDataFromContainer(codeInfo);
+                            //if (realData != null)
+                            //{
+                            //    _MainWindow.HQBackgroundRealData.SetPositionInfo(realData);
+                            //}
                         }
 
                         _MultiUsersPositionDataDic.Clear();

@@ -1141,24 +1141,24 @@ namespace TradingMaster
         /// <summary>
         /// 接收到行情或者主推数据
         /// </summary>
-        public void OnReceiveSnapShotOrUpdateCallBack(RealData realData)
+        public void OnReceiveSnapShotOrUpdateCallBack(Dictionary<Contract, RealData> realDataDict)
         {
             if (HQBackgroundRealData == null)
             {
                 HQBackgroundRealData = new BackgroundDataServer();
             }
-            HQBackgroundRealData.ChangeType(realData);
+            HQBackgroundRealData.ChangeType(realDataDict);
 
             if (uscHangqing != null)
             {
                 if (uscHangqing.HQRealData != null)
                 {
-                    uscHangqing.HQRealData.ChangeType(realData);
+                    uscHangqing.HQRealData.ChangeType(realDataDict);
                 }
 
                 if (uscHangqing.GroupHQRealData != null)
                 {
-                    uscHangqing.GroupHQRealData.ChangeType(realData);
+                    uscHangqing.GroupHQRealData.ChangeType(realDataDict);
                 }
             }
 
@@ -1166,7 +1166,7 @@ namespace TradingMaster
             {
                 if (uscOptionHangqing.OptionQuotesRealData != null)
                 {
-                    uscOptionHangqing.OptionQuotesRealData.ChangeType(realData);
+                    uscOptionHangqing.OptionQuotesRealData.ChangeType(realDataDict);
                 }
             }
             //分档行情
