@@ -435,7 +435,7 @@ namespace TradingMaster
 
             //做市商交互指令
             _CtpTraderApi.OnRspQryForQuote += new CtpTraderApi.RspQryForQuote(CtpTraderApi_OnRspQryForQuote);
-            //_CtpTraderApi.OnRtnForQuoteRsp += new CtpTraderApi.RtnForQuoteRsp(CtpTraderApi_OnRtnForQuoteRsp);
+            _CtpTraderApi.OnRtnForQuoteRsp += new CtpTraderApi.RtnForQuoteRsp(CtpTraderApi_OnRtnForQuoteRsp);
             _CtpTraderApi.OnRspForQuoteInsert += new CtpTraderApi.RspForQuoteInsert(CtpTraderApi_OnRspForQuoteInsert);
             _CtpTraderApi.OnErrRtnForQuoteInsert += new CtpTraderApi.ErrRtnForQuoteInsert(CtpTraderApi_OnErrRtnForQuoteInsert);
             _CtpTraderApi.OnRspQryQuote += new CtpTraderApi.RspQryQuote(CtpTraderApi_OnRspQryQuote);
@@ -1875,7 +1875,9 @@ namespace TradingMaster
 
         void CtpTraderApi_OnRtnForQuoteRsp(ref CThostFtdcForQuoteRspField pForQuoteRsp)
         {
-            Util.Log(String.Format("TradeApiCTP CtpDataServer: OnRtnForQuoteRsp is received. InstrumentID = {0}, ForQuoteSysID = {1}, ForQuoteTime = {2} {3}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID, pForQuoteRsp.TradingDay, pForQuoteRsp.ForQuoteTime));
+            Util.Log(String.Format("TradeApiCTP CtpDataServer: OnRtnForQuoteRsp is received. InstrumentID = {0}, ForQuoteSysID = {1}, ForQuoteTime = {2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID, pForQuoteRsp.ForQuoteTime));
+            string msg = String.Format("询价信息：{0}, 询价号：{1}, 询价时间：{2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID.Trim(), pForQuoteRsp.ForQuoteTime);
+            TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
         }
 
         void CtpTraderApi_OnRspForQuoteInsert(ref CThostFtdcInputForQuoteField pInputForQuote, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
@@ -5924,7 +5926,9 @@ namespace TradingMaster
 
         void mdApi_OnRtnForQuoteRsp(ref CThostFtdcForQuoteRspField pForQuoteRsp)
         {
-            Util.Log(String.Format("TradeApiCTP CtpDataServer: OnRtnForQuoteRsp is received. InstrumentID = {0}, ForQuoteSysID = {1}, ForQuoteTime = {2} {3}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID, pForQuoteRsp.TradingDay, pForQuoteRsp.ForQuoteTime));
+            Util.Log(String.Format("MdApiCTP CtpDataServer: OnRtnForQuoteRsp is received. InstrumentID = {0}, ForQuoteSysID = {1}, ForQuoteTime = {2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID, pForQuoteRsp.ForQuoteTime));
+            string msg = String.Format("询价信息：{0}, 询价号：{1}, 询价时间：{2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID.Trim(), pForQuoteRsp.ForQuoteTime);
+            TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
         }
 
         private RealData MarketDataReport(CThostFtdcDepthMarketDataField pDepthMarketData)

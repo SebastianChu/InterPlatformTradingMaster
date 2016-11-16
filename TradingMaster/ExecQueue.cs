@@ -104,24 +104,29 @@ namespace TradingMaster
                     //serverMethod.Invoke(CtpDataServer.getServerInstance(), cmd.Params.ToArray());
 
                     List<RequestContent> dataList = _OrdQueue.DequeueAll();
-                    foreach (RequestContent data in dataList)
+                    foreach (RequestContent cmd in dataList)
                     {
-                        if (data.FunctionName == "CancelQuoteOrder")
+                        if (cmd.FunctionName == "CancelQuoteOrder")
                         {
-                            cancelQuoteOrderLst.Add(data);
+                            cancelQuoteOrderLst.Add(cmd);
                         }
-                        if (data.FunctionName == "NewQuoteOrder")
+                        if (cmd.FunctionName == "NewQuoteOrder")
                         {
-                            quoteOrderLst.Add(data);
+                            quoteOrderLst.Add(cmd);
                         }
-                        if (data.FunctionName == "CancelOrder")
+                        if (cmd.FunctionName == "CancelOrder")
                         {
-                            cancelOrderLst.Add(data);
+                            cancelOrderLst.Add(cmd);
                         }
-                        if (data.FunctionName == "NewOrderSingle")
+                        if (cmd.FunctionName == "NewOrderSingle")
                         {
-                            orderLst.Add(data);
+                            orderLst.Add(cmd);
                         }
+
+                        Util.Log("TradeApi OrderThreadProc: " + cmd.FunctionName + " dequeues.");
+                        MethodInfo serverMethod = CtpDataServer.GetUserInstance().GetType().GetMethod(cmd.FunctionName);
+                        serverMethod.Invoke(CtpDataServer.GetUserInstance(), cmd.Params.ToArray());
+                        //Thread.Sleep(175);
                     }
 
                     dataList.Clear();
@@ -133,13 +138,6 @@ namespace TradingMaster
                     {
                         Util.Log(String.Format("Order Count: {0}; Cancel Quote Order: {1}, Quote Order: {2}, Cancel Order: {3}, Order: {4}"
                             , dataList.Count, cancelQuoteOrderLst.Count, quoteOrderLst.Count, cancelOrderLst.Count, orderLst.Count));
-                    }
-                    foreach (RequestContent cmd in dataList)
-                    {
-                        Util.Log("TradeApi OrderThreadProc: " + cmd.FunctionName + " dequeues.");
-                        MethodInfo serverMethod = CtpDataServer.GetUserInstance().GetType().GetMethod(cmd.FunctionName);
-                        serverMethod.Invoke(CtpDataServer.GetUserInstance(), cmd.Params.ToArray());
-                        //Thread.Sleep(175);
                     }
                     cancelQuoteOrderLst.Clear();
                     quoteOrderLst.Clear();
