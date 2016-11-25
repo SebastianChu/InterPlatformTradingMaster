@@ -821,9 +821,12 @@ namespace TradingMaster
                     itemCount++;
                     ProcessNewComeExecOrderNotice(execData);
                     string execKey = execData.BrokerExecOrderSeq + "_" + execData.ExecOrderRef + "_" + execData.Exchange;
-                    if (_ExecOrderDataDic.ContainsKey(execKey) && IsLatestExecOrderData(_ExecOrderDataDic[execKey], execData))
+                    if (_ExecOrderDataDic.ContainsKey(execKey))
                     {
-                        _ExecOrderDataDic[execKey] = execData;
+                        if (IsLatestExecOrderData(_ExecOrderDataDic[execKey], execData))
+                        {
+                            _ExecOrderDataDic[execKey] = execData;
+                        }
                     }
                     else
                     {
@@ -862,9 +865,12 @@ namespace TradingMaster
                     itemCount++;
                     ProcessNewComeQuoteOrderNotice(quoteData);
                     string quoteKey = quoteData.BrokerQuoteSeq + "_" + quoteData.QuoteRef + "_" + quoteData.Exchange;
-                    if (_QuoteOrderDataDic.ContainsKey(quoteKey) && IsLatestQuoteOrderData(_QuoteOrderDataDic[quoteKey], quoteData))
+                    if (_QuoteOrderDataDic.ContainsKey(quoteKey))
                     {
-                        _QuoteOrderDataDic[quoteKey] = quoteData;
+                        if (IsLatestQuoteOrderData(_QuoteOrderDataDic[quoteKey], quoteData))
+                        {
+                            _QuoteOrderDataDic[quoteKey] = quoteData;
+                        }
                     }
                     else
                     {
@@ -1183,13 +1189,9 @@ namespace TradingMaster
 
         private bool IsLatestOrderData(Q7JYOrderData orgOrderData, Q7JYOrderData laterOrderData)
         {
-            if (CommonUtil.GetOrderStatus(laterOrderData.OrderStatus) == OrderStatus.PartChengjiao && orgOrderData.TradeHandCount <= laterOrderData.TradeHandCount)
+            if (CommonUtil.IsCancellable(laterOrderData))
             {
-                return true;
-            }
-            else if (!CommonUtil.IsCancellable(orgOrderData) && CommonUtil.IsCancellable(laterOrderData)) //包含"正报"字段
-            {
-                return false;
+                return IsNewStatus(orgOrderData.OrderStatus, laterOrderData.OrderStatus);
             }
             return true;
         }
@@ -1402,9 +1404,14 @@ namespace TradingMaster
         {
             if (CommonUtil.IsQuoteCancellable(laterQuoteOrder))
             {
-                return false;
+                return IsNewStatus(orgQuoteOrder.QuoteStatus, laterQuoteOrder.QuoteStatus);
             }
             return true;
+        }
+
+        private bool IsNewStatus(string orgStatus, string laterStatus)
+        {
+            return CommonUtil.GetOrderStatus(orgStatus) < CommonUtil.GetOrderStatus(laterStatus);
         }
 
         private void ProcessNewComeQuoteOrderNotice(QuoteOrderData qOrder)
@@ -1547,7 +1554,7 @@ namespace TradingMaster
         {
             if (CommonUtil.IsExecCancellable(laterExecOrder))
             {
-                return false;
+                return IsNewStatus(orgExecOrder.ExecStatus, laterExecOrder.ExecStatus);
             }
             return true;
         }

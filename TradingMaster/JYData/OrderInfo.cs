@@ -15,86 +15,90 @@ namespace TradingMaster
         /// 未知
         /// </summary>
         Unknown = 0,
-        /// <summary>
-        /// 完全成交
-        /// </summary>
-        Chengjiao = 1,
-        /// <summary>
-        /// 已排队
-        /// </summary>
-        Queued = 2,
-        /// <summary>
-        /// 已撤单
-        /// </summary>
-        Cancelled = 3,
+
         /// <summary>
         /// 埋单
         /// </summary>
-        MaiDan = 4,
+        MaiDan = 11,
         /// <summary>
         /// 埋单删除
         /// </summary>
-        MaiDanDelete = 5,
+        MaiDanDelete = 12,
         /// <summary>
         /// 埋单已经触发
         /// </summary>
-        MaiDanTouch = 6,
+        MaiDanTouch = 13,
         /// <summary>
         /// 埋单拒绝
         /// </summary>
-        MaiDanReject = 7,
+        MaiDanReject = 14,
+
         /// <summary>
         /// 自动单
         /// </summary>
-        Auto = 8,
+        Auto = 21,
         /// <summary>
         /// 自动单删除
         /// </summary>
-        AutoDelete = 9,
+        AutoDelete = 22,
         /// <summary>
         /// 自动单已经触发
         /// </summary>
-        AutoTouch = 10,
+        AutoTouch = 23,
         /// <summary>
         /// 自动单拒绝
         /// </summary>
-        AutoReject = 11,
-        /// <summary>
-        /// 部分成交
-        /// </summary>
-        PartChengjiao = 12,
+        AutoReject = 24,
+
         /// <summary>
         /// 已经提交到服务端
         /// </summary>
-        Submitted = 13,
+        Submitted = 31,
         /// <summary>
         /// 非条件单,未触发
         /// </summary>
-        NotTouched = 14,
+        NotTouched = 32,
         /// <summary>
         /// 条件单
         /// </summary>
-        Condition = 15,
+        Condition = 33,
         /// <summary>
         /// 条件单删除
         /// </summary>
-        ConditionDelete = 16,
+        ConditionDelete = 34,
         /// <summary>
         /// 条件单已经触发
         /// </summary>
-        ConditionTouch = 17,
+        ConditionTouch = 35,
         /// <summary>
         /// 条件单拒绝
         /// </summary>
-        ConditionReject = 18,
+        ConditionReject = 36,
         /// <summary>
         /// 自动生成的已经发送的条件单
         /// </summary>
-        ConditionSubmmited = 19,
+        ConditionSubmmited = 37,
+
+        /// <summary>
+        /// 已排队
+        /// </summary>
+        Queued = 91,
+        /// <summary>
+        /// 部分成交
+        /// </summary>
+        PartChengjiao = 92,
         /// <summary>
         /// 待撤
         /// </summary>
-        PendingCancel = 20,
+        PendingCancel = 93,
+        /// <summary>
+        /// 完全成交
+        /// </summary>
+        Chengjiao = 94,
+        /// <summary>
+        /// 已撤单
+        /// </summary>
+        Cancelled = 95,
         /// <summary>
         /// 指令失败
         /// </summary>

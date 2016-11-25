@@ -1223,7 +1223,7 @@ namespace TradingMaster
             {
                 string quoteStatus = CommonUtil.GetOrderProperty(order, "QuoteStatus").ToString();
                 string code = CommonUtil.GetOrderProperty(order, "Code").ToString();
-                return code != "" && quoteStatus != null && (quoteStatus.Contains("未成交") || quoteStatus.Contains("已报") || quoteStatus.Contains("未发送") || quoteStatus.Contains("未报") || quoteStatus.Contains("部分成交"));
+                return code != "" && quoteStatus != null && (quoteStatus.Contains("正报") || quoteStatus.Contains("未成交") || quoteStatus.Contains("已报") || quoteStatus.Contains("未发送") || quoteStatus.Contains("未报") || quoteStatus.Contains("部分成交"));
             }
             catch (Exception ex)
             {
@@ -1239,7 +1239,7 @@ namespace TradingMaster
             {
                 string execStatus = CommonUtil.GetOrderProperty(order, "ExecStatus").ToString();
                 string code = CommonUtil.GetOrderProperty(order, "Code").ToString();
-                return code != "" && execStatus != null && (execStatus.Contains("未执行") || execStatus.Contains("正报") || execStatus.Contains("已报") || execStatus.Contains("未发送") || execStatus.Contains("未报"));
+                return code != "" && execStatus != null && (execStatus.Contains("正报") || execStatus.Contains("未执行") || execStatus.Contains("已报") || execStatus.Contains("未发送") || execStatus.Contains("未报"));
             }
             catch (Exception ex)
             {
