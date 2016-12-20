@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using TradingMaster.CodeSet;
 
 namespace TradingMaster
@@ -60,7 +58,7 @@ namespace TradingMaster
         public void GenerateSPCCodeInfo(Species baseSpecies, Species baseSpecies2, string codeTitle)
         {
             if (Codes == null) Codes = new List<Contract>();
-            for (int i = 0, j = 0; i < Math.Min(baseSpecies.Codes.Count, baseSpecies2.Codes.Count) && j < Math.Min(baseSpecies.Codes.Count, baseSpecies2.Codes.Count); )
+            for (int i = 0, j = 0; i < Math.Min(baseSpecies.Codes.Count, baseSpecies2.Codes.Count) && j < Math.Min(baseSpecies.Codes.Count, baseSpecies2.Codes.Count);)
             {
                 int tempcount1 = baseSpecies.Codes[i].Code.IndexOfAny("0123456789".ToCharArray());
                 string tempcode1 = baseSpecies.Codes[i].Code.Substring(tempcount1);

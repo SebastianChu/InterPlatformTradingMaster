@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Data;
 using TradingMaster.CodeSet;
 
@@ -207,8 +204,8 @@ namespace TradingMaster
             }
 
             //获得最小变动单位
-            string code = values[0] == null ? "" :values[0].ToString();
-            if (code.StartsWith("TF") && (double)propertyValue!=0)
+            string code = values[0] == null ? "" : values[0].ToString();
+            if (code.StartsWith("TF") && (double)propertyValue != 0)
             {
                 //Util.Log("TF");
             }
@@ -227,7 +224,7 @@ namespace TradingMaster
             {
                 doubleValue = CommonUtil.GetDoubleValue(propertyValue);
             }
-            
+
             if (doubleValue == 0)
             {
                 return CommonUtil.DefaultHQDisplayValue;
@@ -832,7 +829,7 @@ namespace TradingMaster
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            string buysellinfo = value == null ? "" :value.ToString();
+            string buysellinfo = value == null ? "" : value.ToString();
 
             if (buysellinfo.Contains("买"))
                 buysellinfo = "买";

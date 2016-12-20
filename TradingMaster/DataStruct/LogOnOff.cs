@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace TradingMaster
+﻿namespace TradingMaster
 {
     public class LogonStruct
     {
@@ -164,7 +159,7 @@ namespace TradingMaster
             }
         }
     }
-    
+
     public class DisconnectStruct
     {
         /// <summary>

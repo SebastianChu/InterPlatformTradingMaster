@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Windows;
+﻿using ICSharpCode.SharpZipLib.Zip;
+using System;
 using System.Diagnostics;
-using System.Xml.Serialization;
-using System.Security.Principal;
-using ICSharpCode.SharpZipLib.Checksums;
-using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.GZip;
 using System.IO;
-using System.Threading;
+using System.Security.Principal;
+using System.Windows;
 
 namespace TradingMaster
 {
@@ -54,7 +46,7 @@ namespace TradingMaster
         {
             //Util.Log("未处理的Exception:" + ex.ExceptionObject);
             Exception exception = (Exception)ex.ExceptionObject;
-            Util.Log(String.Format("UnhandledException({0}): {1} ---> {2}", 
+            Util.Log(String.Format("UnhandledException({0}): {1} ---> {2}",
                 exception.GetType().Name, exception.Message, exception.InnerException.Message));
         }
 
@@ -66,7 +58,7 @@ namespace TradingMaster
                 Application.Current.Shutdown();
                 return;
             }
-           
+
             ////先判断Data目录下是否存在.zip文件，如果存在则解压
             //ExtractZip();
 
@@ -250,11 +242,11 @@ namespace TradingMaster
                             {
                                 Util.Log("exception 解压文件" + filename + "时发生错误:" + ex2.Message);
                                 index += 1;
-                                Util.Log("index=" + index+" 睡眠500毫秒");
+                                Util.Log("index=" + index + " 睡眠500毫秒");
                                 System.Threading.Thread.Sleep(500);
                             }
                         }
-                        
+
                         int size = 2048;
                         byte[] data = new byte[2048];
                         while (true)
@@ -266,7 +258,7 @@ namespace TradingMaster
                                 {
                                     streamWriter.Write(data, 0, size);
                                 }
-                                
+
                             }
                             else
                             {

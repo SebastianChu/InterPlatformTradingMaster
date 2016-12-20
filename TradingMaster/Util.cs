@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Security.Cryptography;
 using System.Diagnostics;
-using System.Xml;
-using System.Text.RegularExpressions;
-using System.Reflection;
+using System.IO;
 using System.Management;
 using System.Net;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TradingMaster
 {
@@ -24,7 +21,7 @@ namespace TradingMaster
 
         public const int OF_READWRITE = 2;
         public const int OF_SHARE_DENY_NONE = 0x40;
-        public static readonly IntPtr HFILE_ERROR = new IntPtr(-1);  
+        public static readonly IntPtr HFILE_ERROR = new IntPtr(-1);
 
         /// <summary>
         /// 判断文件是否被占用
@@ -43,7 +40,7 @@ namespace TradingMaster
             if (vHandle == HFILE_ERROR)
             {
                 Util.Log("文件被占用");
-                bret= true;
+                bret = true;
             }
             CloseHandle(vHandle);
             return bret;
@@ -68,7 +65,7 @@ namespace TradingMaster
         /// <returns></returns>
         public static string GetPluginVersionString(string pluginDllFileName)
         {
-            if(String.IsNullOrEmpty(pluginDllFileName)) return "";
+            if (String.IsNullOrEmpty(pluginDllFileName)) return "";
             Util.Log("获取文件版本号:" + pluginDllFileName);
             Assembly ass = Assembly.LoadFrom(pluginDllFileName);
             Version ver = ass.GetName().Version;
@@ -79,8 +76,8 @@ namespace TradingMaster
         {
             StackTrace st = new StackTrace(true);
             StackFrame sf = st.GetFrame(1);
-            System.Reflection.MethodBase method=sf.GetMethod();
-            string lastcallmethod = method.DeclaringType.ToString() +"."+ method.Name;
+            System.Reflection.MethodBase method = sf.GetMethod();
+            string lastcallmethod = method.DeclaringType.ToString() + "." + method.Name;
 
             string dateTime = DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff");
             string currentThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId.ToString();
@@ -110,7 +107,7 @@ namespace TradingMaster
 
         public static string GetMD5(string content)
         {
-            Util.Log("content="+content);
+            Util.Log("content=" + content);
             MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
             byte[] hashData = md5.ComputeHash(Encoding.Default.GetBytes(content));
             string str = System.BitConverter.ToString(hashData);

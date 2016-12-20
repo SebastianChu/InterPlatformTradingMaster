@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace TradingMaster
 {
@@ -31,7 +28,7 @@ namespace TradingMaster
             ClearUserDll();
             LoadDll(DLLNAME);
             string tempOrderRef = DateTime.Now.Ticks.ToString();
-            MaxOrderRef = int.Parse(tempOrderRef.Substring(6,6));
+            MaxOrderRef = int.Parse(tempOrderRef.Substring(6, 6));
         }
 
         /// <summary>
@@ -225,7 +222,7 @@ namespace TradingMaster
                 return false;
             }
             CloseHandle(vHandle);
-            return true;  
+            return true;
         }
 
         /// <summary>
@@ -303,7 +300,7 @@ namespace TradingMaster
         /// </summary>
         /// <param name="order">输入的报单</param>
         private delegate int reqOrderInsert(ref CThostFtdcInputOrderField pField);
-        public int OrderInsert(CThostFtdcInputOrderField pOrder) 
+        public int OrderInsert(CThostFtdcInputOrderField pOrder)
         {
             return ((reqOrderInsert)Invoke(this.PtrHandle, "ReqOrderInsert", typeof(reqOrderInsert)))(ref pOrder);
         }
@@ -388,7 +385,7 @@ namespace TradingMaster
             }
             return ((reqOrderInsert)Invoke(this.PtrHandle, "ReqOrderInsert", typeof(reqOrderInsert)))(ref pOrder);
         }
-       
+
         /// <summary>
         /// 撤单
         /// </summary>
@@ -520,7 +517,7 @@ namespace TradingMaster
         private delegate int reqQryInvestor(string BROKER_ID, string INVESTOR_ID);
         public int QryInvestor()
         {
-            return ((reqQryInvestor)Invoke(this.PtrHandle, "ReqQryInvestor", typeof(reqQryInvestor)))(this.BrokerID, this.InvestorID); 
+            return ((reqQryInvestor)Invoke(this.PtrHandle, "ReqQryInvestor", typeof(reqQryInvestor)))(this.BrokerID, this.InvestorID);
         }
 
         /// <summary>
@@ -989,7 +986,7 @@ namespace TradingMaster
             pInputQuote.QuoteRef = "" + (++this.MaxOrderRef).ToString();
             pInputQuote.UserID = this.InvestorID;
             pInputQuote.ForQuoteSysID = ForQuoteID;
-            
+
             pInputQuote.BidOrderRef = "" + (++this.MaxOrderRef).ToString();
             pInputQuote.BidOffsetFlag = BidOffset;
             pInputQuote.BidPrice = BidPrice;
@@ -1163,7 +1160,7 @@ namespace TradingMaster
         /// 回调函数 =====================================================================================================================
 
         private delegate void Reg(IntPtr pPtr);
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -1185,7 +1182,7 @@ namespace TradingMaster
                 (Invoke(this.PtrHandle, "RegOnFrontConnected", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnFrontConnected));
             }
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -1228,7 +1225,7 @@ namespace TradingMaster
             }
         }
 
-        
+
         public delegate void RspUserLogin(ref CThostFtdcRspUserLoginField pRspUserLogin, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
         private RspUserLogin _OnRspUserLogin;
         /// <summary>

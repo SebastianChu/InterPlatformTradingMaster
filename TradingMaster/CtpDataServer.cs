@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using TradingMaster.Control;
 using System.Threading;
-using TradingMaster.JYData;
-using TradingMaster.CodeSet;
+using System.Windows;
 using System.Xml;
-using System.Collections.Concurrent;
+using TradingMaster.CodeSet;
+using TradingMaster.Control;
+using TradingMaster.JYData;
 
 namespace TradingMaster
 {
@@ -27,7 +24,7 @@ namespace TradingMaster
         private CtpTraderApi _CtpTraderApi = null;
         private CtpMdApi _CtpMdApi = null;
         private BACKENDTYPE _BackEnd = BACKENDTYPE.CTP;
-        
+
         /// <summary>
         /// 经纪公司设定
         /// </summary>
@@ -237,11 +234,11 @@ namespace TradingMaster
         /// 处理委托查询
         /// </summary>
         /// <param name="pOrderData"></param>
-        protected void ProcessParkedOrderData(List<Q7JYOrderData> pOrderData)
+        protected void ProcessParkedOrderData(List<TradeOrderData> pOrderData)
         {
-            if (_MainWindow != null && System.Windows.Application.Current != null)
+            if (_MainWindow != null && Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     try
                     {
@@ -250,7 +247,7 @@ namespace TradingMaster
                         _MainWindow.PreOrderData.Clear();
                         _MainWindow.SentOrderData.Clear();
 
-                        foreach (Q7JYOrderData pOrder in pOrderData)
+                        foreach (TradeOrderData pOrder in pOrderData)
                         {
                             _MainWindow.PreConditionOrderData.Add(pOrder);
 
@@ -302,9 +299,9 @@ namespace TradingMaster
         /// <param name="maxOperation"></param>
         public void ProcessMaxOperation(MaxOperation maxOperation)
         {
-            if (_MainWindow != null && System.Windows.Application.Current != null)
+            if (_MainWindow != null && Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     try
                     {
@@ -319,7 +316,7 @@ namespace TradingMaster
             }
         }
 
-        public void ProcessNewComeTradeInfo(Q7JYOrderData trade, bool isInited = true)
+        public void ProcessNewComeTradeInfo(TradeOrderData trade, bool isInited = true)
         {
             //Add for GHS 5.0.2
             if (trade == null)
@@ -328,17 +325,17 @@ namespace TradingMaster
             }
 
             //Synchronizing the trading info when initialized
-            List<Q7JYOrderData> removeItems = new List<Q7JYOrderData>();
+            List<TradeOrderData> removeItems = new List<TradeOrderData>();
             if (!isInited)
             {
-                foreach (Q7JYOrderData item in QryTradeDataLst)
+                foreach (TradeOrderData item in QryTradeDataLst)
                 {
                     if (trade.TradeID != "" && item.TradeID == trade.TradeID && item.OrderID == trade.OrderID && item.Exchange == trade.Exchange)
                     {
                         removeItems.Add(item);
                     }
                 }
-                foreach (Q7JYOrderData rItem in removeItems)
+                foreach (TradeOrderData rItem in removeItems)
                 {
                     QryTradeDataLst.Remove(rItem);
                 }
@@ -603,9 +600,9 @@ namespace TradingMaster
             else
             {
                 AddToTradeDataQryQueue(new RequestContent("RequestSettlementInstructions", new List<object>() { "" }));
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         if (_AffirmWindow == null)
                         {
@@ -827,7 +824,7 @@ namespace TradingMaster
                 MaxOperation maxOper = new MaxOperation();
                 maxOper.CodeInfo = CodeSetManager.GetContractInfo(pQueryMaxOrderVolume.InstrumentID);
                 maxOper.Count = pQueryMaxOrderVolume.MaxVolume;
-                maxOper.PosEffect = GetPosEffectType (pQueryMaxOrderVolume.OffsetFlag);
+                maxOper.PosEffect = GetPosEffectType(pQueryMaxOrderVolume.OffsetFlag);
                 maxOper.Side = GetSideType(pQueryMaxOrderVolume.Direction);
                 maxOper.HedgeType = GetHedgeType(pQueryMaxOrderVolume.HedgeFlag);
                 ProcessMaxOperation(maxOper);
@@ -853,7 +850,7 @@ namespace TradingMaster
 
         void CtpTraderApi_OnRtnOrder(ref CThostFtdcOrderField pOrder)
         {
-            Q7JYOrderData jyData = OrderExecutionReport(pOrder);
+            TradeOrderData jyData = OrderExecutionReport(pOrder);
             Util.Log(String.Format("OnRtnOrder pOrder: Code {0}, BrokerOrderSeq {1}, OrderSysID {2}, OrderRef {3}, Status {4}, Hedge {5}",
                 jyData.Code, jyData.BrokerOrderSeq, jyData.OrderID, jyData.OrderRef, jyData.FeedBackInfo, jyData.Hedge));
             if (TempOrderFlag) //接收同步的报单回报
@@ -958,7 +955,7 @@ namespace TradingMaster
 
         void CtpTraderApi_OnRtnTrade(ref CThostFtdcTradeField pTrade)
         {
-            Q7JYOrderData tradedData = TradeExecutionReport(pTrade);
+            TradeOrderData tradedData = TradeExecutionReport(pTrade);
             Util.Log(String.Format("OnRtnTrade Code {0}, TradeID {1}, OrderSysID {2}, BrokerOrderSeq {3}, Volume {4}, Hedge {5}",
                 tradedData.Code, tradedData.TradeID, tradedData.OrderID, tradedData.BrokerOrderSeq, tradedData.TradeHandCount, tradedData.Hedge));
             if (TempTradeFlag)
@@ -1030,7 +1027,7 @@ namespace TradingMaster
                 # region Clearing Remaining Re-opening Order
 
                 List<PosInfoOrder> openItemLst = new List<PosInfoOrder>();
-                //foreach (Q7JYOrderData jyData in _JYOrderData)
+                //foreach (TradeOrderData jyData in _JYOrderData)
                 //if (jyData.OpenClose.Contains("平") && pInputOrder.OrderRef == jyData.OrderRef)
                 if (Enum.GetName(typeof(EnumThostOffsetFlagType), pInputOrder.CombOffsetFlag_0).Contains("Close"))
                 {
@@ -1101,7 +1098,7 @@ namespace TradingMaster
                     TempOrderFlag = false;
                     return;
                 }
-                Q7JYOrderData jyData = OrderExecutionReport(pOrder);
+                TradeOrderData jyData = OrderExecutionReport(pOrder);
                 string orderKey = jyData.BrokerOrderSeq + "_" + jyData.OrderRef + "_" + jyData.Exchange;
                 if (QryOrderDataDic.ContainsKey(orderKey))
                 {
@@ -1117,7 +1114,7 @@ namespace TradingMaster
                     TempOrderFlag = false;
                     if (TempOrderData.Count > 0)
                     {
-                        foreach (Q7JYOrderData tempData in TempOrderData)
+                        foreach (TradeOrderData tempData in TempOrderData)
                         {
                             if (String.IsNullOrEmpty(tempData.Name) || tempData.Name == "")
                             {
@@ -1139,12 +1136,12 @@ namespace TradingMaster
                             //ProcessNewComeOrderInfo(tempData);
                         }
                     }
-                    List<Q7JYOrderData> qryOrderLst = new List<Q7JYOrderData>();
+                    List<TradeOrderData> qryOrderLst = new List<TradeOrderData>();
                     foreach (string key in QryOrderDataDic.Keys)
                     {
                         qryOrderLst.Add(QryOrderDataDic[key]);
                     }
-                    qryOrderLst.Sort(Q7JYOrderData.CompareByCommitTime);
+                    qryOrderLst.Sort(TradeOrderData.CompareByCommitTime);
                     TradeDataClient.GetClientInstance().RtnOrderEnqueue(qryOrderLst);
                     TempOrderData.Clear();
                 }
@@ -1166,7 +1163,7 @@ namespace TradingMaster
                     TempTradeFlag = false;
                     return;
                 }
-                Q7JYOrderData jyData = TradeExecutionReport(pTrade);
+                TradeOrderData jyData = TradeExecutionReport(pTrade);
                 QryTradeDataLst.Add(jyData);
                 if (bIsLast)
                 {
@@ -1174,7 +1171,7 @@ namespace TradingMaster
                     TempTradeFlag = false;
                     if (TempTradeData.Count > 0)
                     {
-                        foreach (Q7JYOrderData tempData in TempTradeData)
+                        foreach (TradeOrderData tempData in TempTradeData)
                         {
                             if (String.IsNullOrEmpty(tempData.Name) || tempData.Name == "")
                             {
@@ -1188,7 +1185,7 @@ namespace TradingMaster
                             QryTradeDataLst.Add(tempData);
                         }
                     }
-                    QryTradeDataLst.Sort(Q7JYOrderData.CompareByTradeTime);
+                    QryTradeDataLst.Sort(TradeOrderData.CompareByTradeTime);
                     //ProcessTradedOrderData(QryTradeDataLst);
                     TradeDataClient.GetClientInstance().RtnTradeEnqueue(QryTradeDataLst);
                     TempTradeData.Clear();
@@ -1202,14 +1199,14 @@ namespace TradingMaster
             {
                 return;
             }
-            Q7PosInfoTotal posDetail = PositionExecutionReport(pInvestorPosition);
+            PosInfoTotal posDetail = PositionExecutionReport(pInvestorPosition);
             JYPosSumData.Add(posDetail);
             if (bIsLast)
             {
                 Util.Log("TradeApiCTP CtpDataServer: OnRspQryInvestorPosition(last) is received.");
                 lock (ServerLock)
                 {
-                    JYPosSumData.Sort(Q7PosInfoTotal.CompareByCode);
+                    JYPosSumData.Sort(PosInfoTotal.CompareByCode);
                     //ProcessPositions_Total(JYPosSumData);
                 }
             }
@@ -1222,14 +1219,14 @@ namespace TradingMaster
                 TempPosFlag = false;
                 return;
             }
-            Q7PosInfoDetail posDetail = PosDetailExecutionReport(pInvestorPositionDetail);
+            PosInfoDetail posDetail = PosDetailExecutionReport(pInvestorPositionDetail);
             QryPosDetailData.Add(posDetail);
             if (bIsLast)
             {
                 Util.Log("TradeApiCTP CtpDataServer: OnRspQryInvestorPositionDetail(last) is received.");
                 lock (ServerLock)
                 {
-                    QryPosDetailData.Sort(Q7PosInfoDetail.CompareByExecID);
+                    QryPosDetailData.Sort(PosInfoDetail.CompareByExecID);
                     TradeDataClient.GetClientInstance().RtnPositionEnqueue(QryPosDetailData);
                     //ProcessPositions(QryPosDetailData);
                 }
@@ -1243,14 +1240,14 @@ namespace TradingMaster
             {
                 return;
             }
-            //Q7PosInfoDetail posDetail = PosDetailExecutionReport(pInvestorPositionDetail);
+            //PosInfoDetail posDetail = PosDetailExecutionReport(pInvestorPositionDetail);
             //jyPosDetailData.Add(posDetail);
             if (bIsLast)
             {
                 Util.Log("TradeApiCTP CtpDataServer: OnRspQryInvestorPositionCombineDetail(last) is received.");
                 lock (ServerLock)
                 {
-                    //jyPosDetailData.Sort(Q7PosInfoDetail.CompareByExecID);
+                    //jyPosDetailData.Sort(PosInfoDetail.CompareByExecID);
                     //ProcessPositions(jyPosDetailData);
                 }
             }
@@ -1279,9 +1276,9 @@ namespace TradingMaster
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("用户" + pTradingNoticeInfo.InvestorID + "：" + pTradingNoticeInfo.FieldContent);
                 string acct = pTradingNoticeInfo.InvestorID;
                 string msg = pTradingNoticeInfo.FieldContent;
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("用户" + acct + "：" + msg, "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -1309,18 +1306,18 @@ namespace TradingMaster
             Util.Log("TradeApiCTP CtpDataServer: OnRspParkedOrderInsert is received.");
             if (pRspInfo.ErrorID == 0)
             {
-                Q7JYOrderData parkedOrder = GetParkedOrderExcutionReport(pParkedOrder);
+                TradeOrderData parkedOrder = GetParkedOrderExcutionReport(pParkedOrder);
                 PreOrderData.Add(parkedOrder);
                 if (bIsLast)
                 {
                     Util.Log("TradeApiCTP CtpDataServer: OnRspParkedOrderInsert(last) is received.");
                     lock (ServerLock)
                     {
-                        foreach (Q7JYOrderData pOrder in PreOrderData)
+                        foreach (TradeOrderData pOrder in PreOrderData)
                         {
                             //ProcessNewComeParkedOrderInfo(pOrder);
                         }
-                        PreOrderData.Sort(Q7JYOrderData.CompareByCommitTime);
+                        PreOrderData.Sort(TradeOrderData.CompareByCommitTime);
                         ProcessParkedOrderData(PreOrderData);
                     }
                 }
@@ -1340,14 +1337,14 @@ namespace TradingMaster
                 TempOrderFlag = false;
                 return;
             }
-            Q7JYOrderData parkedOrder = GetParkedOrderExcutionReport(pParkedOrder);
+            TradeOrderData parkedOrder = GetParkedOrderExcutionReport(pParkedOrder);
             PreOrderData.Add(parkedOrder);
             if (bIsLast)
             {
                 Util.Log("TradeApiCTP CtpDataServer: OnRspQryParkedOrder(last) is received.");
                 lock (ServerLock)
                 {
-                    PreOrderData.Sort(Q7JYOrderData.CompareByCommitTime);
+                    PreOrderData.Sort(TradeOrderData.CompareByCommitTime);
                     ProcessParkedOrderData(PreOrderData);
                 }
             }
@@ -1361,14 +1358,14 @@ namespace TradingMaster
                 TempOrderFlag = false;
                 return;
             }
-            Q7JYOrderData parkedOrder = GetParkedOrderActionExcutionReport(pParkedOrderAction);
+            TradeOrderData parkedOrder = GetParkedOrderActionExcutionReport(pParkedOrderAction);
             PreOrderData.Add(parkedOrder);
             if (bIsLast)
             {
                 Util.Log("TradeApiCTP CtpDataServer: OnRspQryParkedOrder(last) is received.");
                 lock (ServerLock)
                 {
-                    PreOrderData.Sort(Q7JYOrderData.CompareByCommitTime);
+                    PreOrderData.Sort(TradeOrderData.CompareByCommitTime);
                     ProcessParkedOrderData(PreOrderData);
                 }
             }
@@ -1386,7 +1383,7 @@ namespace TradingMaster
                 Util.Log("Error! TradeApiCTP CtpDataServer OnRspRemoveParkedOrder fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("操作失败！" + pRspInfo.ErrorMsg);
             }
-            //foreach (Q7JYOrderData removePreOrder in preOrderData)
+            //foreach (TradeOrderData removePreOrder in preOrderData)
             //{
             //    if (removePreOrder.OrderID == pRemoveParkedOrder.ParkedOrderID)
             //    {
@@ -1396,7 +1393,7 @@ namespace TradingMaster
             //if (bIsLast)
             //{
             //    Util.Log("TradeApiCTP CtpDataServer: OnRspRemoveParkedOrder(last) is received.");
-            //    preOrderData.Sort(Q7JYOrderData.CompareByCommitTime);
+            //    preOrderData.Sort(TradeOrderData.CompareByCommitTime);
             //    ProcessParkedOrderData(preOrderData);
             //}
         }
@@ -1480,9 +1477,9 @@ namespace TradingMaster
             else
             {
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("账户" + pTradingAccountPasswordUpdate.AccountID + "修改密码成功！");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("修改密码成功！", "信息", MessageBoxButton.OK, MessageBoxImage.Information);
                     });
@@ -1520,9 +1517,9 @@ namespace TradingMaster
                 Util.Log("Error! TradeApiCTP CtpDataServer OnRspQueryBankAccountMoneyByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show(msg, "银期操作失败", MessageBoxButton.OK, MessageBoxImage.Warning); ;
                     });
@@ -1541,9 +1538,9 @@ namespace TradingMaster
                 Util.Log("Error! TradeApiCTP CtpDataServer OnRtnQueryBankBalanceByFuture fails! pRspInfo: ID:" + pNotifyQueryAccount.ErrorID + " ErrorMsg:" + pNotifyQueryAccount.ErrorMsg);
                 string msg = pNotifyQueryAccount.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show(msg, "银期操作失败", MessageBoxButton.OK, MessageBoxImage.Warning); ;
                     });
@@ -1565,9 +1562,9 @@ namespace TradingMaster
                 Util.Log("Error! TradeApiCTP CtpDataServer OnRspQueryBankAccountMoneyByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show(msg, "银期操作失败", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -1588,9 +1585,9 @@ namespace TradingMaster
 
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show(msg, "银期操作失败", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -1609,9 +1606,9 @@ namespace TradingMaster
                 Util.Log("Error! TradeApiCTP CtpDataServer OnRtnQueryBankBalanceByFuture fails! pRspInfo: ID:" + pRspTransfer.ErrorID + " ErrorMsg:" + pRspTransfer.ErrorMsg);
                 string msg = pRspTransfer.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspTransfer.ErrorMsg);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show(msg, "银期操作失败", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -1622,9 +1619,9 @@ namespace TradingMaster
                 Util.Log("TradeApiCTP CtpDataServer: OnRtnFromFutureToBankByFuture is received.");
                 TransferSingleRecord transferRec = NewIncomingTransferReport(pRspTransfer);
                 TradeDataClient.GetClientInstance().RtnQueryEnqueue(transferRec);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("转账成功", "转账成功", MessageBoxButton.OK, MessageBoxImage.Information);
                     });
@@ -1639,9 +1636,9 @@ namespace TradingMaster
                 Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnFutureToBankByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show(msg, "转账失败", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -1662,9 +1659,9 @@ namespace TradingMaster
 
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show(msg, "银期操作失败", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -1683,9 +1680,9 @@ namespace TradingMaster
                 Util.Log("Error! TradeApiCTP CtpDataServer OnRtnFromBankToFutureByFuture fails! pRspInfo: ID:" + pRspTransfer.ErrorID + " ErrorMsg:" + pRspTransfer.ErrorMsg);
                 string msg = pRspTransfer.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspTransfer.ErrorMsg);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show(msg, "银期操作失败", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -1696,9 +1693,9 @@ namespace TradingMaster
                 Util.Log("TradeApiCTP CtpDataServer: OnRtnFromBankToFutureByFuture is received.");
                 TransferSingleRecord transferRec = NewIncomingTransferReport(pRspTransfer);
                 TradeDataClient.GetClientInstance().RtnQueryEnqueue(transferRec);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("转账成功", "转账成功", MessageBoxButton.OK, MessageBoxImage.Information);
                     });
@@ -1713,9 +1710,9 @@ namespace TradingMaster
                 Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnBankToFutureByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show(msg, "转账失败", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -2091,7 +2088,7 @@ namespace TradingMaster
             Util.Log("TradeApiCTP CtpDataServer: RequestTradeDataDisConnect: Clearing UI Information...");
             DisconnectStruct disStruct = GetDisconnectReport("Trader");
             TradeDataClient.GetClientInstance().RtnMessageEnqueue(disStruct);
-            
+
             //_CtpServerInstance = null;
             Util.Log("TradeApiCTP CtpDataServer: RequestTradeDataDisConnect: DisConnect starts...");
             try
@@ -2949,9 +2946,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. OrderInsert() = " + orderFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("网络连接失败，如发现数据有误，请尝试重新报单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -2961,9 +2958,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of undealt requests has overlimit the permitted number. OrderInsert() = " + orderFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("未处理请求超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("未处理请求超过许可数，如发现数据有误，请尝试重新报单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -2973,9 +2970,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of the requests sent per second has overlimit the permitted number. OrderInsert() = " + orderFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("每秒发送请求数超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("每秒发送请求数超过许可数，如发现数据有误，请尝试重新报单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -2998,9 +2995,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. OrderAction() = " + cancelFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("网络连接失败，如发现数据有误，请尝试重新撤单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3010,9 +3007,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of undealt requests has overlimit the permitted number. OrderAction() = " + cancelFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("未处理请求超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("未处理请求超过许可数，如发现数据有误，请尝试重新撤单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3022,9 +3019,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of the requests sent per second has overlimit the permitted number. OrderAction() = " + cancelFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("每秒发送请求数超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("每秒发送请求数超过许可数，如发现数据有误，请尝试重新撤单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3144,9 +3141,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ParkedOrderInsert() = " + pOrdInsertFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("网络连接失败，如发现数据有误，请尝试重新埋单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3156,9 +3153,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of undealt requests has overlimit the permitted number. ParkedOrderInsert() = " + pOrdInsertFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("未处理请求超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("未处理请求超过许可数，如发现数据有误，请尝试重新埋单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3169,9 +3166,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of the requests sent per second has overlimit the permitted number. ParkedOrderInsert() = " + pOrdInsertFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("每秒发送请求数超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("每秒发送请求数超过许可数，如发现数据有误，请尝试重新埋单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3195,9 +3192,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ReqParkedOrderAction() = " + pCancelFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("网络连接失败，如发现数据有误，请尝试重新埋撤单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3207,9 +3204,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of undealt requests has overlimit the permitted number. ReqParkedOrderAction() = " + pCancelFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("未处理请求超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("未处理请求超过许可数，如发现数据有误，请尝试重新埋撤单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3219,9 +3216,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of the requests sent per second has overlimit the permitted number. ReqParkedOrderAction() = " + pCancelFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("每秒发送请求数超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("每秒发送请求数超过许可数，如发现数据有误，请尝试重新埋撤单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3244,9 +3241,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ReqRemoveParkedOrder() = " + deletePreFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("网络连接失败，如发现数据有误，请尝试重新删除", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3256,9 +3253,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of undealt requests has overlimit the permitted number. ReqRemoveParkedOrder() = " + deletePreFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("未处理请求超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("未处理请求超过许可数，如发现数据有误，请尝试重新删除", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3268,9 +3265,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of the requests sent per second has overlimit the permitted number. ReqRemoveParkedOrder() = " + deletePreFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("每秒发送请求数超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("每秒发送请求数超过许可数，如发现数据有误，请尝试重新删除", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3293,9 +3290,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ReqRemoveParkedOrderAction() = " + deletePreFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("网络连接失败，如发现数据有误，请尝试重新删除", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3305,9 +3302,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of undealt requests has overlimit the permitted number. ReqRemoveParkedOrderAction() = " + deletePreFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("未处理请求超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("未处理请求超过许可数，如发现数据有误，请尝试重新删除", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3317,9 +3314,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of the requests sent per second has overlimit the permitted number. ReqRemoveParkedOrderAction() = " + deletePreFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("每秒发送请求数超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("每秒发送请求数超过许可数，如发现数据有误，请尝试重新删除", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3401,9 +3398,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ReqQryContractBank() = " + BankFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("网络连接失败，如发现数据有误，请尝试重启控件", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3491,9 +3488,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ReqQryAccountregister() = " + registerFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("网络连接失败，如发现数据有误，请尝试重启控件", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3527,9 +3524,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ReqQryTransferSerial() = " + serialFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("网络连接失败，如发现数据有误，请尝试重启控件", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3577,9 +3574,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ReqQueryBankAccountMoneyByFuture() = " + qryBankAcctFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("网络连接失败，如发现数据有误，请尝试重启控件", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3628,9 +3625,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ReqFromFutureToBankByFuture() = " + transToBankFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("网络连接失败，如发现数据有误，请尝试重启控件", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3679,9 +3676,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! Network Connection Error. ReqFromBankToFutureByFuture() = " + transToFutFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("网络连接失败，如发现数据有误，请尝试重启控件", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3845,9 +3842,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of undealt requests has overlimit the permitted number. ReqQuoteInsert() = " + orderFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("未处理请求超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("未处理请求超过许可数，如发现数据有误，请尝试重新报单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -3857,9 +3854,9 @@ namespace TradingMaster
             {
                 Util.Log("Warning! The number of the requests sent per second has overlimit the permitted number. ReqQuoteInsert() = " + orderFlag);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("每秒发送请求数超过许可数");
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.MessageBox.Show("每秒发送请求数超过许可数，如发现数据有误，请尝试重新报单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
@@ -4468,9 +4465,9 @@ namespace TradingMaster
             return commRate;
         }
 
-        public Q7JYOrderData OrderExecutionReport(CThostFtdcOrderField pOrder)
+        public TradeOrderData OrderExecutionReport(CThostFtdcOrderField pOrder)
         {
-            Q7JYOrderData jyData = new Q7JYOrderData();
+            TradeOrderData jyData = new TradeOrderData();
             try
             {
                 jyData.InvestorID = pOrder.InvestorID;
@@ -4535,9 +4532,9 @@ namespace TradingMaster
             return jyData;
         }
 
-        private Q7JYOrderData TradeExecutionReport(CThostFtdcTradeField pTrade)
+        private TradeOrderData TradeExecutionReport(CThostFtdcTradeField pTrade)
         {
-            Q7JYOrderData tradeData = new Q7JYOrderData();
+            TradeOrderData tradeData = new TradeOrderData();
             try
             {
                 tradeData.InvestorID = pTrade.InvestorID;
@@ -4580,9 +4577,9 @@ namespace TradingMaster
             }
         }
 
-        private Q7PosInfoTotal PositionExecutionReport(CThostFtdcInvestorPositionField pInvestorPosition)
+        private PosInfoTotal PositionExecutionReport(CThostFtdcInvestorPositionField pInvestorPosition)
         {
-            Q7PosInfoTotal posData = new Q7PosInfoTotal();
+            PosInfoTotal posData = new PosInfoTotal();
             try
             {
                 posData.InvestorID = pInvestorPosition.InvestorID;
@@ -4624,10 +4621,10 @@ namespace TradingMaster
             return posData;
         }
 
-        private Q7PosInfoDetail PosDetailExecutionReport(CThostFtdcInvestorPositionDetailField pPosDetail)
+        private PosInfoDetail PosDetailExecutionReport(CThostFtdcInvestorPositionDetailField pPosDetail)
         {
             //Util.Log("pPosDetail ExecID:" + pPosDetail.TradeID);
-            Q7PosInfoDetail posData = new Q7PosInfoDetail();
+            PosInfoDetail posData = new PosInfoDetail();
             try
             {
                 posData.InvestorID = pPosDetail.InvestorID;
@@ -4724,9 +4721,9 @@ namespace TradingMaster
             return fundData;
         }
 
-        private Q7JYOrderData GetParkedOrderExcutionReport(CThostFtdcParkedOrderField pParkedOrder)
+        private TradeOrderData GetParkedOrderExcutionReport(CThostFtdcParkedOrderField pParkedOrder)
         {
-            Q7JYOrderData pOrder = new Q7JYOrderData();
+            TradeOrderData pOrder = new TradeOrderData();
             try
             {
                 pOrder.InvestorID = pParkedOrder.InvestorID;
@@ -4770,10 +4767,10 @@ namespace TradingMaster
             return pOrder;
         }
 
-        private Q7JYOrderData GetParkedOrderActionExcutionReport(CThostFtdcParkedOrderActionField pParkedOrderAction)
+        private TradeOrderData GetParkedOrderActionExcutionReport(CThostFtdcParkedOrderActionField pParkedOrderAction)
         {
             //Todo
-            Q7JYOrderData pOrder = new Q7JYOrderData();
+            TradeOrderData pOrder = new TradeOrderData();
             try
             {
                 pOrder.InvestorID = pParkedOrderAction.InvestorID;

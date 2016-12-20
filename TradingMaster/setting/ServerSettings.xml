@@ -32,6 +32,8 @@
       <host name="中期实盘五" brokerID="8070"  ip="zjzx-front5.ctp.shcifco.com"       port="41205" selected="False" />
       <host name="期货模拟一" brokerID="2030"  ip="asp-sim2-front1.financial-trading-platform.com" port="26205" selected="False" />
       <host name="模拟做市"           brokerID="7070"  ip="192.168.3.182"      port="41205" selected="False" />
+      <host name="飞马1.03测试"       brokerID="7070"  ip="117.185.125.9"      port="6666"  selected="False" />
+      <host name="飞马2.00两所测试"   brokerID="7070"  ip="117.185.125.9"      port="53126" selected="False" />
       <host name="华宝A股模拟"        brokerID="2011"  ip="211.144.195.163"    port="44505" selected="False" />
       <host name="华宝证券LTS一"      brokerID="2011"  ip="101.231.210.1"      port="24505" selected="False" />
       <host name="华宝证券LTS二"      brokerID="2011"  ip="101.231.210.2"      port="24505" selected="False" />
@@ -71,6 +73,8 @@
       <host name="中期实盘四" brokerID="8070"  ip="zjzx-md4.ctp.shcifco.com"        port="41213" selected="False" />
       <host name="期货模拟一" brokerID="2030"  ip="asp-sim2-md1.financial-trading-platform.com" port="26213" selected="False" />
       <host name="模拟做市"           brokerID="7070"  ip="192.168.3.182"      port="41213" selected="False" />
+      <host name="飞马1.03测试"       brokerID="7070"  ip="117.185.125.9"      port="8888"  selected="False" />
+      <host name="飞马2.00两所测试"   brokerID="7070"  ip="117.185.125.9"      port="52004" selected="False" />
       <host name="华宝A股模拟"        brokerID="2011"  ip="211.144.195.163"    port="44513" selected="False" />
       <host name="华宝证券LTS一"      brokerID="2011"  ip="14.17.75.31"        port="6507"  selected="False" />
       <host name="华宝证券LTS二"      brokerID="2011"  ip="61.153.209.141"     port="6507"  selected="False" />

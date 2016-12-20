@@ -1,15 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace TradingMaster.Control
 {
@@ -69,7 +59,7 @@ namespace TradingMaster.Control
             }
 
             int ret = 0;
-            if (int.TryParse(s,out ret))
+            if (int.TryParse(s, out ret))
             {
                 if (bNeg)
                 {
@@ -91,6 +81,6 @@ namespace TradingMaster.Control
             this.Hide();
         }
 
-      
+
     }
 }

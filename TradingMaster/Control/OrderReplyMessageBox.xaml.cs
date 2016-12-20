@@ -1,16 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TradingMaster.Properties;
 
 namespace TradingMaster.Control
@@ -37,7 +28,7 @@ namespace TradingMaster.Control
         private MainWindow _MainWindow { get; set; }
 
 
-        public bool AddOrderInfo(Q7JYOrderData orderInfo)
+        public bool AddOrderInfo(TradeOrderData orderInfo)
         {
             bool canAdd = false;
             if (CommonUtil.GetOrderStatus(orderInfo.OrderStatus) == OrderStatus.Queued)
@@ -85,7 +76,7 @@ namespace TradingMaster.Control
             return canAdd;
         }
 
-        private void AddSystemMessage(Q7JYOrderData orderInfo)
+        private void AddSystemMessage(TradeOrderData orderInfo)
         {
             string title = string.Empty;
             string code = orderInfo.Code;//orderInfo.legs[0] != null ? orderInfo.legs[0].Code ： "";
@@ -176,7 +167,7 @@ namespace TradingMaster.Control
             if (CommonUtil.GetOrderStatus(orderInfo.QuoteStatus) == OrderStatus.Queued)
             {
                 message = string.Format("报价号：{0} 下单成功：{1}：买 {2},{3}手，买价{4}；卖 {5},{6}手，卖价{7}；应价编号：{8}",
-                   orderInfo.QuoteOrderID.Trim(), code, 
+                   orderInfo.QuoteOrderID.Trim(), code,
                    bidOpenClose, orderInfo.BidHandCount, orderInfo.BidPrice, askOpenClose, orderInfo.AskHandCount, orderInfo.AskPrice, orderInfo.ForQuoteOrderID);
             }
             else if (CommonUtil.GetOrderStatus(orderInfo.QuoteStatus) == OrderStatus.Chengjiao)
@@ -363,9 +354,9 @@ namespace TradingMaster.Control
             HideCheckBox();
             string title = string.Empty;
             string message = "";
-            if (_LstOrders[index] is Q7JYOrderData)
+            if (_LstOrders[index] is TradeOrderData)
             {
-                Q7JYOrderData orderInfo = _LstOrders[index] as Q7JYOrderData;
+                TradeOrderData orderInfo = _LstOrders[index] as TradeOrderData;
                 string code = orderInfo.Code;//orderInfo.legs[0] != null ? orderInfo.legs[0].Code ： "";
                 string buySell = orderInfo.BuySell;
                 string openClose = orderInfo.OpenClose;// JYDataServer.getServerInstance().GetPosEffect(orderInfo.posEffect);
@@ -407,7 +398,7 @@ namespace TradingMaster.Control
                 string bidOpenClose = orderInfo.BidOpenClose;
                 string askOpenClose = orderInfo.AskOpenClose;
                 // JYDataServer.getServerInstance().GetPosEffect(orderInfo.posEffect);
-                
+
                 message = string.Format("报价号 ：{0}", orderInfo.QuoteOrderID);
                 message = message + string.Format("\n合约：{0}", code);
                 message = message + string.Format("\n买开平：{0}", bidOpenClose);
@@ -452,7 +443,7 @@ namespace TradingMaster.Control
                 message = message + string.Format("\n开平：{0}", openClose);
                 message = message + string.Format("\n委托量：{0}", orderInfo.HandCount);
                 message = message + string.Format("\n备注：{0}", orderInfo.StatusMsg);
-                
+
                 if (CommonUtil.GetOrderStatus(orderInfo.ExecStatus) == OrderStatus.Queued)
                 {
                     title = "指令成功";

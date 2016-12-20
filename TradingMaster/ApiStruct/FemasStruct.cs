@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace TradingMaster
 {
@@ -21,7 +17,7 @@ namespace TradingMaster
 		/// 交易用户代码
 		/// </summary>
 		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-		public string UserID;
+        public string UserID;
         /// <summary>
         /// 经纪公司编号
         /// </summary>
@@ -31,7 +27,7 @@ namespace TradingMaster
 		/// 密码
 		/// </summary>
 		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
-		public string Password;
+        public string Password;
         /// <summary>
         /// 用户端产品信息
         /// </summary>
@@ -220,7 +216,7 @@ namespace TradingMaster
         /// 投资者编号
 		/// </summary>
 		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 19)]
-		public string InvestorID;
+        public string InvestorID;
         /// <summary>
         /// 用户代码
         /// </summary>
@@ -326,7 +322,7 @@ namespace TradingMaster
         /// 投资者编号
 		/// </summary>
 		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 19)]
-		public string InvestorID;
+        public string InvestorID;
         /// <summary>
         /// 用户代码
         /// </summary>
@@ -367,7 +363,7 @@ namespace TradingMaster
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 61)]
         public string MemTableName;
-   };
+    };
 
     /// <summary>
     /// 响应信息
@@ -879,7 +875,7 @@ namespace TradingMaster
         /// 空头占用保证金
         /// </summary>
         public double ShortMargin;
-         /// <summary>
+        /// <summary>
         /// 当日释放保证金
         /// </summary>
         public double ReleaseMargin;
@@ -1164,7 +1160,7 @@ namespace TradingMaster
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
         public string Currency;
-   };
+    };
 
     /// <summary>
     /// 合规参数查询请求
@@ -1258,7 +1254,7 @@ namespace TradingMaster
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
         public string EndUserID;
-   };
+    };
 
     /// <summary>
     /// 用户
@@ -1319,7 +1315,7 @@ namespace TradingMaster
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
         public string CommandTime;
-   };
+    };
 
     /// <summary>
     /// 投资者手续费率查询
@@ -1885,7 +1881,7 @@ namespace TradingMaster
         /// 结算准备金
         /// </summary>
         public double Balance;
-   };
+    };
 
     /// <summary>
     /// 报价录入
@@ -2463,7 +2459,7 @@ namespace TradingMaster
         /// 最后修改毫秒
         /// </summary>
         public int UpdateMillisec;
-   };
+    };
 
     /// <summary>
     /// 深度行情
@@ -2934,7 +2930,7 @@ namespace TradingMaster
         public double ShortFrozenMargin;
     };
 
-    
+
     /// <summary>
     /// TFtdcUstpVolumeConditionType是一个成交量类型类型
     /// </summary>
@@ -2943,17 +2939,17 @@ namespace TradingMaster
         /// <summary>
         /// 任何数量
         /// </summary>
-        AV  = (byte)'1',
-        
+        AV = (byte)'1',
+
         /// <summary>
         /// 最小数量
         /// </summary>
-        MV  = (byte)'2',
-        
+        MV = (byte)'2',
+
         /// <summary>
         /// 全部数量
         /// </summary>
-        CV  = (byte)'3'
+        CV = (byte)'3'
     }
 
     /// <summary>
@@ -2964,27 +2960,27 @@ namespace TradingMaster
         /// <summary>
         /// 非强平
         /// </summary>
-        NotForceClose  = (byte)'0',
+        NotForceClose = (byte)'0',
 
         /// <summary>
         /// 资金不足
         /// </summary>
-        LackDeposit  = (byte)'1',
+        LackDeposit = (byte)'1',
 
         /// <summary>
         /// 客户超仓
         /// </summary>
-        ClientOverPositionLimit  = (byte)'2',
+        ClientOverPositionLimit = (byte)'2',
 
         /// <summary>
         /// 会员超仓
         /// </summary>
-        MemberOverPositionLimit  = (byte)'3',
+        MemberOverPositionLimit = (byte)'3',
 
         /// <summary>
         /// 持仓非整数倍
         /// </summary>
-        NotMultiple  = (byte)'4'
+        NotMultiple = (byte)'4'
 
     }
 
@@ -2996,37 +2992,37 @@ namespace TradingMaster
         /// <summary>
         /// 开盘前
         /// </summary>
-        BeforeTrading  = (byte)'0',
-        
+        BeforeTrading = (byte)'0',
+
         /// <summary>
         /// 非交易
         /// </summary>
-        NoTrading  = (byte)'1',
+        NoTrading = (byte)'1',
 
         /// <summary>
         /// 连续交易
         /// </summary>
-        Continous  = (byte)'2',
+        Continous = (byte)'2',
 
         /// <summary>
         /// 集合竞价报单
         /// </summary>
-        AuctionOrdering  = (byte)'3',
+        AuctionOrdering = (byte)'3',
 
         /// <summary>
         /// 集合竞价价格平衡
         /// </summary>
-        AuctionBalance  = (byte)'4',
+        AuctionBalance = (byte)'4',
 
         /// <summary>
         /// 集合竞价撮合
         /// </summary>
-        AuctionMatch  = (byte)'5',
+        AuctionMatch = (byte)'5',
 
         /// <summary>
         /// 收盘
         /// </summary>
-        Closed  = (byte)'6'
+        Closed = (byte)'6'
     }
 
     /// <summary>
@@ -3037,27 +3033,27 @@ namespace TradingMaster
         /// <summary>
         /// 开仓
         /// </summary>
-        Open  = (byte)'0',
+        Open = (byte)'0',
 
         /// <summary>
         /// 平仓
         /// </summary>
-        Close  = (byte)'1',
+        Close = (byte)'1',
 
         /// <summary>
         /// 强平
         /// </summary>
-        ForceClose  = (byte)'2',
+        ForceClose = (byte)'2',
 
         /// <summary>
         /// 平今
         /// </summary>
-        CloseToday  = (byte)'3',
+        CloseToday = (byte)'3',
 
         /// <summary>
         /// 平昨
         /// </summary>
-        CloseYesterday  = (byte)'4'
+        CloseYesterday = (byte)'4'
     }
 
     /// <summary>
@@ -3068,22 +3064,22 @@ namespace TradingMaster
         /// <summary>
         /// 任意价
         /// </summary>
-        AnyPrice  = (byte)'1',
+        AnyPrice = (byte)'1',
 
         /// <summary>
         /// 限价
         /// </summary>
-        LimitPrice  = (byte)'2',
+        LimitPrice = (byte)'2',
 
         /// <summary>
         /// 最优价
         /// </summary>
-        BestPrice  = (byte)'3',
+        BestPrice = (byte)'3',
 
         /// <summary>
         /// 五档价
         /// </summary>
-        FiveLevelPrice  = (byte)'4'
+        FiveLevelPrice = (byte)'4'
     }
 
     /// <summary>
@@ -3094,37 +3090,37 @@ namespace TradingMaster
         /// <summary>
         /// 全部成交
         /// </summary>
-        AllTraded  = (byte)'0',
+        AllTraded = (byte)'0',
 
         /// <summary>
         /// 部分成交还在队列中
         /// </summary>
-        PartTradedQueueing  = (byte)'1',
+        PartTradedQueueing = (byte)'1',
 
         /// <summary>
         /// 部分成交不在队列中
         /// </summary>
-        PartTradedNotQueueing  = (byte)'2',
+        PartTradedNotQueueing = (byte)'2',
 
         /// <summary>
         /// 未成交还在队列中
         /// </summary>
-        NoTradeQueueing  = (byte)'3',
+        NoTradeQueueing = (byte)'3',
 
         /// <summary>
         /// 未成交不在队列中
         /// </summary>
-        NoTradeNotQueueing  = (byte)'4',
+        NoTradeNotQueueing = (byte)'4',
 
         /// <summary>
         /// 撤单
         /// </summary>
-        Canceled  = (byte)'5',
+        Canceled = (byte)'5',
 
         /// <summary>
         /// 订单已报入交易所未应答
         /// </summary>
-        AcceptedNoReply  = (byte)'6'
+        AcceptedNoReply = (byte)'6'
     }
 
     /// <summary>
@@ -3135,22 +3131,22 @@ namespace TradingMaster
         /// <summary>
         /// 自然人
         /// </summary>
-        Person  = (byte)'1',
+        Person = (byte)'1',
 
         /// <summary>
         /// 理财产品
         /// </summary>
-        Product  = (byte)'2',
+        Product = (byte)'2',
 
         /// <summary>
         /// 期货公司管理员
         /// </summary>
-        Manager  = (byte)'3',
+        Manager = (byte)'3',
 
         /// <summary>
         /// 席位
         /// </summary>
-        Seat  = (byte)'4'
+        Seat = (byte)'4'
     }
 
     /// <summary>
@@ -3161,17 +3157,17 @@ namespace TradingMaster
         /// <summary>
         /// 可以交易
         /// </summary>
-        Allow  = (byte)'0',
+        Allow = (byte)'0',
 
         /// <summary>
         /// 只能平仓
         /// </summary>
-        CloseOnly  = (byte)'1',
+        CloseOnly = (byte)'1',
 
         /// <summary>
         /// 不能交易
         /// </summary>
-        Forbidden  = (byte)'2'
+        Forbidden = (byte)'2'
     }
 
     /// <summary>
@@ -3182,32 +3178,32 @@ namespace TradingMaster
         /// <summary>
         /// 立即完成，否则撤销
         /// </summary>
-        IOC  = (byte)'1',
+        IOC = (byte)'1',
 
         /// <summary>
         /// 本节有效
         /// </summary>
-        GFS  = (byte)'2',
+        GFS = (byte)'2',
 
         /// <summary>
         /// 当日有效
         /// </summary>
-        GFD  = (byte)'3',
+        GFD = (byte)'3',
 
         /// <summary>
         /// 指定日期前有效
         /// </summary>
-        GTD  = (byte)'4',
+        GTD = (byte)'4',
 
         /// <summary>
         /// 撤销前有效
         /// </summary>
-        GTC  = (byte)'5',
+        GTC = (byte)'5',
 
         /// <summary>
         /// 集合竞价有效
         /// </summary>
-        GFA  = (byte)'6'
+        GFA = (byte)'6'
     }
 
     /// <summary>
@@ -3218,17 +3214,17 @@ namespace TradingMaster
         /// <summary>
         /// 来自参与者
         /// </summary>
-        Participant  = (byte)'0',
+        Participant = (byte)'0',
 
         /// <summary>
         /// 来自管理员
         /// </summary>
-        Administrator  = (byte)'1',
+        Administrator = (byte)'1',
 
         /// <summary>
         /// 报价单拆分出来的买单或卖单
         /// </summary>
-        QuoteSplit  = (byte)'2'
+        QuoteSplit = (byte)'2'
     }
 
     /// <summary>
@@ -3255,12 +3251,12 @@ namespace TradingMaster
         /// <summary>
         /// 人民币
         /// </summary>
-        RMB  = (byte)'1',
+        RMB = (byte)'1',
 
         /// <summary>
         /// 美元
         /// </summary>
-        UDOLLAR  = (byte)'2'
+        UDOLLAR = (byte)'2'
     }
 
     /// <summary>
@@ -3271,12 +3267,12 @@ namespace TradingMaster
         /// <summary>
         /// 入金
         /// </summary>
-        In  = (byte)'1',
+        In = (byte)'1',
 
         /// <summary>
         /// 出金
         /// </summary>
-        Out  = (byte)'2'
+        Out = (byte)'2'
     }
 
     /// <summary>
@@ -3287,22 +3283,22 @@ namespace TradingMaster
         /// <summary>
         /// 投机
         /// </summary>
-        Speculation  = (byte)'1',
+        Speculation = (byte)'1',
 
         /// <summary>
         /// 套利
         /// </summary>
-        Arbitrage  = (byte)'2',
+        Arbitrage = (byte)'2',
 
         /// <summary>
         /// 套保
         /// </summary>
-        Hedge  = (byte)'3',
+        Hedge = (byte)'3',
 
         /// <summary>
         /// 做市商
         /// </summary>
-        MarketMaker  = (byte)'4'
+        MarketMaker = (byte)'4'
     }
 
     /// <summary>
@@ -3313,22 +3309,22 @@ namespace TradingMaster
         /// <summary>
         /// 删除
         /// </summary>
-        Delete  = (byte)'0',
+        Delete = (byte)'0',
 
         /// <summary>
         /// 挂起
         /// </summary>
-        Suspend  = (byte)'1',
+        Suspend = (byte)'1',
 
         /// <summary>
         /// 激活
         /// </summary>
-        Active  = (byte)'2',
+        Active = (byte)'2',
 
         /// <summary>
         /// 修改
         /// </summary>
-        Modify  = (byte)'3'
+        Modify = (byte)'3'
     }
 
     /// <summary>
@@ -3339,12 +3335,12 @@ namespace TradingMaster
         /// <summary>
         /// 净持仓
         /// </summary>
-        Net  = (byte)'1',
+        Net = (byte)'1',
 
         /// <summary>
         /// 综合持仓
         /// </summary>
-        Gross  = (byte)'2'
+        Gross = (byte)'2'
     }
 
     /// <summary>
@@ -3355,17 +3351,17 @@ namespace TradingMaster
         /// <summary>
         /// 非期权
         /// </summary>
-        NotOptions  = (byte)'0',
+        NotOptions = (byte)'0',
 
         /// <summary>
         /// 看涨
         /// </summary>
-        CallOptions  = (byte)'1',
+        CallOptions = (byte)'1',
 
         /// <summary>
         /// 看跌
         /// </summary>
-        PutOptions  = (byte)'2'
+        PutOptions = (byte)'2'
     }
 
     /// <summary>
@@ -3376,12 +3372,12 @@ namespace TradingMaster
         /// <summary>
         /// 不活跃
         /// </summary>
-        NoActive  = (byte)'0',
+        NoActive = (byte)'0',
 
         /// <summary>
         /// 活跃
         /// </summary>
-        Active  = (byte)'1'
+        Active = (byte)'1'
     }
 
     /// <summary>
@@ -3392,37 +3388,37 @@ namespace TradingMaster
         /// <summary>
         /// 在飞马中还未进入交易系统
         /// </summary>
-        Inited_InFEMAS  = (byte)'0',
+        Inited_InFEMAS = (byte)'0',
 
         /// <summary>
         /// 已经报入交易系统中
         /// </summary>
-        Accepted_InTradingSystem  = (byte)'1',
+        Accepted_InTradingSystem = (byte)'1',
 
         /// <summary>
         /// 已经撤掉单腿
         /// </summary>
-        Canceled_SingleLeg  = (byte)'2',
+        Canceled_SingleLeg = (byte)'2',
 
         /// <summary>
         /// 已经全部撤掉
         /// </summary>
-        Canceled_All  = (byte)'3',
+        Canceled_All = (byte)'3',
 
         /// <summary>
         /// 已经有单腿成交
         /// </summary>
-        Traded_SingleLeg  = (byte)'4',
+        Traded_SingleLeg = (byte)'4',
 
         /// <summary>
         /// 已经全部成交
         /// </summary>
-        Traded_All  = (byte)'5',
+        Traded_All = (byte)'5',
 
         /// <summary>
         /// 错误的撤消报价请求
         /// </summary>
-        Error_QuoteAction  = (byte)'6'
+        Error_QuoteAction = (byte)'6'
     }
 
     /// <summary>
@@ -3433,12 +3429,12 @@ namespace TradingMaster
         /// <summary>
         /// 申请组合
         /// </summary>
-        Combine  = (byte)'0',
+        Combine = (byte)'0',
 
         /// <summary>
         /// 申请拆分组合
         /// </summary>
-        UnCombine  = (byte)'1'
+        UnCombine = (byte)'1'
     }
 
 }

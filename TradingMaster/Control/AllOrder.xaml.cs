@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TradingMaster.Control
 {
@@ -20,7 +11,7 @@ namespace TradingMaster.Control
     public partial class AllOrder : UserControl
     {
         public AllOrder()
-        {            
+        {
             CommonStaticMemeber.LoadStyleFromUserFile();
             this.DataContext = this;
             InitializeComponent();
@@ -61,7 +52,7 @@ namespace TradingMaster.Control
 
         private void CancelOrderforNewPrice_Click(object sender, RoutedEventArgs e)
         {
-           // CommonUtil.CancelOrder_NewOrder(sender, mainWindow.OrderDataCollection);
+            // CommonUtil.CancelOrder_NewOrder(sender, mainWindow.OrderDataCollection);
         }
 
         private void rbAll_Checked(object sender, RoutedEventArgs e)
@@ -120,7 +111,7 @@ namespace TradingMaster.Control
             CommonUtil.AutoAdjustColumnWidth_Click(sender, e);
         }
 
-        
+
 
 
         private void dgAllOrder_ContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -168,13 +159,13 @@ namespace TradingMaster.Control
         {
             if (dgAllOrder.SelectedItem != null)
             {
-                List<Q7JYOrderData> newOrderList = new List<Q7JYOrderData>();
-                foreach (Q7JYOrderData orderItem in dgAllOrder.SelectedItems)
+                List<TradeOrderData> newOrderList = new List<TradeOrderData>();
+                foreach (TradeOrderData orderItem in dgAllOrder.SelectedItems)
                 {
                     newOrderList.Add(orderItem);
                 }
 
-                foreach (Q7JYOrderData orderData in newOrderList)
+                foreach (TradeOrderData orderData in newOrderList)
                 {
                     if (CommonUtil.IsCancellable(orderData))
                     {

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace TradingMaster
 {
     /// <summary>
     /// 快期的委托数据
     /// </summary>
-    public class Q7JYOrderData : INotifyPropertyChanged
+    public class TradeOrderData : INotifyPropertyChanged
     {
         /// <summary>
         /// 投资者代码
@@ -487,20 +483,16 @@ namespace TradingMaster
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string info)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(info));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
 
-        public Q7JYOrderData Copy()
+        public TradeOrderData Copy()
         {
-            Q7JYOrderData ret = (Q7JYOrderData)this.MemberwiseClone();
+            TradeOrderData ret = (TradeOrderData)this.MemberwiseClone();
             return ret;
         }
 
-        public static int CompareByTradeTime(Q7JYOrderData o1, Q7JYOrderData o2)
+        public static int CompareByTradeTime(TradeOrderData o1, TradeOrderData o2)
         {
             if (o1 == null && o2 == null) return 0;
             if (o1 == null) return -1;
@@ -541,7 +533,7 @@ namespace TradingMaster
             return -1;
         }
 
-        public static int CompareByCommitTime(Q7JYOrderData o1, Q7JYOrderData o2)
+        public static int CompareByCommitTime(TradeOrderData o1, TradeOrderData o2)
         {
             if (o1 == null && o2 == null) return 0;
             if (o1 == null) return -1;
@@ -582,7 +574,7 @@ namespace TradingMaster
             return -1;
         }
 
-        public static int CompareByOrderID(Q7JYOrderData o1, Q7JYOrderData o2)
+        public static int CompareByOrderID(TradeOrderData o1, TradeOrderData o2)
         {
             if (o1 == null && o2 == null) return 0;
             if (o1 == null) return -1;
@@ -623,7 +615,7 @@ namespace TradingMaster
             return -1;
         }
 
-        public static int CompareByTradeID(Q7JYOrderData o1, Q7JYOrderData o2)
+        public static int CompareByTradeID(TradeOrderData o1, TradeOrderData o2)
         {
             if (o1 == null && o2 == null) return 0;
             if (o1 == null) return -1;
@@ -664,7 +656,7 @@ namespace TradingMaster
             return -1;
         }
 
-        public static int CompareByCode(Q7JYOrderData o1, Q7JYOrderData o2)
+        public static int CompareByCode(TradeOrderData o1, TradeOrderData o2)
         {
             if (o1 == null && o2 == null) return 0;
             if (o1 == null) return -1;

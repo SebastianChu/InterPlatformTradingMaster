@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
+using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Threading;
-using System.IO;
-using System.Globalization;
-using TradingMaster.JYData;
 
 namespace TradingMaster
 {
@@ -37,12 +30,12 @@ namespace TradingMaster
 
         private string _StrAuthCode = string.Empty;
         //private GlobalCommonUtils commonUtil;
-        private List<UserNameInfo> _UserNameList=null;
+        private List<UserNameInfo> _UserNameList = null;
         private bool _IsRememeberUserName;
         //private ServerSettings serversettings = null;
         //private bool InitTag = false;
         //private bool ExecFlag = false;
-        
+
         //public ObservableCollection<ServerData> ServerData = new ObservableCollection<ServerData>();
         //private bool isDataDirty = false;
 
@@ -62,7 +55,7 @@ namespace TradingMaster
         private string _TradeBrokerID = "";
         private string _TradeServerAddr = "";
         private string _QuoteBrokerID = "";
-        private string _QuoteServerAddr = "";  
+        private string _QuoteServerAddr = "";
 
         private static Login _LoginInstace = null;
 
@@ -93,9 +86,9 @@ namespace TradingMaster
         {
             if (isUpdateSuccess)
             {
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         //PassWord.Password = TradeClientAppWrapper.TradeClientApp.newPassword;
                     });
@@ -113,8 +106,8 @@ namespace TradingMaster
         {
             get { return tb_userName; }
         }
-        
-        
+
+
         public TextBlock TbStatusMessage
         {
             get { return StatusMessage; }
@@ -138,9 +131,9 @@ namespace TradingMaster
         {
             if (hasError == true)
             {
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         System.Windows.Forms.MessageBox.Show("无法从网络访问合约文件，程序即将关闭！\n请检查网络后重启该程序。", "错误", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
                         Environment.Exit(0);
@@ -159,7 +152,7 @@ namespace TradingMaster
             //serverDatasReconnected = new List<SingleLogin.ServerData>();
             //UpgradeMng.Init();
             //CodeGen.CodeSet.Init(DelegateInitOver);
-            
+
             InitializeComponent();
             //Boolean isSim = CommonUtil.IsSim();
 
@@ -193,8 +186,8 @@ namespace TradingMaster
 
             //cbStyle.SelectedValue = SingleLogin.Properties.Settings.Default.DefaultStyle;
 
-            ResourceDictionary o = (ResourceDictionary)System.Windows.Application.LoadComponent(new Uri("/TradingMaster;component/Dictionary1.xaml", UriKind.Relative));
-            System.Windows.Application.Current.Resources.MergedDictionaries.Add(o);
+            ResourceDictionary o = (ResourceDictionary)Application.LoadComponent(new Uri("/TradingMaster;component/Dictionary1.xaml", UriKind.Relative));
+            Application.Current.Resources.MergedDictionaries.Add(o);
 
             //ShowNetworkSetting(false);
             _LoginTicker.Elapsed += new System.Timers.ElapsedEventHandler(LoginTicker_Elapsed);
@@ -291,11 +284,11 @@ namespace TradingMaster
                         }
 
                         string line = "";
-                        List < UserNameInfo > ret=new List<UserNameInfo>();
+                        List<UserNameInfo> ret = new List<UserNameInfo>();
                         while ((line = sr.ReadLine()) != null)
                         {
                             UserNameInfo uif = UserNameInfo.Parse(line);
-                            
+
                             if (uif != null)
                             {
                                 if (uif.userName.ToLower() == "true" || uif.userName.ToLower() == "false") continue;
@@ -312,7 +305,7 @@ namespace TradingMaster
                     Util.Log(ex.StackTrace);
                     isRememberUserName = false;
                     return new List<UserNameInfo>();
-                }                
+                }
             }
             else
             {
@@ -321,7 +314,7 @@ namespace TradingMaster
             }
 
 
-            
+
         }
 
         public static Boolean SaveToRiskCheckFile(string username)
@@ -329,8 +322,8 @@ namespace TradingMaster
             String filename = System.AppDomain.CurrentDomain.BaseDirectory + "setting\\rcf.usr";
             FileStream fs = null;
             StreamReader sreader = null;
-            StreamWriter sr = null; 
-            
+            StreamWriter sr = null;
+
 
             try
             {
@@ -409,8 +402,8 @@ namespace TradingMaster
                 {
                     if (tb_authcode.Text.ToUpper().Equals(_StrAuthCode.ToUpper()))
                     {
-                            //ServerStruct.SaveXml();
-                        SetStatusMessage("连接中...",true);
+                        //ServerStruct.SaveXml();
+                        SetStatusMessage("连接中...", true);
                         bt_ok.IsEnabled = false;
                         //TODO
                         ServerStruct.ChangeSelectedServer();
@@ -424,10 +417,10 @@ namespace TradingMaster
                     }
                 }
             }
-                //ServerStruct.SaveXml();
+            //ServerStruct.SaveXml();
             if (bt_ok.IsEnabled == true)
             {
-                SetStatusMessage("连接中...",true);
+                SetStatusMessage("连接中...", true);
                 //TODO
                 ServerStruct.ChangeSelectedServer();
                 ClientLogin();
@@ -455,7 +448,7 @@ namespace TradingMaster
                 {
                     foreach (string s in name)
                     {
-                        if (s.Replace("\r","").ToLower().Equals(username.ToLower()))
+                        if (s.Replace("\r", "").ToLower().Equals(username.ToLower()))
                         {
                             bRet = false;
                             break;
@@ -485,7 +478,7 @@ namespace TradingMaster
 
         private void ClientLogin()
         {
-            Util.Log(DateTime.Now.ToString("HH:mm:ss.fff")+ " ClientLogin");
+            Util.Log(DateTime.Now.ToString("HH:mm:ss.fff") + " ClientLogin");
 
             foreach (char c in tb_userName.Text.ToCharArray())
             {
@@ -513,20 +506,20 @@ namespace TradingMaster
                 bt_ok.IsEnabled = true;
                 return;
             }
-            Thread t = new Thread(delegate()
+            Thread t = new Thread(delegate ()
             {
-                string username="";
-                string password="";
+                string username = "";
+                string password = "";
                 //int selValue = 0;
                 //string projname = "";
                 //BACKENDTYPE backEndType=BACKENDTYPE.HST2;
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         //selValue=(int)cbStyle.SelectedValue;
-                        username=tb_userName.Text.Trim();
-                        password=pb_passWord.Password;
+                        username = tb_userName.Text.Trim();
+                        password = pb_passWord.Password;
 
                         //SimpleComboxItem selectItem = cbStyle.SelectedItem as SimpleComboxItem;
                         //projname = selectItem.Value;
@@ -537,7 +530,7 @@ namespace TradingMaster
                         //}
                         //else
                         //{
-                            //backEndType = TradeClientApp.BackEndUser(tb_userName.Text);
+                        //backEndType = TradeClientApp.BackEndUser(tb_userName.Text);
                         //}
 
                     });
@@ -552,9 +545,9 @@ namespace TradingMaster
                 //Util.Log(DateTime.Now.ToString("HH:mm:ss.fff") + " 开始获取TradeClientAppWrapper");
                 //TradeClientAppWrapper cliengApp = GetTradeClientApp(projname, backEndType);
                 Util.Log(DateTime.Now.ToString("HH:mm:ss.fff") + " 开始连接:用户名:" + username);
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         if (rbSingleUser.IsChecked == true)
                         {
@@ -572,8 +565,8 @@ namespace TradingMaster
 
         //private Boolean IsCTPUser()
         //{
-            //根据tb_userName.Text判断
-            //return BACKENDTYPE.CTP== TradeClientApp.BackEndUser(tb_userName.Text);
+        //根据tb_userName.Text判断
+        //return BACKENDTYPE.CTP== TradeClientApp.BackEndUser(tb_userName.Text);
         //}
 
 
@@ -585,9 +578,9 @@ namespace TradingMaster
         //private TradeClientAppWrapper GetTradeClientApp(string clientProjectName,BACKENDTYPE backEndType)
         //{
         //    Util.Log("执行GetTradeClientApp");
-            
+
         //    Assembly assembly = null;
-           
+
         //    Util.Log("clientProjectName=" + clientProjectName);
         //    if (!dicResource.Keys.Contains<string>(clientProjectName))
         //    {
@@ -617,7 +610,7 @@ namespace TradingMaster
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             IsTerminated = true;
-                //ServerStruct.SaveXml();
+            //ServerStruct.SaveXml();
             string fileContent = GetUserNameDatContent();
             CommonUtil.writeFile(Login.USERNAME_FILEPATH, fileContent);
             ClearToInit();
@@ -667,20 +660,20 @@ namespace TradingMaster
         }
         private char[] randAuthCode()
         {
-            char[] authCode=new char[4] ;
+            char[] authCode = new char[4];
             char[] authCodeSet ={'a','b','c','d','e','f','g','h','i','j','k','m','n','p','q','r','s','t','u','v','w','x','y','z',
                                  'A','B','C','D','E','F','G','H','I','J','K','M','N','P','Q','R','S','T','U','V','W','X','Y','Z',
                                  '1','2','3','4','5','6','7','8','9','0'};
             Random random = new Random();
             _StrAuthCode = string.Empty;
-            for (int i = 0; i < 4;i++ )
+            for (int i = 0; i < 4; i++)
             {
                 authCode[i] = authCodeSet[random.Next(authCodeSet.Length)];
                 _StrAuthCode = _StrAuthCode + authCode[i].ToString();
             }
             return authCode;
         }
-        private ImageSource getAuthCodeImage(int width,int height)
+        private ImageSource getAuthCodeImage(int width, int height)
         {
             DrawingVisual drawingVisual = new DrawingVisual();
             DrawingContext drawingContext = drawingVisual.RenderOpen();
@@ -707,12 +700,12 @@ namespace TradingMaster
            new Point(72, 0));
             //////////////////干扰线///////////////////////////////////////////
             Random random = new Random();
-            for (int i = 0; i < 6;i++ )
+            for (int i = 0; i < 6; i++)
             {
-                Point startPoint = new Point(random.Next(width),random.Next(height-10));
-                Point endPoint = new Point(random.Next(width),random.Next(height-4));
-                SolidColorBrush brush=new SolidColorBrush(Color.FromRgb(Convert.ToByte(random.Next(255)),Convert.ToByte(random.Next(255)),Convert.ToByte(random.Next(255))));
-                Pen linePen=new Pen(brush,1);
+                Point startPoint = new Point(random.Next(width), random.Next(height - 10));
+                Point endPoint = new Point(random.Next(width), random.Next(height - 4));
+                SolidColorBrush brush = new SolidColorBrush(Color.FromRgb(Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255))));
+                Pen linePen = new Pen(brush, 1);
                 drawingContext.DrawLine(linePen, startPoint, endPoint);
             }
             drawingContext.Close();
@@ -782,17 +775,17 @@ namespace TradingMaster
                 //}
                 //else
                 //{
-                    //不显示设置信息
-                    //image.BeginInit();
-                    //image.UriSource = GetPicUri(2);
-                    //image.EndInit();
+                //不显示设置信息
+                //image.BeginInit();
+                //image.UriSource = GetPicUri(2);
+                //image.EndInit();
                 //}
-                
+
                 //image1.Source = image;
 
                 AuthCode.Height = new GridLength(50);
                 //LoginRow.Height = new GridLength(LoginRow.Height.Value + 36);
-                this.Height = this.ActualHeight + 50;                
+                this.Height = this.ActualHeight + 50;
             }
             bt_ok.IsEnabled = true;
         }
@@ -890,7 +883,7 @@ namespace TradingMaster
         //        this.Height = this.Height - 134;
         //    }
 
-            
+
         //}
 
         //private void UpdateBackgroundImage()
@@ -969,9 +962,9 @@ namespace TradingMaster
         //    label5.Foreground = deep;
         //    label5_S.Foreground = light;
 
-            
 
-           
+
+
         //}
 
         /// <summary>
@@ -1140,7 +1133,7 @@ namespace TradingMaster
                 }
                 else
                 {
-                    int count=0;
+                    int count = 0;
                     String msg = statusMsg.msg;
                     //Util.Log("statusMsg.msg:" + statusMsg.msg);
                     while (true)
@@ -1151,7 +1144,7 @@ namespace TradingMaster
                         {
                             break;
                         }
-                        msg =" "+ msg + ".";
+                        msg = " " + msg + ".";
                         count += 1;
                         SetStatusMessage_inner(msg);
                         //Util.Log("SetStatusMessage_inner(msg) msg:" + msg);
@@ -1174,15 +1167,15 @@ namespace TradingMaster
                 //        }
                 //    });
                 //}
-               
+
             }
         }
 
         private void SetStatusMessage_inner(string msg)
         {
-            if (System.Windows.Application.Current != null)
+            if (Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     //bt_ok.IsEnabled = true; //Trial
                     msg = msg.Split('\n')[0].Split('\r')[0];
@@ -1200,13 +1193,13 @@ namespace TradingMaster
                     {
                         TbStatusMessage.Text = msg;
                     }
-                   
+
                 });
             }
-            
+
         }
 
-        public void SetStatusMessage(string msg,bool isLoading=false)
+        public void SetStatusMessage(string msg, bool isLoading = false)
         {
             Util.Log("开始调用 SetStatusMessage:msg=" + msg);
             Util.Log("guid=" + _Guid.ToString());
@@ -1235,7 +1228,7 @@ namespace TradingMaster
             string[] fs = commandLine.Split('-');
             if (fs.Length == 2)
             {
-                int id=0;
+                int id = 0;
                 if (int.TryParse(fs[1], out id) == true)
                 {
                     //找到进程，删除
@@ -1498,7 +1491,7 @@ namespace TradingMaster
         }
 
 
-       
+
     }
 
 }

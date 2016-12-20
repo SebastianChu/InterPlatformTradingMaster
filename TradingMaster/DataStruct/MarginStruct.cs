@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace TradingMaster
+﻿namespace TradingMaster
 {
     public class MarginStruct
     {
@@ -47,7 +42,7 @@ namespace TradingMaster
         public static bool IsInitiatedValue(string type, MarginStruct mStruct)
         {
             if (type.Contains("Futures") && mStruct.LongMarginRatioByMoney == 0 && mStruct.LongMarginRatioByVolume == 0 && mStruct.ShortMarginRatioByMoney == 0 && mStruct.ShortMarginRatioByVolume == 0
-            || (type.Contains("Option")  && mStruct.FixedMargin == 0 && mStruct.MiniMargin == 0 && mStruct.MiniMargin == 0))
+            || (type.Contains("Option") && mStruct.FixedMargin == 0 && mStruct.MiniMargin == 0 && mStruct.MiniMargin == 0))
             {
                 return true;
             }

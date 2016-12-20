@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TradingMaster.Control
 {
@@ -120,7 +113,7 @@ namespace TradingMaster.Control
                 //else if (time >= 9 * 3600 + 14 * 60 && time < 9 * 3600 + 15 * 60)   //9:14-9:15
                 else if (time >= 9 * 3600 + 29 * 60 && time < 9 * 3600 + 30 * 60)   //9:29-9:30
                 {
-                    
+
                     tb.Tag = "NonTrade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "集合竞价撮合";
                 }

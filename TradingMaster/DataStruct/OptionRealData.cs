@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using TradingMaster.CodeSet;
 
@@ -222,7 +219,7 @@ namespace TradingMaster
             get { return _StBuyPrice_c; }
             set
             {
-                LastStBuyPrice_C = _StBuyPrice_c == 0.0? value: _StBuyPrice_c;
+                LastStBuyPrice_C = _StBuyPrice_c == 0.0 ? value : _StBuyPrice_c;
 
                 _StBuyPrice_c = value;
                 OnPropertyChanged("StBuyPrice_C");
@@ -410,84 +407,84 @@ namespace TradingMaster
         /// 昨结算
         /// </summary>
         public Double PrevSettleMent_C
-         {
-             get
-             {
-                 return _IPrevSettlement_c;
-             }
-             set
-             {
-                 _IPrevSettlement_c = value;
-                 OnPropertyChanged("PrevSettleMent_C");
-                 OnPropertyChanged("PriceFluctuation_C");
-             }
-         }
+        {
+            get
+            {
+                return _IPrevSettlement_c;
+            }
+            set
+            {
+                _IPrevSettlement_c = value;
+                OnPropertyChanged("PrevSettleMent_C");
+                OnPropertyChanged("PriceFluctuation_C");
+            }
+        }
 
-         /// <summary>
-         /// 涨跌
-         /// </summary>
-         public double PriceFluctuation_C
-         {
-             get
-             {
-                 if (_INewPrice_c == 0)
-                 {
-                     return 0;
-                 }
-                 else
-                 {
-                     return _INewPrice_c - _IPrevSettlement_c;
-                 }
-             }
-         }
+        /// <summary>
+        /// 涨跌
+        /// </summary>
+        public double PriceFluctuation_C
+        {
+            get
+            {
+                if (_INewPrice_c == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return _INewPrice_c - _IPrevSettlement_c;
+                }
+            }
+        }
 
-         /// <summary>
-         /// 涨跌幅度
-         /// </summary>
-         public Double PriceFluctuationFD_C
-         {
-             get
-             {
-                 if (_IPrevSettlement_c == 0)
-                 {
-                     return 0;
-                 }
-                 return PriceFluctuation_C / _IPrevSettlement_c;
-             }
-         }
-         private Double _UpStopPrice_c;
+        /// <summary>
+        /// 涨跌幅度
+        /// </summary>
+        public Double PriceFluctuationFD_C
+        {
+            get
+            {
+                if (_IPrevSettlement_c == 0)
+                {
+                    return 0;
+                }
+                return PriceFluctuation_C / _IPrevSettlement_c;
+            }
+        }
+        private Double _UpStopPrice_c;
         /// <summary>
         /// 涨停价
         /// </summary>
-         public Double UpStopPrice_C
-         {
-             get
-             {
-                 return _UpStopPrice_c;
-             }
-             set
-             {
-                 _UpStopPrice_c = value;
-                 OnPropertyChanged("UpStopPrice_C");
-             }
-         }
+        public Double UpStopPrice_C
+        {
+            get
+            {
+                return _UpStopPrice_c;
+            }
+            set
+            {
+                _UpStopPrice_c = value;
+                OnPropertyChanged("UpStopPrice_C");
+            }
+        }
 
-         private Double _DownStopPrice_c;
-         /// <summary>
-         /// 跌停价
-         /// </summary>
-         public Double DownStopPrice_C
-         {
-             get
-             {
-                 return _DownStopPrice_c;
-             }
-             set
-             {
-                 _DownStopPrice_c = value;
-                 OnPropertyChanged("DownStopPrice_C");
-             }
-         }
+        private Double _DownStopPrice_c;
+        /// <summary>
+        /// 跌停价
+        /// </summary>
+        public Double DownStopPrice_C
+        {
+            get
+            {
+                return _DownStopPrice_c;
+            }
+            set
+            {
+                _DownStopPrice_c = value;
+                OnPropertyChanged("DownStopPrice_C");
+            }
+        }
         private short _NTime_c;				//开盘分钟偏移数，冗余数据
 
         public short NTime_C
@@ -521,17 +518,17 @@ namespace TradingMaster
             }
         }
 
-         /// <summary>
-         /// 持仓增减
-         /// </summary>
+        /// <summary>
+        /// 持仓增减
+        /// </summary>
         public int PositionFluctuation_C
-         {
-             get
-             {
-                 return (int)ChiCangLiang_C - (int)PreChicang_C;
-                 
-             }
-         }
+        {
+            get
+            {
+                return (int)ChiCangLiang_C - (int)PreChicang_C;
+
+            }
+        }
 
         private string _UpdateTime_c;				//更新时间
 
@@ -1235,8 +1232,8 @@ namespace TradingMaster
             this.IMaxPrice_C = realData.IMaxPrice_C;
             this.IMinPrice_C = realData.IMinPrice_C;
             this.INewPrice_C = realData.INewPrice_C;
-            this.LastINewPrice_C = realData.LastINewPrice_C+r.Next(-2,1);
-                //this.IsFirstData = realData.IsFirstData;
+            this.LastINewPrice_C = realData.LastINewPrice_C + r.Next(-2, 1);
+            //this.IsFirstData = realData.IsFirstData;
             this.LogMessage = realData.LogMessage;
             this.Name = realData.Name;
             this.Open_C = realData.Open_C;
@@ -1296,7 +1293,7 @@ namespace TradingMaster
 
             double basePrice = realData.INewPrice - this.ExecutePrice;
 
-            this.ChiCangLiang_C = realData.ChiCangLiang + (ulong)r.Next(100) *100;
+            this.ChiCangLiang_C = realData.ChiCangLiang + (ulong)r.Next(100) * 100;
             this.StBuyCount_C = realData.StBuyCount + (uint)r.Next(10);
             this.StBuyPrice_C = realData.StBuyPrice - this.ExecutePrice + r.NextDouble() * 10;
             this.StSellCount_C = realData.StSellCount + (uint)r.Next(10);
@@ -1317,7 +1314,7 @@ namespace TradingMaster
             this.LastINewPrice_C = this.INewPrice_C + r.Next(-2, 1);
 
             this.Open_C = realData.Open - realData.PrevSettleMent + r.Next(100);
-            this.NTime_C = realData.NTime ;
+            this.NTime_C = realData.NTime;
             this.PrevClose_C = realData.PrevClose - realData.PrevSettleMent + r.Next(100);
             this.UsUpdateNumber_C = realData.UsUpdateNumber;
             this.Volumn_C = realData.Volumn + (ulong)r.Next(100);
@@ -1360,7 +1357,7 @@ namespace TradingMaster
                 this.StSellCount_C = realData.AskHand[0];
                 this.StSellPrice_C = realData.AskPrice[0];
                 this.DownStopPrice_C = realData.LowerLimitPrice;
-                this.I64Sum_C = (UInt64)realData.Sum ;
+                this.I64Sum_C = (UInt64)realData.Sum;
                 //this.ICurrentSu_C = realData.ICurrentSum ;
                 this.ISettlementPrice_C = realData.SettlmentPrice;
                 this.PrevSettleMent_C = realData.PrevSettlementPrice;
@@ -1418,7 +1415,7 @@ namespace TradingMaster
             string ret = "";
             if (_Code != null)
             {
-                ret += "Code=" + Code.ToString()+" ";
+                ret += "Code=" + Code.ToString() + " ";
             }
 
             if (_Code_c != null)

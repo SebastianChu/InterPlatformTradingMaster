@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Reflection;
-using TradingMaster.JYData;
+using System.Threading;
 using System.Threading.Tasks;
+using TradingMaster.JYData;
 
 namespace TradingMaster
 {
@@ -29,10 +27,10 @@ namespace TradingMaster
         {
             _CmdQueue = new SynQueue<RequestContent>();
             _OrdQueue = new SynQueue<RequestContent>();
-            _LockObject = new object();            
+            _LockObject = new object();
             //reqCodeInfoDict = new Dictionary<CodeKey, ReqCodeValue>();
 
-            _CmdTask = Task.Factory.StartNew(() => CommandThreadProc(cts.Token),cts.Token);
+            _CmdTask = Task.Factory.StartNew(() => CommandThreadProc(cts.Token), cts.Token);
             //CmdThread = new Task(CommandThreadProc);
             //CmdThread.IsBackground = true;
             //CmdThread.Start();            
@@ -145,7 +143,7 @@ namespace TradingMaster
                     orderLst.Clear();
                 }
                 catch (Exception ex)
-                {                    
+                {
                     Util.Log("exception: " + ex.Message);
                     Util.Log("exception: " + ex.StackTrace);
                     cancelQuoteOrderLst.Clear();
@@ -201,13 +199,13 @@ namespace TradingMaster
 
         //public void ClearThread()
         //{
-            //if (CmdThread != null && CmdThread.IsAlive)
-            //{
-            //    ExecFlag = false;
-            //    CmdThread.Abort();
-            //    Util.Log("CmdThread Abort");
-            //    Sleeping(100);
-            //}
+        //if (CmdThread != null && CmdThread.IsAlive)
+        //{
+        //    ExecFlag = false;
+        //    CmdThread.Abort();
+        //    Util.Log("CmdThread Abort");
+        //    Sleeping(100);
+        //}
         //}
     }
 

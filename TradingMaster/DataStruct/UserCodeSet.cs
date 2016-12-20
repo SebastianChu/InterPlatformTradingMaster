@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
-using TradingMaster.CodeSet;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using TradingMaster.CodeSet;
 
 namespace TradingMaster
 {

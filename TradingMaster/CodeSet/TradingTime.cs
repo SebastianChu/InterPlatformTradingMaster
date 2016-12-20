@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace TradingMaster
 {
@@ -34,7 +32,7 @@ namespace TradingMaster
             DateTime dtEnd = new DateTime(2000, 1, 1, EndTime.Hour, EndTime.minute, 0);
             if (StartTime.TimeType == TIMETYPE.YESTERDAY && EndTime.TimeType == TIMETYPE.TODAY)
             {
-                dtEnd=dtEnd.AddDays(1);
+                dtEnd = dtEnd.AddDays(1);
             }
             else if (StartTime.TimeType == TIMETYPE.YESTERDAY && EndTime.TimeType == TIMETYPE.TOMORROW)
             {
@@ -44,8 +42,8 @@ namespace TradingMaster
             {
                 dtEnd = dtEnd.AddDays(1);
             }
-            TimeSpan ts=dtEnd.Subtract(dtStart);
-            return (int)ts.TotalMinutes+1;
+            TimeSpan ts = dtEnd.Subtract(dtStart);
+            return (int)ts.TotalMinutes + 1;
         }
 
         public int GetIndexByMinute(int time)
@@ -54,15 +52,15 @@ namespace TradingMaster
             DateTime dtEnd = new DateTime(2000, 1, 1, EndTime.Hour, EndTime.minute, 0);
             if (StartTime.TimeType == TIMETYPE.YESTERDAY && EndTime.TimeType == TIMETYPE.TODAY)
             {
-                dtEnd=dtEnd.AddDays(1);
+                dtEnd = dtEnd.AddDays(1);
             }
             else if (StartTime.TimeType == TIMETYPE.YESTERDAY && EndTime.TimeType == TIMETYPE.TOMORROW)
             {
-                dtEnd=dtEnd.AddDays(2);
+                dtEnd = dtEnd.AddDays(2);
             }
             else if (StartTime.TimeType == TIMETYPE.TODAY && EndTime.TimeType == TIMETYPE.TOMORROW)
             {
-                dtEnd=dtEnd.AddDays(1);
+                dtEnd = dtEnd.AddDays(1);
             }
 
             DateTime dtNow = new DateTime(2000, 1, 1, time / 100, time % 100, 0);
@@ -145,9 +143,9 @@ namespace TradingMaster
 
     public enum TIMETYPE
     {
-        TODAY=0,
-        YESTERDAY=1,
-        TOMORROW=2
+        TODAY = 0,
+        YESTERDAY = 1,
+        TOMORROW = 2
     }
 
     public class DstSettings

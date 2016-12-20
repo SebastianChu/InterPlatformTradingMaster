@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 
 namespace TradingMaster
@@ -9,16 +6,12 @@ namespace TradingMaster
     /// <summary>
     /// 快期界面的持仓合计
     /// </summary>
-    public class Q7PosInfoTotal : INotifyPropertyChanged
+    public class PosInfoTotal : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string info)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(info));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
 
         /// <summary>
@@ -386,19 +379,19 @@ namespace TradingMaster
             set { _BackEnd = value; OnPropertyChanged("BackEnd"); }
         }
 
-        public Q7PosInfoTotal Copy()
+        public PosInfoTotal Copy()
         {
-            Q7PosInfoTotal ret = (Q7PosInfoTotal)this.MemberwiseClone();
+            PosInfoTotal ret = (PosInfoTotal)this.MemberwiseClone();
             return ret;
         }
 
-        public static int CompareByCode(Q7PosInfoTotal o1, Q7PosInfoTotal o2)
+        public static int CompareByCode(PosInfoTotal o1, PosInfoTotal o2)
         {
             if (o1 == null && o2 == null) return 0;
             if (o1 == null) return -1;
             if (o2 == null) return 1;
 
-            if (o1._Code.Length > 6  && o2._Code.Length <= 6) 
+            if (o1._Code.Length > 6 && o2._Code.Length <= 6)
             {
                 return 1;
             }

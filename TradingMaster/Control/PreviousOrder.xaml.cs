@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TradingMaster.CodeSet;
 
 namespace TradingMaster.Control
@@ -86,21 +78,21 @@ namespace TradingMaster.Control
         /// <param name="e"></param>
         private void MaiDanHandle(object sender, RoutedEventArgs e)
         {
-            List<Q7JYOrderData> selectedOrder = new List<Q7JYOrderData>();
+            List<TradeOrderData> selectedOrder = new List<TradeOrderData>();
             foreach (var item in dgMaiConditionOrder.SelectedItems)
             {
-                selectedOrder.Add((Q7JYOrderData)item);
+                selectedOrder.Add((TradeOrderData)item);
             }
 
             foreach (var item in selectedOrder)
             {
-                Q7JYOrderData o = (Q7JYOrderData)item;
+                TradeOrderData o = (TradeOrderData)item;
                 if (o != null)
                 {
                     //对o撤单
                     if (IsMaiDanHandlable(o))
                     {
-                        TradeDataClient.GetClientInstance().RequestOrder(o.InvestorID, BACKENDTYPE.CTP, new RequestContent("NewOrderSingle", new List<object>() 
+                        TradeDataClient.GetClientInstance().RequestOrder(o.InvestorID, BACKENDTYPE.CTP, new RequestContent("NewOrderSingle", new List<object>()
                             { CodeSetManager.GetContractInfo(o.Code, CodeSetManager.ExNameToCtp(o.Exchange)), SIDETYPE.BUY, PosEffect.Close, 0, 0, 0, o.OrderID, CommonUtil.GetHedgeType(o.Hedge) }));
                     }
                 }
@@ -112,7 +104,7 @@ namespace TradingMaster.Control
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        private Boolean IsMaiDanHandlable(Q7JYOrderData o)
+        private Boolean IsMaiDanHandlable(TradeOrderData o)
         {
             if (o.OrderStatus == "预置单有效")
             {
@@ -139,11 +131,11 @@ namespace TradingMaster.Control
                 //}
                 //foreach (var item in selectedOrder)
                 //{
-                //    if (item != null && item is Q7JYOrderData)
+                //    if (item != null && item is TradeOrderData)
                 //    {
                 //        //撤单
                 //        CommonUtil.CancelOrder(item);
-                //        //Q7JYOrderData tempCancelItem = item as Q7JYOrderData;
+                //        //TradeOrderData tempCancelItem = item as TradeOrderData;
                 //        //JYDataServer.getServerInstance().AddToOrdQueue(new CTPRequestContent("DeletePreOrder", new List<object>() { tempCancelItem.OrderID }));
                 //        //JYDataServer.getServerInstance().AddToOrdQueue(new CTPRequestContent("PreCancelOrder", new List<object>() { tempCancelItem.Code, tempCancelItem.FrontID, tempCancelItem.SessionID, tempCancelItem.OrderRef, tempCancelItem.Exchange, tempCancelItem.OrderID }));
                 //    }
@@ -176,7 +168,7 @@ namespace TradingMaster.Control
                     CommonUtil.CancelSelectedOrder(dgMaiConditionOrder, _MainWindow, true);//TODO
                     //if (dgMaiConditionOrder.SelectedItem != null)
                     //{
-                    //    Q7JYOrderData tempCancelItem = dgMaiConditionOrder.SelectedItem as Q7JYOrderData;
+                    //    TradeOrderData tempCancelItem = dgMaiConditionOrder.SelectedItem as TradeOrderData;
                     //    if (tempCancelItem != null && CommonUtil.IsCancellable(tempCancelItem))
                     //    {
                     //        //JYDataServer.getServerInstance().AddToOrdQueue(new CTPRequestContent("DeletePreOrder", new List<object>() { tempCancelItem.OrderID }));
@@ -184,7 +176,7 @@ namespace TradingMaster.Control
                     //    }
                     //}
                 }
-                
+
             }
             catch (Exception ex)
             {

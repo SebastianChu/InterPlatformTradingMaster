@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Xml;
 using System.Globalization;
+using System.Linq;
+using System.Xml;
 
 namespace TradingMaster.CodeSet
 {
@@ -391,7 +389,7 @@ namespace TradingMaster.CodeSet
             }
             else
             {
-                underlyingCode = option.BaseCode; 
+                underlyingCode = option.BaseCode;
             }
             return underlyingCode;
         }
@@ -403,7 +401,7 @@ namespace TradingMaster.CodeSet
         }
 
         public static bool IsOutOfDate(string contract)
-        {            
+        {
             return false;
         }
     }

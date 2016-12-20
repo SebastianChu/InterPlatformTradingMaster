@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TradingMaster.Control
 {
@@ -74,7 +64,7 @@ namespace TradingMaster.Control
             catpitalInfo.AppendLine("".PadRight(_EqualMarkPadNumber, '='));
 
             AddLine("　保底资金：", jyRealData.Reserve, catpitalInfo, 3);
-            AddLine("　可取资金：", jyRealData.Fetchable, catpitalInfo, 3);       
+            AddLine("　可取资金：", jyRealData.Fetchable, catpitalInfo, 3);
             catpitalInfo.AppendLine("".PadRight(_EqualMarkPadNumber, '='));
 
             //AddLine("　权利金收付：", jyRealData.Premium, catpitalInfo, 2);
@@ -84,7 +74,7 @@ namespace TradingMaster.Control
             //catpitalInfo.AppendLine("".PadRight(equalMarkPadNumber, '='));
 
             AddLine("　期权市值：", jyRealData.OptionMarketCap, catpitalInfo, 3);
-            AddLine("＋动态权益：", jyRealData.DynamicEquity, catpitalInfo, 3);            
+            AddLine("＋动态权益：", jyRealData.DynamicEquity, catpitalInfo, 3);
             catpitalInfo.AppendLine("".PadRight(_MinusMarkPadNumber, '-'));
             AddLine("＝账户市值：", jyRealData.AccountCap, catpitalInfo, 3);
             catpitalInfo.AppendLine("".PadRight(_EqualMarkPadNumber, '='));

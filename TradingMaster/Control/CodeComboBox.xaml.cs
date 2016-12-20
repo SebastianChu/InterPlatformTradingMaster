@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Collections.ObjectModel;
 using TradingMaster.CodeSet;
 
 namespace TradingMaster.Control
@@ -49,7 +41,7 @@ namespace TradingMaster.Control
             {
                 //if (txtBox_Inner != null)
                 //{
-                    codeCBX.Text = value;
+                codeCBX.Text = value;
                 //}
             }
         }
@@ -178,7 +170,7 @@ namespace TradingMaster.Control
         {
             string zlCode = "";
             List<string> contracts = GetContractBySpeciesName(speciesName, out zlCode);
-            if (zlCode == "" && contracts.Count>0)
+            if (zlCode == "" && contracts.Count > 0)
             {
                 return contracts[0].Length;
             }
@@ -208,13 +200,13 @@ namespace TradingMaster.Control
             foreach (SpeciesItem item in _Species)
             {
                 cbi = new ComboBoxItem();
-                cbi.Tag = item.code+"."+item.otherCode;
+                cbi.Tag = item.code + "." + item.otherCode;
                 Util.Log("ComboBox 添加品种名:" + cbi.Name);
                 cbi.Content = item.name;
                 codeCBX.Items.Add(cbi);
             }
         }
-     
+
         private void PART_EditableTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             Util.Log("\nPART_EditableTextBox_TextChanged开始");
@@ -231,11 +223,11 @@ namespace TradingMaster.Control
                 Util.Log("lastTextStack[0]=" + _LastTextStack.ToArray()[0]);
             }
 
-          
-           
+
+
             if (content == "" && _LastTextStack.Count == 1)
             {
-                string lastCodeText=_LastTextStack.ToArray()[0];
+                string lastCodeText = _LastTextStack.ToArray()[0];
                 int contractLength = GetContractLength(GetValidSpeciesName(lastCodeText));
                 Util.Log("合约长度=" + contractLength);
                 if (_LastKey == Key.Delete || _LastKey == Key.Back || contractLength == lastCodeText.Length)
@@ -265,7 +257,7 @@ namespace TradingMaster.Control
                     codeCBX.IsDropDownOpen = true;
                 }
 
-                if (_LastKey != Key.Delete && _LastKey != Key.Back && content.Length!=zlCode.Length)
+                if (_LastKey != Key.Delete && _LastKey != Key.Back && content.Length != zlCode.Length)
                 {
                     if (zlCode != "")
                     {
@@ -274,16 +266,16 @@ namespace TradingMaster.Control
                     }
                     else
                     {
-                        
+
                         Util.Log("未发现主力合约，默认选择第一个" + zlCode);
-                        ComboBoxItem ci=codeCBX.Items[0] as ComboBoxItem;
+                        ComboBoxItem ci = codeCBX.Items[0] as ComboBoxItem;
                         if (content.Length != ci.Content.ToString().Length)
                         {
                             txtBox.Text = ci.Content.ToString();
                         }
                     }
                 }
-                string []lastTexts=_LastTextStack.ToArray();
+                string[] lastTexts = _LastTextStack.ToArray();
                 if (lastTexts.Length >= 2 && lastTexts[0].Length >= lastTexts[1].Length && _LastKey != Key.Delete && _LastKey != Key.Back)
                 {
                     txtBox.Select(lastTexts[1].Length, lastTexts[0].Length - lastTexts[1].Length);
@@ -358,7 +350,7 @@ namespace TradingMaster.Control
             //    //    }
             //    //}
             //}
-           
+
 
             //if (txtBox != null)
             //{
@@ -387,7 +379,7 @@ namespace TradingMaster.Control
             //}
         }
 
-        
+
 
         /// <summary>
         /// 得到正确的品种名
@@ -410,7 +402,7 @@ namespace TradingMaster.Control
                 {
                     break;
                 }
-                else 
+                else
                 {
                     realSpeciesName += c;
                 }
@@ -622,7 +614,7 @@ namespace TradingMaster.Control
             {
                 //Todo:
                 //if (s.SpeciesCode.Contains("SP") || s.SpeciesCode.Contains("efp") || s.SpeciesCode.Contains("_o"))
-                if (s.SpeciesCode.Contains("efp") || s.SpeciesCode.StartsWith("sc")|| s.ProductType == "Combination" || s.ProductType.Contains("Option") || s.SpeciesCode == "CVX")
+                if (s.SpeciesCode.Contains("efp") || s.SpeciesCode.StartsWith("sc") || s.ProductType == "Combination" || s.ProductType.Contains("Option") || s.SpeciesCode == "CVX")
                     continue;
 
                 si = null;
@@ -696,13 +688,13 @@ namespace TradingMaster.Control
     /// </summary>
     public class SpeciesItem
     {
-        public string name="";
-        public string code="";
-        public string otherCode="";
+        public string name = "";
+        public string code = "";
+        public string otherCode = "";
 
         public override string ToString()
         {
-            return name + " " + code+" "+otherCode;
+            return name + " " + code + " " + otherCode;
         }
     }
 

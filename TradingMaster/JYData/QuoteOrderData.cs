@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace TradingMaster
 {
@@ -313,7 +309,7 @@ namespace TradingMaster
             get { return _Exchange; }
             set { _Exchange = value; OnPropertyChanged("Exchange"); }
         }
-        
+
         /// <summary>
         /// 应价编号
         /// </summary>
@@ -416,11 +412,7 @@ namespace TradingMaster
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string info)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(info));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
 
         public QuoteOrderData Copy()

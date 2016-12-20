@@ -1,55 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Reflection;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace TradingMaster
 {
-	/// <summary>
-	/// 行情接口
-	/// </summary>
-	public class CtpMdApi
-	{
+    /// <summary>
+    /// 行情接口
+    /// </summary>
+    public class CtpMdApi
+    {
         const string DLLPROFILE = "dll\\CtpMdApi.dll";
 
-		/// <summary>
-		/// MdApi.dll/CTPMdApi.dll/thostmduserapi.dll 放在主程序的执行文件夹中
-		/// </summary>
-		/// <param name="_investor">投资者帐号:海风351962</param>
-		/// <param name="_pwd">密码</param>
-		/// <param name="_broker">经纪公司代码:2030-CTP模拟</param>
-		/// <param name="_addr">前置地址:默认为CTP模拟</param>
+        /// <summary>
+        /// MdApi.dll/CTPMdApi.dll/thostmduserapi.dll 放在主程序的执行文件夹中
+        /// </summary>
+        /// <param name="_investor">投资者帐号:海风351962</param>
+        /// <param name="_pwd">密码</param>
+        /// <param name="_broker">经纪公司代码:2030-CTP模拟</param>
+        /// <param name="_addr">前置地址:默认为CTP模拟</param>
         //public MdApi(string _investor, string _pwd, string _broker = "2030"
         //    , string _addr = "tcp://asp-sim2-md1.financial-trading-platform.com:26213")
         public CtpMdApi(string _investor, string _pwd, string _broker, string _addr)
-		{
-			this.FrontAddr = _addr;
-			this.BrokerID = _broker;
-			this.InvestorID = _investor;
-			this.Password = _pwd;
+        {
+            this.FrontAddr = _addr;
+            this.BrokerID = _broker;
+            this.InvestorID = _investor;
+            this.Password = _pwd;
             ClearUserDll();
             LoadDll(DLLPROFILE);
-		}
+        }
 
-		/// <summary>
-		/// 前置地址
-		/// </summary>
-		public string FrontAddr { get; set; }
-		/// <summary>
-		/// 经纪公司代码ctp-2030;上期-4030;
-		/// </summary>
-		public string BrokerID { get; set; }
-		/// <summary>
-		/// 投资者代码 351962-申万
-		/// </summary>
-		public string InvestorID { get; set; }
-		/// <summary>
-		/// 密码
-		/// </summary>
-		private string Password;
+        /// <summary>
+        /// 前置地址
+        /// </summary>
+        public string FrontAddr { get; set; }
+        /// <summary>
+        /// 经纪公司代码ctp-2030;上期-4030;
+        /// </summary>
+        public string BrokerID { get; set; }
+        /// <summary>
+        /// 投资者代码 351962-申万
+        /// </summary>
+        public string InvestorID { get; set; }
+        /// <summary>
+        /// 密码
+        /// </summary>
+        private string Password;
 
         /// <summary>
         /// 原型是 :HMODULE LoadLibrary(LPCTSTR lpFileName);
@@ -213,9 +209,9 @@ namespace TradingMaster
             return true;
         }
 
-		/// <summary>
-		/// 登录
-		/// </summary>
+        /// <summary>
+        /// 登录
+        /// </summary>
         private delegate void reqConnect(string pFront);
         public void Connect()
         {
@@ -232,47 +228,47 @@ namespace TradingMaster
             return ((getTradingDay)Invoke(this.PtrHandle, "GetTradingDay", typeof(getTradingDay)))();
         }
 
-		/// <summary>
-		/// 断开连接
-		/// </summary>
+        /// <summary>
+        /// 断开连接
+        /// </summary>
         private delegate void reqDisConnect();
         public void DisConnect()
         {
             ((reqDisConnect)Invoke(this.PtrHandle, "DisConnect", typeof(reqDisConnect)))();
         }
 
-		/// <summary>
-		/// 登录
-		/// </summary>
+        /// <summary>
+        /// 登录
+        /// </summary>
         private delegate int reqUserLogin(string pBroker, string pInvestor, string pPwd);
         public int ReqUserLogin()
         {
             return ((reqUserLogin)Invoke(this.PtrHandle, "ReqUserLogin", typeof(reqUserLogin)))(this.BrokerID, this.InvestorID, this.Password);
         }
 
-		/// <summary>
-		/// 用户注销
-		/// </summary>
+        /// <summary>
+        /// 用户注销
+        /// </summary>
         private delegate int reqUserLogout(string BROKER_ID, string INVESTOR_ID);
         public int ReqUserLogout()
         {
             return ((reqUserLogout)Invoke(this.PtrHandle, "ReqUserLogout", typeof(reqUserLogout)))(this.BrokerID, this.InvestorID);
         }
 
-		/// <summary>
-		/// 订阅行情
-		/// </summary>
-		/// <param name="instruments">合约代码:可填多个,订阅所有填null</param>
+        /// <summary>
+        /// 订阅行情
+        /// </summary>
+        /// <param name="instruments">合约代码:可填多个,订阅所有填null</param>
         private delegate int subMarketData(string[] instrumentsID, int nCount);
         public int SubscribeMarketData(params string[] instruments)
         {
             return ((subMarketData)Invoke(this.PtrHandle, "SubscribeMarketData", typeof(subMarketData)))(instruments, instruments == null ? 0 : instruments.Length);
         }
 
-		/// <summary>
-		/// 退订行情
-		/// </summary>
-		/// <param name="instruments">合约代码:可填多个,退订所有填null</param>
+        /// <summary>
+        /// 退订行情
+        /// </summary>
+        /// <param name="instruments">合约代码:可填多个,退订所有填null</param>
         private delegate int unSubMarketData(string[] instrumentsID, int nCount);
         public int UnSubscribeMarketData(params string[] instruments)
         {
@@ -299,11 +295,11 @@ namespace TradingMaster
             return ((unSubForQuoteRsp)Invoke(this.PtrHandle, "UnSubscribeForQuoteRsp", typeof(unSubForQuoteRsp)))(instruments, instruments == null ? 0 : instruments.Length);
         }
 
-		//回调函数 ==================================================================================================================
+        //回调函数 ==================================================================================================================
 
         private delegate void Reg(IntPtr pPtr);
 
-		#region 连接响应
+        #region 连接响应
         /// <summary>
         /// 
         /// </summary>
@@ -325,9 +321,9 @@ namespace TradingMaster
                 (Invoke(this.PtrHandle, "RegOnFrontConnected", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnFrontConnected));
             }
         }
-		#endregion
+        #endregion
 
-		#region 断开应答
+        #region 断开应答
         /// <summary>
         /// 
         /// </summary>
@@ -349,7 +345,7 @@ namespace TradingMaster
                 (Invoke(this.PtrHandle, "RegOnFrontDisconnected", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnFrontDisConnected));
             }
         }
-		#endregion
+        #endregion
 
         #region 心跳响应
         /// <summary>
@@ -375,7 +371,7 @@ namespace TradingMaster
         }
         #endregion
 
-		#region 登入请求应答
+        #region 登入请求应答
         public delegate void RspUserLogin(ref CThostFtdcRspUserLoginField pRspUserLogin, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
         private RspUserLogin _OnRspUserLogin;
         /// <summary>
@@ -394,9 +390,9 @@ namespace TradingMaster
                 (Invoke(this.PtrHandle, "RegRspUserLogin", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspUserLogin));
             }
         }
-		#endregion
+        #endregion
 
-		#region 登出请求应答
+        #region 登出请求应答
         public delegate void RspUserLogout(ref CThostFtdcUserLogoutField pUserLogout, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
         private RspUserLogout _OnRspUserLogout;
         /// <summary>
@@ -415,7 +411,7 @@ namespace TradingMaster
                 (Invoke(this.PtrHandle, "RegRspUserLogout", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspUserLogout));
             }
         }
-		#endregion
+        #endregion
 
         #region 错误应答
         public delegate void RspError(ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
@@ -438,7 +434,7 @@ namespace TradingMaster
         }
         #endregion
 
-		#region 订阅行情应答
+        #region 订阅行情应答
         public delegate void RspSubMarketData(ref CThostFtdcSpecificInstrumentField pSpecificInstrument, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
         private RspSubMarketData _OnRspSubMarketData;
         /// <summary>
@@ -457,9 +453,9 @@ namespace TradingMaster
                 (Invoke(this.PtrHandle, "RegRspSubMarketData", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspSubMarketData));
             }
         }
-		#endregion
+        #endregion
 
-		#region 退订请求应答
+        #region 退订请求应答
         public delegate void RspUnSubMarketData(ref CThostFtdcSpecificInstrumentField pSpecificInstrument, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
         private RspUnSubMarketData _OnRspUnSubMarketData;
         /// <summary>
@@ -478,9 +474,9 @@ namespace TradingMaster
                 (Invoke(this.PtrHandle, "RegRspUnSubMarketData", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspUnSubMarketData));
             }
         }
-		#endregion
+        #endregion
 
-		#region 深度行情通知
+        #region 深度行情通知
         public delegate void RtnDepthMarketData(ref CThostFtdcDepthMarketDataField pDepthMarketData);
         private RtnDepthMarketData _OnRtnDepthMarketData;
         /// <summary>
@@ -499,7 +495,7 @@ namespace TradingMaster
                 (Invoke(this.PtrHandle, "RegRtnDepthMarketData", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRtnDepthMarketData));
             }
         }
-		#endregion
+        #endregion
 
         #region 订阅询价应答
         public delegate void RspSubForQuoteRsp(ref CThostFtdcSpecificInstrumentField pSpecificInstrument, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
@@ -564,5 +560,5 @@ namespace TradingMaster
         }
         #endregion
 
-	}
+    }
 }

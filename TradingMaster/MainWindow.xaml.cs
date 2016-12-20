@@ -1,35 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading;
-using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using TradingMaster.CodeSet;
 using TradingMaster.Control;
-using TradingMaster.JYData;
 
 namespace TradingMaster
-{    
+{
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window
     {
         internal MainWindow()
         {
-            ResourceDictionary o = (ResourceDictionary)System.Windows.Application.LoadComponent(new Uri("/TradingMaster;component/Dictionary1.xaml", UriKind.Relative));
-            System.Windows.Application.Current.Resources.MergedDictionaries.Add(o);
-            InitializeComponent();            
+            ResourceDictionary o = (ResourceDictionary)Application.LoadComponent(new Uri("/TradingMaster;component/Dictionary1.xaml", UriKind.Relative));
+            Application.Current.Resources.MergedDictionaries.Add(o);
+            InitializeComponent();
             InitControls();
             this.Title += String.Format("  【当前账号：{0}  经纪号：{1}  交易服务器：{2}  行情服务器：{3}】",
                 CtpDataServer.GetUserInstance().GetCurrentInvestorID(), CtpDataServer.GetUserInstance().GetCurrentBroker(),
@@ -56,7 +46,7 @@ namespace TradingMaster
             capitalQuery.Init(this);
             capitalQuery.btnQuery.Click += new RoutedEventHandler(CapitalDetail_Click);
             capitalQuery.btnTransfer.Click += new RoutedEventHandler(btnTransfer_Click);
-                        
+
             uscQuoteOrder.Init(this);
             uscOptionExecInquiry.Init(this);
             uscExecOrderPanel.Init(this);
@@ -327,7 +317,7 @@ namespace TradingMaster
             return TradingMaster.Properties.Settings.Default.ConfirmBeforeSendNewOrder;
 
         }
-        
+
         public Window BankAmountQrywindow = null;
         public StatementsInquiry UscStatementsInquiry = null;
         public InterTranfer UscInterTransfer = null;
@@ -377,35 +367,35 @@ namespace TradingMaster
         /// <summary>
         /// 委托单
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _OrderDataCollection = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _OrderDataCollection = new ObservableCollection<TradeOrderData>();
         /// <summary>
         /// 挂单
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _PendingCollection = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _PendingCollection = new ObservableCollection<TradeOrderData>();
         /// <summary>
         /// 所有成交，明细
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _TradeCollection_MX = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _TradeCollection_MX = new ObservableCollection<TradeOrderData>();
 
         /// <summary>
         /// 所有成交，按合约分组
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _TradeCollection_Code = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _TradeCollection_Code = new ObservableCollection<TradeOrderData>();
 
         /// <summary>
         /// 所有成交委托单
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _TradedOrderCollection = new ObservableCollection<Q7JYOrderData>();        
+        private ObservableCollection<TradeOrderData> _TradedOrderCollection = new ObservableCollection<TradeOrderData>();
 
         /// <summary>
         /// 持仓明细
         /// </summary>
-        public ObservableCollection<Q7PosInfoDetail> _PositionDetailCollection = new ObservableCollection<Q7PosInfoDetail>();
+        public ObservableCollection<PosInfoDetail> _PositionDetailCollection = new ObservableCollection<PosInfoDetail>();
 
         /// <summary>
         /// 持仓合计
         /// </summary>
-        private ObservableCollection<Q7PosInfoTotal> _PositionDetailCollection_Total = new ObservableCollection<Q7PosInfoTotal>();
+        private ObservableCollection<PosInfoTotal> _PositionDetailCollection_Total = new ObservableCollection<PosInfoTotal>();
 
         /// <summary>
         /// 平仓查询
@@ -450,12 +440,12 @@ namespace TradingMaster
         /// <summary>
         /// 所有埋单条件单
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _PreConditionOrderData = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _PreConditionOrderData = new ObservableCollection<TradeOrderData>();
 
         /// <summary>
         /// 所有埋单条件单
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> PreConditionOrderData
+        public ObservableCollection<TradeOrderData> PreConditionOrderData
         {
             get { return _PreConditionOrderData; }
             set { _PreConditionOrderData = value; }
@@ -464,12 +454,12 @@ namespace TradingMaster
         /// <summary>
         /// 条件单
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _ConditionOrderData = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _ConditionOrderData = new ObservableCollection<TradeOrderData>();
 
         /// <summary>
         /// 条件单
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> ConditionOrderData
+        public ObservableCollection<TradeOrderData> ConditionOrderData
         {
             get { return _ConditionOrderData; }
             set { _ConditionOrderData = value; }
@@ -478,12 +468,12 @@ namespace TradingMaster
         /// <summary>
         /// 预埋单
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _PreOrderData = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _PreOrderData = new ObservableCollection<TradeOrderData>();
 
         /// <summary>
         /// 预埋单
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> PreOrderData
+        public ObservableCollection<TradeOrderData> PreOrderData
         {
             get { return _PreOrderData; }
             set { _PreOrderData = value; }
@@ -492,11 +482,11 @@ namespace TradingMaster
         /// <summary>
         /// 已发送埋单条件单
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _SentOrderData = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _SentOrderData = new ObservableCollection<TradeOrderData>();
         /// <summary>
         /// 已发送埋单条件单
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> SentOrderData
+        public ObservableCollection<TradeOrderData> SentOrderData
         {
             get { return _SentOrderData; }
             set { _SentOrderData = value; }
@@ -505,12 +495,12 @@ namespace TradingMaster
         /// <summary>
         /// 已撤单
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _CancelledOrderData = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _CancelledOrderData = new ObservableCollection<TradeOrderData>();
 
         /// <summary>
         /// 已撤单
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> CancelledOrderData
+        public ObservableCollection<TradeOrderData> CancelledOrderData
         {
             get { return _CancelledOrderData; }
             set { _CancelledOrderData = value; }
@@ -519,12 +509,12 @@ namespace TradingMaster
         /// <summary>
         /// 已成交单
         /// </summary>
-        private ObservableCollection<Q7JYOrderData> _TransactionOrderData = new ObservableCollection<Q7JYOrderData>();
+        private ObservableCollection<TradeOrderData> _TransactionOrderData = new ObservableCollection<TradeOrderData>();
 
         /// <summary>
         /// 已成交单
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> TransactionOrderData
+        public ObservableCollection<TradeOrderData> TransactionOrderData
         {
             get { return _TransactionOrderData; }
             set { _TransactionOrderData = value; }
@@ -541,7 +531,7 @@ namespace TradingMaster
         /// <summary>
         /// 所有委托单
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> OrderDataCollection
+        public ObservableCollection<TradeOrderData> OrderDataCollection
         {
             get { return _OrderDataCollection; }
             set { _OrderDataCollection = value; }
@@ -550,7 +540,7 @@ namespace TradingMaster
         /// <summary>
         /// 所有挂单（未成交）
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> PendingCollection
+        public ObservableCollection<TradeOrderData> PendingCollection
         {
             get { return _PendingCollection; }
             set { _PendingCollection = value; }
@@ -559,7 +549,7 @@ namespace TradingMaster
         /// <summary>
         /// 所有成交委托单
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> TradedOrderCollection
+        public ObservableCollection<TradeOrderData> TradedOrderCollection
         {
             get { return _TradedOrderCollection; }
             set { _TradedOrderCollection = value; }
@@ -568,7 +558,7 @@ namespace TradingMaster
         /// <summary>
         /// 所有成交_合计
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> TradeCollection_Code
+        public ObservableCollection<TradeOrderData> TradeCollection_Code
         {
             get { return _TradeCollection_Code; }
             set { _TradeCollection_Code = value; }
@@ -577,7 +567,7 @@ namespace TradingMaster
         /// <summary>
         /// 所有成交_明细
         /// </summary>
-        public ObservableCollection<Q7JYOrderData> TradeCollection_MX
+        public ObservableCollection<TradeOrderData> TradeCollection_MX
         {
             get { return _TradeCollection_MX; }
             set { _TradeCollection_MX = value; }
@@ -586,7 +576,7 @@ namespace TradingMaster
         /// <summary>
         /// 持仓明细
         /// </summary>
-        public ObservableCollection<Q7PosInfoDetail> PositionDetailCollection
+        public ObservableCollection<PosInfoDetail> PositionDetailCollection
         {
             get { return _PositionDetailCollection; }
             set { _PositionDetailCollection = value; }
@@ -595,7 +585,7 @@ namespace TradingMaster
         /// <summary>
         /// 持仓合计
         /// </summary>
-        public ObservableCollection<Q7PosInfoTotal> PositionCollection_Total
+        public ObservableCollection<PosInfoTotal> PositionCollection_Total
         {
             get { return _PositionDetailCollection_Total; }
             set { _PositionDetailCollection_Total = value; }
@@ -693,11 +683,11 @@ namespace TradingMaster
         /// </summary>
         /// <param name="orderInfo"></param>
         /// <param name="messageType">1 commit;2 transact; 3 cancel</param>
-        public void HandleOrderInfo(Q7JYOrderData orderInfo)
+        public void HandleOrderInfo(TradeOrderData orderInfo)
         {
-            if (System.Windows.Application.Current != null)
+            if (Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     try
                     {
@@ -741,9 +731,9 @@ namespace TradingMaster
 
         public void HandleOrderInfo(QuoteOrderData orderInfo)
         {
-            if (System.Windows.Application.Current != null)
+            if (Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     try
                     {
@@ -787,9 +777,9 @@ namespace TradingMaster
 
         public void HandleOrderInfo(ExecOrderData orderInfo)
         {
-            if (System.Windows.Application.Current != null)
+            if (Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     try
                     {
@@ -841,13 +831,13 @@ namespace TradingMaster
 
         internal void ShowSystemMessge()
         {
-            if (System.Windows.Application.Current != null)
+            if (Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     if (_SystemMessageWindow == null)
                     {
-                        _SystemMessageWindow =CommonUtil.GetWindow("日志记录", _SystemTips, this);
+                        _SystemMessageWindow = CommonUtil.GetWindow("日志记录", _SystemTips, this);
                         _SystemMessageWindow.ResizeMode = ResizeMode.CanResize;
                         _SystemMessageWindow.Closing += new CancelEventHandler(systemMessageWindow_Closing);
                     }
@@ -888,7 +878,7 @@ namespace TradingMaster
             CapitalDataCollection.DeliveryMargin = jyRealData.DeliveryMargin;
             CapitalDataCollection.Royalty = jyRealData.Royalty;
             CapitalDataCollection.FrozenRoyalty = jyRealData.FrozenRoyalty;
-            
+
             if (!_HasShowedRisk)
             {
                 if (jyRealData.RiskRatio > 80)
@@ -917,9 +907,9 @@ namespace TradingMaster
 
         public void OnGotBankAmountDetail(BankAcctDetail bankAcctDetail)
         {
-            if (System.Windows.Application.Current != null)
+            if (Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     if (BankAmountQrywindow != null)
                     {
@@ -969,7 +959,7 @@ namespace TradingMaster
         private void CapitalDetail_Click(object sender, RoutedEventArgs e)
         {
             TradeDataClient.GetClientInstance().RequestTradeData("", BACKENDTYPE.CTP, new RequestContent("ReqCapital", new List<object>()));
-            if (CapitalDataCollection != null )
+            if (CapitalDataCollection != null)
             {
                 if (_CapitalDetailWindow == null)
                 {
@@ -1012,7 +1002,7 @@ namespace TradingMaster
                 //capitalDetailWindow.Visibility = Visibility.Visible;
             }
             _InterTransferWindow.Show();
-        }      
+        }
 
         void capitalDetailWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -1046,9 +1036,9 @@ namespace TradingMaster
         {
             try
             {
-                if (System.Windows.Application.Current != null)
+                if (Application.Current != null)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         AddMessageToCollection(feedbackTime, feedbackMessage, messageLevel, messageClass);
                     });
@@ -1063,7 +1053,7 @@ namespace TradingMaster
 
         private void AddMessageToCollection(string feedbackTime, string feedbackMessage, string messageLevel, string messageClass)
         {
-            _MutualExclusion.WaitOne();            
+            _MutualExclusion.WaitOne();
             try
             {
                 //Todo: 存疑
@@ -1110,9 +1100,9 @@ namespace TradingMaster
         /// <param name="isConnected"></param>
         public void ChangeServerConnectionStatus()
         {
-            if (System.Windows.Application.Current != null)
+            if (Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     uscStatusBar.FormString();
                 });
@@ -1190,9 +1180,9 @@ namespace TradingMaster
 
         //public void updateFuturesDataByDisplayRealData(RealData realData)
         //{
-            //mutexOption.WaitOne();
-            //uscHangqing.updateFuturesDataByDisplayRealData(realData);
-            //mutexOption.ReleaseMutex();
+        //mutexOption.WaitOne();
+        //uscHangqing.updateFuturesDataByDisplayRealData(realData);
+        //mutexOption.ReleaseMutex();
         //}
 
         public void updateOptionDataByDisplayRealData(RealData realData)
@@ -1266,7 +1256,7 @@ namespace TradingMaster
                 ExitTrading();//Environment.Exit(0);
                 //JYDataServer.getServerInstance().AddToQryQueue(new CTPRequestContent("ClientLogOff", new List<object>()));
                 TradeDataClient.GetClientInstance().RequestTradeData("", BACKENDTYPE.CTP, new RequestContent("RequestTradeDataDisConnect", new List<object>()));
-                TradeDataClient.GetClientInstance().RequestMarketData("",BACKENDTYPE.CTP, new RequestContent("RequestMarketDataDisConnect", new List<object>()));
+                TradeDataClient.GetClientInstance().RequestMarketData("", BACKENDTYPE.CTP, new RequestContent("RequestMarketDataDisConnect", new List<object>()));
             }
         }
 

@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Collections.ObjectModel;
 using TradingMaster.CodeSet;
 
 namespace TradingMaster.Control
@@ -96,7 +88,7 @@ namespace TradingMaster.Control
             }
 
             foreach (var temp in selectedContract)
-            {  
+            {
                 _ChooseSet.Remove(temp);
             }
         }
@@ -150,10 +142,10 @@ namespace TradingMaster.Control
             GetSelectedItems(itemsource, selectedItems);
 
 
-            for (int i = selectedItems.Count-1; i >= 0; i--)
+            for (int i = selectedItems.Count - 1; i >= 0; i--)
             {
                 int index = itemsource.IndexOf(selectedItems[i]);
-                if (index == itemsource.Count-1)
+                if (index == itemsource.Count - 1)
                 {
                     continue;
                 }
@@ -307,13 +299,13 @@ namespace TradingMaster.Control
             {
                 _ChooseSet = UserCodeSetInstance.GetContractListByUserCodeSet((cbUserCodeSet.SelectedItem as UserCodeSet).Id);
                 this.dgChoosedCode.ItemsSource = _ChooseSet;
-                switch(cbUserCodeSet.SelectedIndex)
+                switch (cbUserCodeSet.SelectedIndex)
                 {
                     case 0:
                         _CurrentContractType = "Futures";
                         break;
                     case 1:
-                        _CurrentContractType = "Combination";                        
+                        _CurrentContractType = "Combination";
                         break;
                 }
                 int i = cb_area.SelectedIndex;
@@ -340,7 +332,7 @@ namespace TradingMaster.Control
                     txtCode.Text = validSpeciesName + SpeciesDate;
                     return;
                 }
-            }      
+            }
         }
 
 

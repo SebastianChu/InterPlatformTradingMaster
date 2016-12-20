@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Threading;
 
 namespace TradingMaster.Control
@@ -47,16 +39,16 @@ namespace TradingMaster.Control
                 txtStatementOrder.Text = "正在查询，请稍等...";
                 btnQueryStatementOrder.IsEnabled = btnQueryMonthStatementOrder.IsEnabled = false;
 
-                TradeDataClient.GetClientInstance().RequestTradeData("",BACKENDTYPE.CTP, new RequestContent("RequestSettlementInstructions", new List<object>() { queryDate }));
+                TradeDataClient.GetClientInstance().RequestTradeData("", BACKENDTYPE.CTP, new RequestContent("RequestSettlementInstructions", new List<object>() { queryDate }));
                 //JYDataServer.getServerInstance().RequestSettlementInstructions(queryDate);
 
-                Thread t = new Thread(delegate()
+                Thread t = new Thread(delegate ()
                 {
                     Thread.Sleep(_QueryTimeOut);
 
-                    if (System.Windows.Application.Current != null)
+                    if (Application.Current != null)
                     {
-                        System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                        Application.Current.Dispatcher.Invoke((Action)delegate
                         {
                             if (btnQueryStatementOrder.IsEnabled == false || btnQueryMonthStatementOrder.IsEnabled == false)
                             {
@@ -88,13 +80,13 @@ namespace TradingMaster.Control
                 btnQueryStatementOrder.IsEnabled = btnQueryMonthStatementOrder.IsEnabled = false;
 
                 TradeDataClient.GetClientInstance().RequestTradeData("", BACKENDTYPE.CTP, new RequestContent("RequestSettlementInstructions", new List<object>() { queryDate.Substring(0, queryDate.Length - 2) }));
-                Thread t = new Thread(delegate()
+                Thread t = new Thread(delegate ()
                 {
                     Thread.Sleep(_QueryTimeOut);
 
-                    if (System.Windows.Application.Current != null)
+                    if (Application.Current != null)
                     {
-                        System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
+                        Application.Current.Dispatcher.Invoke((Action)delegate
                         {
                             if (btnQueryStatementOrder.IsEnabled == false || btnQueryMonthStatementOrder.IsEnabled == false)
                             {

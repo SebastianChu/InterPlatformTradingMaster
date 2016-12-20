@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Collections.ObjectModel;
-using System.Runtime.InteropServices;
 using TradingMaster.CodeSet;
 
 namespace TradingMaster.Control
@@ -66,7 +60,7 @@ namespace TradingMaster.Control
 
         private MainWindow _MainWindow { get; set; }
 
-        private bool CancelFreezeOrder(Q7PosInfoTotal dhPosInfoTotal)
+        private bool CancelFreezeOrder(PosInfoTotal dhPosInfoTotal)
         {
             if (dhPosInfoTotal == null)
             {
@@ -75,7 +69,7 @@ namespace TradingMaster.Control
                     //一条都未选中，返回
                     return false;
                 }
-                dhPosInfoTotal = dgPositionsInq.SelectedItem as Q7PosInfoTotal;
+                dhPosInfoTotal = dgPositionsInq.SelectedItem as PosInfoTotal;
             }
             string keyStr = dhPosInfoTotal.InvestorID + dhPosInfoTotal.Code + dhPosInfoTotal.BuySell.Contains("买") + dhPosInfoTotal.Hedge;
             return TradeDataClient.GetClientInstance().CancelPositionFreezeOrder(keyStr);
@@ -119,7 +113,7 @@ namespace TradingMaster.Control
             DataGridCell dgc = grid.TemplatedParent as DataGridCell;
             if (tp != null && dgc != null)
             {
-                Q7PosInfoTotal posInfoTotal = dgc.DataContext as Q7PosInfoTotal;
+                PosInfoTotal posInfoTotal = dgc.DataContext as PosInfoTotal;
                 //Util.Log("o.tostring()=" + posInfoTotal.ToString());
                 tp.Inlines.Clear();
 
@@ -218,10 +212,10 @@ namespace TradingMaster.Control
             DataGridCell dgc = grid.TemplatedParent as DataGridCell;
             if (tp != null && dgc != null)
             {
-                Q7PosInfoTotal posInfoTotal = dgc.DataContext as Q7PosInfoTotal;
+                PosInfoTotal posInfoTotal = dgc.DataContext as PosInfoTotal;
                 //Util.Log("o.tostring()=" + posInfoTotal.ToString());
                 //如果没有昨仓，则不显示提示信息
-                if (posInfoTotal.YesterdayPosition == 0 )//|| (posInfoTotal.TodayPosition == 0 && posInfoTotal.YesterdayPosition <= posInfoTotal.FreezeCount))
+                if (posInfoTotal.YesterdayPosition == 0)//|| (posInfoTotal.TodayPosition == 0 && posInfoTotal.YesterdayPosition <= posInfoTotal.FreezeCount))
                 {
                     grid.ToolTip = null;
                     return;
@@ -301,7 +295,7 @@ namespace TradingMaster.Control
             DataGridCell dgc = grid.TemplatedParent as DataGridCell;
             if (tp != null && dgc != null)
             {
-                Q7PosInfoTotal posInfoTotal = dgc.DataContext as Q7PosInfoTotal;
+                PosInfoTotal posInfoTotal = dgc.DataContext as PosInfoTotal;
                 //Util.Log("o.tostring()=" + posInfoTotal.ToString());
 
                 //如果没有仓位，则不显示提示信息
@@ -394,7 +388,7 @@ namespace TradingMaster.Control
             DataGridCell dgc = grid.TemplatedParent as DataGridCell;
             if (tp != null && dgc != null)
             {
-                Q7PosInfoTotal posInfoTotal = dgc.DataContext as Q7PosInfoTotal;
+                PosInfoTotal posInfoTotal = dgc.DataContext as PosInfoTotal;
                 //Util.Log("o.tostring()=" + posInfoTotal.ToString());
                 //如果没有未成平仓，则不显示提示信息
                 if (posInfoTotal.FreezeCount == 0)
@@ -427,7 +421,7 @@ namespace TradingMaster.Control
 
         private void ExportDataMenuItem_Click(object sender, RoutedEventArgs e)
         {
-           CommonUtil.ExportedData_Click(sender, e, true);
+            CommonUtil.ExportedData_Click(sender, e, true);
         }
 
         private void rbPositionTotal_Checked(object sender, RoutedEventArgs e)
@@ -458,13 +452,13 @@ namespace TradingMaster.Control
             {
                 return;
             }
-            Q7PosInfoTotal record = cell.DataContext as Q7PosInfoTotal;
+            PosInfoTotal record = cell.DataContext as PosInfoTotal;
             GridPositionsTotal(record);
 
             DataGrid dg = sender as DataGrid;
             if (dg != null)
             {
-                ObservableCollection<Q7PosInfoTotal> posInfoTotalList = dg.ItemsSource as ObservableCollection<Q7PosInfoTotal>;
+                ObservableCollection<PosInfoTotal> posInfoTotalList = dg.ItemsSource as ObservableCollection<PosInfoTotal>;
                 if (System.Windows.Forms.Control.ModifierKeys == System.Windows.Forms.Keys.Control)
                 {
                     //Util.Log("上一次,按下CTRL键时:" + lastCtrlPressedTime.ToString("hh:mm:ss.fff"));
@@ -509,7 +503,7 @@ namespace TradingMaster.Control
                 }
                 else if (System.Windows.Forms.Control.ModifierKeys == System.Windows.Forms.Keys.Shift)
                 {
-                    ObservableCollection<Q7PosInfoTotal> allPostionTotal = _MainWindow.PositionCollection_Total;
+                    ObservableCollection<PosInfoTotal> allPostionTotal = _MainWindow.PositionCollection_Total;
                     if (dg.SelectedItems.Count == 0)
                     {
                         dg.SelectedItems.Add(record);
@@ -553,14 +547,14 @@ namespace TradingMaster.Control
             {
                 return;
             }
-            Q7PosInfoDetail record = cell.DataContext as Q7PosInfoDetail;
+            PosInfoDetail record = cell.DataContext as PosInfoDetail;
             GridPositionsDetail(record);
 
             DataGrid dg = sender as DataGrid;
 
             if (dg != null)
             {
-                ObservableCollection<Q7PosInfoDetail> posInfoTotalList = dg.ItemsSource as ObservableCollection<Q7PosInfoDetail>;
+                ObservableCollection<PosInfoDetail> posInfoTotalList = dg.ItemsSource as ObservableCollection<PosInfoDetail>;
 
                 //if (System.Windows.Forms.Control.ModifierKeys == System.Windows.Forms.Keys.Control)
                 //{
@@ -648,7 +642,7 @@ namespace TradingMaster.Control
             //}
         }
 
-        private void GridPositionsDetail(Q7PosInfoDetail record)
+        private void GridPositionsDetail(PosInfoDetail record)
         {
             if (!CommonUtil.IsValidCode(record.Code))
             {
@@ -692,7 +686,7 @@ namespace TradingMaster.Control
             //mainWindow.uscOptionHangqing.SelectDataByCode(realData.Code);
         }
 
-        private void GridPositionsTotal(Q7PosInfoTotal record)
+        private void GridPositionsTotal(PosInfoTotal record)
         {
             if (!CommonUtil.IsValidCode(record.Code))
             {
@@ -730,7 +724,7 @@ namespace TradingMaster.Control
                 kp = "平仓";
                 num = record.TotalPosition;
             }
-            
+
 
             //mainWindow.uscOptionHangqing.AddExternalHqingData(realData);
             if (PositionDataMouseLeftButtonDown != null)
@@ -803,19 +797,19 @@ namespace TradingMaster.Control
                 return;
             }
 
-            ObservableCollection<Q7PosInfoTotal> posInfoTotalCollction = new ObservableCollection<Q7PosInfoTotal>();
+            ObservableCollection<PosInfoTotal> posInfoTotalCollction = new ObservableCollection<PosInfoTotal>();
             List<PosInfoOrder> posInfoOrderList = new List<PosInfoOrder>();
             foreach (var item in dgPositionsInq.SelectedItems)
             {
-                posInfoTotalCollction.Add(item as Q7PosInfoTotal);
+                posInfoTotalCollction.Add(item as PosInfoTotal);
             }
 
             CheckableMessageBox messageBox = new CheckableMessageBox();
             messageBox.tbMessage.Text = string.Empty;
 
-            foreach (Q7PosInfoTotal posInfo in posInfoTotalCollction)
+            foreach (PosInfoTotal posInfo in posInfoTotalCollction)
             {
-                //Q7PosInfoTotal posInfo = item as Q7PosInfoTotal;
+                //PosInfoTotal posInfo = item as PosInfoTotal;
                 RealData realData = _MainWindow.HQBackgroundRealData.GetRealDataByCode(posInfo.Code);
                 if (realData == null)
                 {
@@ -839,7 +833,7 @@ namespace TradingMaster.Control
                 //}
 
                 EnumOrderType orderType = EnumOrderType.Limit;
-                
+
                 if (priceClose == 0)
                 {
                     priceClose = realData.NewPrice;
@@ -874,8 +868,8 @@ namespace TradingMaster.Control
                                 messageBox.tbMessage.Text = messageBox.tbMessage.Text + "\n";
                             }
                             string keyStr = posInfo.InvestorID + posInfo.Code + posInfo.BuySell.Contains("买") + posInfo.Hedge;
-                            List<Q7JYOrderData> orderLst = TradeDataClient.GetClientInstance().GetFreezeOrder(keyStr);
-                            foreach (Q7JYOrderData order in orderLst)
+                            List<TradeOrderData> orderLst = TradeDataClient.GetClientInstance().GetFreezeOrder(keyStr);
+                            foreach (TradeOrderData order in orderLst)
                             {
                                 messageBox.tbMessage.Text = messageBox.tbMessage.Text + string.Format("撤单{0}: {1} {2}  {3} {4}手 于价格{5}, {6}",
                                     order.OrderID, order.OpenClose, order.BuySell, order.Code, order.CommitHandCount, order.CommitPrice.ToString(), order.Hedge);
@@ -918,8 +912,8 @@ namespace TradingMaster.Control
                         if (posInfo.FreezeCount > 0)
                         {
                             string keyStr = posInfo.InvestorID + posInfo.Code + posInfo.BuySell.Contains("买") + posInfo.Hedge;
-                            List<Q7JYOrderData> orderLst = TradeDataClient.GetClientInstance().GetFreezeOrder(keyStr);
-                            foreach (Q7JYOrderData order in orderLst)
+                            List<TradeOrderData> orderLst = TradeDataClient.GetClientInstance().GetFreezeOrder(keyStr);
+                            foreach (TradeOrderData order in orderLst)
                             {
                                 messageBox.tbMessage.Text = messageBox.tbMessage.Text + string.Format("撤单{0}: {1} {2}  {3} {4}手 于价格{5}, {6}\n",
                                     order.OrderID, order.OpenClose, order.BuySell, order.Code, order.CommitHandCount, order.CommitPrice.ToString(), order.Hedge);
@@ -959,7 +953,7 @@ namespace TradingMaster.Control
                         }
                         foreach (PosInfoOrder item in posInfoOrderList)
                         {
-                            Q7PosInfoTotal posInfo = item.posInfo;
+                            PosInfoTotal posInfo = item.posInfo;
                             //double priceClose = item.sPrice;
                             //bool posOpen = item.posEffect == PosEffect.Open ? true : false;
                             bool hasCancelOrder = false;
@@ -977,7 +971,7 @@ namespace TradingMaster.Control
             {
                 foreach (PosInfoOrder item in posInfoOrderList)
                 {
-                    Q7PosInfoTotal posInfo = item.posInfo;
+                    PosInfoTotal posInfo = item.posInfo;
                     //double priceClose = item.sPrice;
                     //bool posOpen = item.posEffect == PosEffect.Open ? true : false;
                     bool hasCancelOrder = false;
@@ -1040,17 +1034,17 @@ namespace TradingMaster.Control
                 return;
             }
 
-            ObservableCollection<Q7PosInfoTotal> posInfoTotalCollction = new ObservableCollection<Q7PosInfoTotal>();
+            ObservableCollection<PosInfoTotal> posInfoTotalCollction = new ObservableCollection<PosInfoTotal>();
             List<ExecOrderInfo> execOrderInfoList = new List<ExecOrderInfo>();
             foreach (var item in dgPositionsInq.SelectedItems)
             {
-                posInfoTotalCollction.Add(item as Q7PosInfoTotal);
+                posInfoTotalCollction.Add(item as PosInfoTotal);
             }
 
             CheckableMessageBox messageBox = new CheckableMessageBox();
             messageBox.tbMessage.Text = string.Empty;
 
-            foreach (Q7PosInfoTotal record in posInfoTotalCollction)
+            foreach (PosInfoTotal record in posInfoTotalCollction)
             {
                 if (record.BuySell == "买" && record.ProductType.Contains("Option"))
                 {
@@ -1066,7 +1060,7 @@ namespace TradingMaster.Control
                             }
                             messageBox.tbMessage.Text = string.Format("指令：行权 {0} {1}手",
                                 record.Code, record.TodayPosition);
-                            ExecOrderInfo eOrder = new ExecOrderInfo(record, buySell, PosEffect.CloseToday,record.TodayPosition);
+                            ExecOrderInfo eOrder = new ExecOrderInfo(record, buySell, PosEffect.CloseToday, record.TodayPosition);
                             execOrderInfoList.Add(eOrder);
                         }
                         if (record.YesterdayPosition > 0)
@@ -1078,7 +1072,7 @@ namespace TradingMaster.Control
                             }
                             messageBox.tbMessage.Text = messageBox.tbMessage.Text + string.Format("指令：行权 {0} {1}手",
                                 record.Code, record.YesterdayPosition);
-                            ExecOrderInfo eOrder = new ExecOrderInfo(record, buySell, PosEffect.CloseYesterday,record.TodayPosition);
+                            ExecOrderInfo eOrder = new ExecOrderInfo(record, buySell, PosEffect.CloseYesterday, record.TodayPosition);
                             execOrderInfoList.Add(eOrder);
                         }
                     }
@@ -1148,14 +1142,14 @@ namespace TradingMaster.Control
             {
                 return;
             }
-            ObservableCollection<Q7PosInfoTotal> posInfoTotalCollction = new ObservableCollection<Q7PosInfoTotal>();
+            ObservableCollection<PosInfoTotal> posInfoTotalCollction = new ObservableCollection<PosInfoTotal>();
             List<ExecOrderInfo> execOrderInfoList = new List<ExecOrderInfo>();
             foreach (var item in dgPositionsInq.SelectedItems)
             {
-                posInfoTotalCollction.Add(item as Q7PosInfoTotal);
+                posInfoTotalCollction.Add(item as PosInfoTotal);
             }
 
-            foreach (Q7PosInfoTotal record in posInfoTotalCollction)
+            foreach (PosInfoTotal record in posInfoTotalCollction)
             {
                 //JYDataServer.getServerInstance().AddToOrderQueue(new CtpRequestContent("QryInvestorProductMargin", new List<object>() { record.Code }));
                 //JYDataServer.getServerInstance().AddToOrderQueue(new CtpRequestContent("QryProductExchRate", new List<object>() { CodeSetManager.GetContractInfo(record.Code).SpeciesCode }));
@@ -1177,7 +1171,7 @@ namespace TradingMaster.Control
                 DataGrid dg = sender as DataGrid;
                 if (dg.SelectedItem != null)
                 {
-                    Q7PosInfoTotal record = dg.SelectedItem as Q7PosInfoTotal;
+                    PosInfoTotal record = dg.SelectedItem as PosInfoTotal;
                     GridPositionsTotal(record);
                 }
             }
@@ -1190,7 +1184,7 @@ namespace TradingMaster.Control
                 DataGrid dg = sender as DataGrid;
                 if (dg.SelectedItem != null)
                 {
-                    Q7PosInfoDetail record = dg.SelectedItem as Q7PosInfoDetail;
+                    PosInfoDetail record = dg.SelectedItem as PosInfoDetail;
                     GridPositionsDetail(record);
                 }
             }
@@ -1202,15 +1196,15 @@ namespace TradingMaster.Control
     /// </summary>
     public class PosInfoOrder
     {
-        public Q7PosInfoTotal posInfo;      //对应的是平仓合计中的哪条记录
+        public PosInfoTotal posInfo;      //对应的是平仓合计中的哪条记录
 
         public string BuySell { get; set; }            //"买"或者"卖"
         public double Price { get; set; }              //价格
         public PosEffect PositionEffect { get; set; }  //开仓，平仓，平今
         public int HandCount { get; set; }             //手数
-        public EnumOrderType OrderType { get; set; } 
+        public EnumOrderType OrderType { get; set; }
 
-        public PosInfoOrder(Q7PosInfoTotal aPosInfo, string aBuySell, double aPrice, PosEffect aPosEffect, int aHandCount, EnumOrderType aOrderType)
+        public PosInfoOrder(PosInfoTotal aPosInfo, string aBuySell, double aPrice, PosEffect aPosEffect, int aHandCount, EnumOrderType aOrderType)
         {
             this.posInfo = aPosInfo;
             this.BuySell = aBuySell;
@@ -1227,14 +1221,14 @@ namespace TradingMaster.Control
     /// </summary>
     public class ExecOrderInfo
     {
-        public Q7PosInfoTotal posInfo;      //对应的是平仓合计中的哪条记录
+        public PosInfoTotal posInfo;      //对应的是平仓合计中的哪条记录
 
         public string BuySell { get; set; }             //"买"或者"卖"
         public double Price { get; set; }              //价格
         public PosEffect PositionEffect { get; set; }        //开仓，平仓，平今
         public int HandCount { get; set; }               //手数
 
-        public ExecOrderInfo(Q7PosInfoTotal aPosInfo, string aBuySell, PosEffect aPosEffect, int aHandCount)
+        public ExecOrderInfo(PosInfoTotal aPosInfo, string aBuySell, PosEffect aPosEffect, int aHandCount)
         {
             this.posInfo = aPosInfo;
             this.BuySell = aBuySell;

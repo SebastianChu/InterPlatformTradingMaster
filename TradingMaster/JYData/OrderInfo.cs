@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TradingMaster.CodeSet;
-
-namespace TradingMaster
+﻿namespace TradingMaster
 {
     /// <summary>
     /// 委托状态

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 
 namespace TradingMaster.CodeSet
@@ -185,7 +182,7 @@ namespace TradingMaster.CodeSet
         {
             get { return _Strike; }
             set { _Strike = value; }
-        } 
+        }
 
         /// <summary>
         /// 交易所多头保证金率

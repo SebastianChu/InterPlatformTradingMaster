@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Reflection;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace TradingMaster
 {
@@ -15,22 +11,22 @@ namespace TradingMaster
     {
         const string DLLPROFILE = "dll\\FemasMdApi.dll";
 
-		/// <summary>
-		/// FemasMdApi.dll/USTPFtdcMdUserApi.dll 放在主程序的执行文件夹中
-		/// </summary>
-		/// <param name="_investor">投资者帐号</param>
-		/// <param name="_pwd">密码</param>
-		/// <param name="_broker">经纪公司代码</param>
-		/// <param name="_addr">前置地址</param>
+        /// <summary>
+        /// FemasMdApi.dll/USTPFtdcMdUserApi.dll 放在主程序的执行文件夹中
+        /// </summary>
+        /// <param name="_investor">投资者帐号</param>
+        /// <param name="_pwd">密码</param>
+        /// <param name="_broker">经纪公司代码</param>
+        /// <param name="_addr">前置地址</param>
         public FemasMdApi(string _investor, string _pwd, string _broker, string _addr)
-		{
-			this.FrontAddr = _addr;
-			this.BrokerID = _broker;
-			this.InvestorID = _investor;
-			this.Password = _pwd;
+        {
+            this.FrontAddr = _addr;
+            this.BrokerID = _broker;
+            this.InvestorID = _investor;
+            this.Password = _pwd;
             ClearUserDll();
             LoadDll(DLLPROFILE);
-		}
+        }
 
         /// <summary>
         /// 前置地址
@@ -292,7 +288,7 @@ namespace TradingMaster
             return ((reqSubscribeTopic)Invoke(this.PtrHandle, "ReqSubscribeTopic", typeof(reqSubscribeTopic)))(ref pDissemination);
         }
 
-	    ///主题查询请求
+        ///主题查询请求
         private delegate int reqQryTopic(ref CUstpFtdcDisseminationField pDissemination);
         public int ReqQryTopic(CUstpFtdcDisseminationField pDissemination)
         {
@@ -310,9 +306,9 @@ namespace TradingMaster
             return ((reqSubMarketData)Invoke(this.PtrHandle, "ReqSubMarketData", typeof(reqSubMarketData)))(ref pSpecificInstrument);
         }
 
-		/// <summary>
+        /// <summary>
         /// 退订合约的相关信息
-		/// </summary>
+        /// </summary>
         private delegate int reqUnSubMarketData(ref CUstpFtdcSpecificInstrumentField pSpecificInstrument);
         public int ReqUnSubMarketData(string instrumentID)
         {
@@ -417,7 +413,7 @@ namespace TradingMaster
             }
         }
         #endregion
-	
+
         #region 报文回调结束通知
         public delegate void PackageEnd(int nTopicID, int nSequenceNo);
         private PackageEnd _OnPackageEnd;
@@ -503,7 +499,7 @@ namespace TradingMaster
         #endregion
 
         #region 订阅主题应答
-	    public delegate void RspSubscribeTopic(ref CUstpFtdcDisseminationField pDissemination, ref CUstpFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
+        public delegate void RspSubscribeTopic(ref CUstpFtdcDisseminationField pDissemination, ref CUstpFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
         private RspSubscribeTopic _OnRspSubscribeTopic;
         /// <summary>
         /// 订阅主题应答
@@ -524,7 +520,7 @@ namespace TradingMaster
         #endregion
 
         #region 主题查询应答
-	    public delegate void RspQryTopic(ref CUstpFtdcDisseminationField pDissemination, ref CUstpFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
+        public delegate void RspQryTopic(ref CUstpFtdcDisseminationField pDissemination, ref CUstpFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
         private RspQryTopic _OnRspQryTopic;
         /// <summary>
         /// 主题查询应答

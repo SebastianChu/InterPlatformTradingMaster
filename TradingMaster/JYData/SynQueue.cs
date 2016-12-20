@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace TradingMaster.JYData
@@ -209,7 +208,7 @@ namespace TradingMaster.JYData
                 {
                     if (t.Equals(_QList[_QList.Count - 1] as RequestContent))
                     {
-                        chkFlag =  true;
+                        chkFlag = true;
                     }
                     else
                     {

@@ -1,16 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace TradingMaster
 {
@@ -21,8 +11,8 @@ namespace TradingMaster
     {
         public MultiUserLogin(Login logWindow)
         {
-            ResourceDictionary o = (ResourceDictionary)System.Windows.Application.LoadComponent(new Uri("/TradingMaster;component/Dictionary1.xaml", UriKind.Relative));
-            System.Windows.Application.Current.Resources.MergedDictionaries.Add(o);
+            ResourceDictionary o = (ResourceDictionary)Application.LoadComponent(new Uri("/TradingMaster;component/Dictionary1.xaml", UriKind.Relative));
+            Application.Current.Resources.MergedDictionaries.Add(o);
             this.DataContext = this;
             InitializeComponent();
             _LogWindow = logWindow;

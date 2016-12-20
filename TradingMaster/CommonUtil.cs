@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Input;
-using System.Windows.Controls;
 using System.Windows;
-using System.Windows.Media;
-using System.IO;
-using System.Windows.Media.Imaging;
-//using FixHQDataLib;
-//using CodeGen;
-//using JYData;
-using System.Xml.Serialization;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Collections.ObjectModel;
-using TradingMaster.Control;
-using TradingMaster.CodeSet;
 using System.Windows.Data;
-using TradingMaster.JYData;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Xml.Serialization;
+using TradingMaster.CodeSet;
+using TradingMaster.Control;
 
 namespace TradingMaster
 {
@@ -247,10 +243,10 @@ namespace TradingMaster
                 }
                 else
                     if (!(Double.TryParse(textbox.Text, out num)) || textbox.Text.Contains(","))
-                    {
-                        textbox.Text = textbox.Text.Remove(offset, change[0].AddedLength);
-                        textbox.Select(offset, 0);
-                    }
+                {
+                    textbox.Text = textbox.Text.Remove(offset, change[0].AddedLength);
+                    textbox.Select(offset, 0);
+                }
             }
         }
 
@@ -410,7 +406,7 @@ namespace TradingMaster
                 string canceledOrderIds = string.Empty;
                 foreach (var item in selectedOrder)
                 {
-                    Q7JYOrderData order = item as Q7JYOrderData;
+                    TradeOrderData order = item as TradeOrderData;
                     if (messageText != string.Empty)
                     {
                         messageText = messageText + "\n";
@@ -586,7 +582,7 @@ namespace TradingMaster
                 string canceledOrderIds = string.Empty;
                 foreach (var item in selectedOrder)
                 {
-                    Q7JYOrderData order = item as Q7JYOrderData;
+                    TradeOrderData order = item as TradeOrderData;
                     if (messageText != string.Empty)
                     {
                         messageText = messageText + "\n";
@@ -701,12 +697,12 @@ namespace TradingMaster
             }
 
             //找出需要撤销的单
-            List<Q7JYOrderData> selectedOrder = new List<Q7JYOrderData>();
+            List<TradeOrderData> selectedOrder = new List<TradeOrderData>();
             foreach (var item in dgOrder.SelectedItems)
             {
                 if (CommonUtil.IsCancellable(item))
                 {
-                    selectedOrder.Add(item as Q7JYOrderData);
+                    selectedOrder.Add(item as TradeOrderData);
                 }
             }
 
@@ -1139,11 +1135,11 @@ namespace TradingMaster
 
         public static void CancelOrder(object order)
         {
-            if (order is Q7JYOrderData)
+            if (order is TradeOrderData)
             {
                 if (IsCancellable(order))
                 {
-                    Q7JYOrderData o = (Q7JYOrderData)order;
+                    TradeOrderData o = (TradeOrderData)order;
                     if (o != null)
                     {
                         if (o.OrderID.StartsWith("TJBD"))
@@ -1153,7 +1149,7 @@ namespace TradingMaster
                         else
                         {
                             TradeDataClient.GetClientInstance().RequestOrder(o.InvestorID, o.BackEnd, new RequestContent("CancelOrder", new List<object>() { o.Code, o.FrontID, o.SessionID, o.OrderRef, o.Exchange, o.OrderID }));
-                        }                        
+                        }
                     }
                 }
             }
@@ -1169,7 +1165,7 @@ namespace TradingMaster
                     }
                 }
             }
-            else if (order is ExecOrderData) 
+            else if (order is ExecOrderData)
             {
                 if (IsExecCancellable(order))
                 {
@@ -1186,9 +1182,9 @@ namespace TradingMaster
         {
             if (IsCancellable(order))
             {
-                if (order is Q7JYOrderData)
+                if (order is TradeOrderData)
                 {
-                    Q7JYOrderData o = (Q7JYOrderData)order;
+                    TradeOrderData o = (TradeOrderData)order;
                     if (o != null)
                     {
                         //if (!o.OrderID.StartsWith("TJBD"))
@@ -1249,7 +1245,7 @@ namespace TradingMaster
             return false;
         }
 
-        public static void CancelOrder_NewOrder(object sender, ObservableCollection<Q7JYOrderData> OrderDataCollection)
+        public static void CancelOrder_NewOrder(object sender, ObservableCollection<TradeOrderData> OrderDataCollection)
         {
             //DataGrid dg = GetDataGridFromMenuItemBySender(sender);
             //foreach (var item in OrderDataCollection)
@@ -1482,7 +1478,7 @@ namespace TradingMaster
                 }
                 catch (Exception ex)
                 {
-                    CommonUtil.ShowWarning(ex.Message+ "\n");
+                    CommonUtil.ShowWarning(ex.Message + "\n");
                     CommonUtil.ShowWarning("导出失败，可能该文件已经被打开，请关闭后重试。");
                 }
                 finally
@@ -1839,7 +1835,7 @@ namespace TradingMaster
         public static bool IsValidCode(string strCode)
         {
             List<string> strCodeList = new List<string>();
-            foreach(string tempKey in CodeSetManager.ContractMap.Keys)
+            foreach (string tempKey in CodeSetManager.ContractMap.Keys)
             {
                 strCodeList.Add(CodeSetManager.ContractMap[tempKey].Code);
             }
@@ -1932,13 +1928,13 @@ namespace TradingMaster
                     break;
                 case "正报":
                 case "已排队":
-                //case "已报":                
+                    //case "已报":                
                     orderStatus = OrderStatus.Submitted;
                     break;
                 case "全部成交":
                     orderStatus = OrderStatus.Chengjiao;
                     break;
-                case "已报":   
+                case "已报":
                 case "未成交":
                     orderStatus = OrderStatus.Queued;
                     break;
@@ -2139,5 +2135,5 @@ namespace TradingMaster
             ConfirmDate = aConfirmDate;
         }
     }
-    
+
 }

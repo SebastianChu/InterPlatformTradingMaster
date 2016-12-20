@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Collections.ObjectModel;
+using System.Xml;
 using TradingMaster.CodeSet;
 using TradingMaster.JYData;
-using System.Xml;
 
 namespace TradingMaster.Control
 {
@@ -54,7 +48,7 @@ namespace TradingMaster.Control
             dgHangqing.ColumnDisplayIndexChanged += new EventHandler<DataGridColumnEventArgs>(dgHangqing_ColumnDisplayIndexChanged);
             CbxGreekLetters_Unchecked(null, null);
         }
-        
+
         public BackgroundDataServer OptionQuotesRealData;
         //public Dictionary<string, List<Contract>> CCFXOptionCodeDict = new Dictionary<string, List<Contract>>();
         //public Dictionary<string, List<Contract>> XDCEOptionCodeDict = new Dictionary<string, List<Contract>>();
@@ -111,12 +105,12 @@ namespace TradingMaster.Control
             {
                 OptionContractDict[fKey].Sort(Contract.CompareByCode);
             }
-            
+
             List<string> optionCodes = new List<string>();
             foreach (string futures in OptionCodeDict.Keys)
             {
                 optionCodes.Add(GetRelatedOption(futures));
-            }            
+            }
             optionCodes.Sort(String.Compare);
             cbFutureCode.ItemsSource = optionCodes;
 
@@ -443,12 +437,12 @@ namespace TradingMaster.Control
             {
                 foreach (Contract item in OptionContractDict[fCode.Code])
                 {
-                    if (dicOptionRealData.ContainsKey(item.Code.Replace("P", "C")) )
+                    if (dicOptionRealData.ContainsKey(item.Code.Replace("P", "C")))
                     {
                         continue;
                     }
                     OptionRealData ordRealData = new OptionRealData();
-                    int lastIndex = item.Code.LastIndexOfAny(new char[] { '-','C','P' });
+                    int lastIndex = item.Code.LastIndexOfAny(new char[] { '-', 'C', 'P' });
                     ordRealData.ExecutePrice = CommonUtil.GetDoubleValue(item.Code.Substring(lastIndex + 1));
                     if (fCode.ProductType == null)//Temp Judgement
                     {
@@ -463,7 +457,7 @@ namespace TradingMaster.Control
                         ordRealData.Code_C = item.Code.Replace("-P-", "-C-");
                         ordRealData.Code_P = item.Code.Replace("-C-", "-P-");
                     }
-                    else 
+                    else
                     {
                         int tempFirstIndex = item.Code.IndexOf(item.BaseCode);
                         string optInfoString = item.Code.Substring(tempFirstIndex + item.BaseCode.Length);
@@ -510,7 +504,7 @@ namespace TradingMaster.Control
             foreach (Contract cItem in contractLst)
             {
                 RealData optRealData = DataContainer.GetRealDataFromContainer(cItem);
-                if (optRealData != null)           
+                if (optRealData != null)
                 {
                     OptionQuotesRealData.SavedDataInit(optRealData);
                 }
@@ -524,13 +518,13 @@ namespace TradingMaster.Control
                 OptionQuotesRealData.RemoveUselessRequest();
             }
             OptionQuotesRealData.UpdateRealDataList();
-        }        
+        }
 
         public void UpdateOptionRelatedDataByRealData(RealData realData)
         {
             if (cbFutureCode.SelectedValue != null && realData != null
                 && GetRelatedFutures(cbFutureCode.SelectedValue.ToString()) == realData.CodeInfo.Code)
-                //&& cbFutureCode.SelectedValue.ToString().Replace("IO", "IF") == displayRealData.codeInfo.Code)
+            //&& cbFutureCode.SelectedValue.ToString().Replace("IO", "IF") == displayRealData.codeInfo.Code)
             {
                 _LatestDisplayRealData.CopyProperties(realData);
                 _FuturesRealData.CopyProperties(realData);
@@ -597,13 +591,13 @@ namespace TradingMaster.Control
             {
                 LvOptQuotesPanel.lblCode.Content = record.Code_C;
                 record2 = record.GetOptRealData_C();
-                
+
                 string tempKey = record.Code_C + "_" + CodeSetManager.ExNameToCtp(record.Market);
                 if (_BackupCodeDic.ContainsKey(tempKey))
                 {
                     LvOptQuotesPanel.SetLevelsQuotesByRealData(_BackupCodeDic[tempKey]);
                 }
-                
+
             }
             else if (cell.Column.DisplayIndex > _ColumnF)
             {
@@ -780,7 +774,7 @@ namespace TradingMaster.Control
 
             //点击结算价
             double sJsjPrice = 0;
-            double sDrjjPrice = 0;            
+            double sDrjjPrice = 0;
 
 
             if (RealDataMouseLeftButtonDown != null)
@@ -796,7 +790,7 @@ namespace TradingMaster.Control
         /// <param name="e"></param>
         private void Grid_MouseEnter_Open(object sender, MouseEventArgs e)
         {
-            
+
         }
 
         /// <summary>
@@ -1347,6 +1341,6 @@ namespace TradingMaster.Control
             //    }
             //}
         }
-     
+
     }
 }

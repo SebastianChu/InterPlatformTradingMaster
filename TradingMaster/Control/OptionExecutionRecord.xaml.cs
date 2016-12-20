@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using TradingMaster.CodeSet;
 
 namespace TradingMaster.Control
 {
@@ -64,7 +53,7 @@ namespace TradingMaster.Control
         {
             CommonUtil.ExportedData_Click(sender, e, true);
         }
-        
+
         private void btnFresh_Click(object sender, RoutedEventArgs e)
         {
             //CtpDataServer.getServerInstance().AddToTradeDataQryQueue(new RequestContent("QryExecOrder", new List<object>()));

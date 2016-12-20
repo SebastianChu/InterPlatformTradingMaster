@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows;
-using TradingMaster.Control;
 using System.Threading;
-using TradingMaster.JYData;
-using TradingMaster.CodeSet;
-using System.Xml;
 using System.Threading.Tasks;
-using System.Collections.Concurrent;
+using TradingMaster.CodeSet;
+using TradingMaster.Control;
+using TradingMaster.JYData;
 
 namespace TradingMaster
 {
@@ -49,17 +46,17 @@ namespace TradingMaster
         /// </summary>
         private ExchangeTime _ExTime;
 
-        private Dictionary<string, List<Q7JYOrderData>> _MultiUsersOrderDataDic = new Dictionary<string, List<Q7JYOrderData>>();
+        private Dictionary<string, List<TradeOrderData>> _MultiUsersOrderDataDic = new Dictionary<string, List<TradeOrderData>>();
         private Dictionary<string, List<QuoteOrderData>> _MultiUsersQuoteOrderDataDic = new Dictionary<string, List<QuoteOrderData>>();
         private Dictionary<string, List<ExecOrderData>> _MultiUsersExecOrderDataDic = new Dictionary<string, List<ExecOrderData>>();
-        private Dictionary<string, List<Q7JYOrderData>> _MultiUsersTradeDataDic = new Dictionary<string, List<Q7JYOrderData>>();
-        private Dictionary<string, List<Q7PosInfoDetail>> _MultiUsersPosDetailDataDic = new Dictionary<string, List<Q7PosInfoDetail>>();
-        private Dictionary<string, List<Q7PosInfoTotal>> _MultiUsersPositionDataDic = new Dictionary<string, List<Q7PosInfoTotal>>();
+        private Dictionary<string, List<TradeOrderData>> _MultiUsersTradeDataDic = new Dictionary<string, List<TradeOrderData>>();
+        private Dictionary<string, List<PosInfoDetail>> _MultiUsersPosDetailDataDic = new Dictionary<string, List<PosInfoDetail>>();
+        private Dictionary<string, List<PosInfoTotal>> _MultiUsersPositionDataDic = new Dictionary<string, List<PosInfoTotal>>();
 
         /// <summary>
         /// 报单记录更新
         /// </summary>
-        private Dictionary<string, Q7JYOrderData> _OrderDataDic = new Dictionary<string, Q7JYOrderData>();
+        private Dictionary<string, TradeOrderData> _OrderDataDic = new Dictionary<string, TradeOrderData>();
 
         /// <summary>
         /// 报价记录更新
@@ -74,14 +71,14 @@ namespace TradingMaster
         /// <summary>
         /// 成交记录更新
         /// </summary>
-        private List<Q7JYOrderData> _TradeDataLst = new List<Q7JYOrderData>();
+        private List<TradeOrderData> _TradeDataLst = new List<TradeOrderData>();
 
         /// <summary>
         /// 持仓相关锁
         /// </summary>
         private static object _ServerLock;
-        private List<Q7PosInfoDetail> _PositionDetailDataLst = new List<Q7PosInfoDetail>();
-        private List<Q7PosInfoTotal> _PositionSumDataLst = new List<Q7PosInfoTotal>();
+        private List<PosInfoDetail> _PositionDetailDataLst = new List<PosInfoDetail>();
+        private List<PosInfoTotal> _PositionSumDataLst = new List<PosInfoTotal>();
 
         /// <summary>
         /// 某个品种今仓多少手，昨仓多少手的MAP
@@ -91,12 +88,12 @@ namespace TradingMaster
         /// <summary>
         /// 用于记录持仓信息的MAP
         /// </summary>
-        public Dictionary<string, Q7PosInfoTotal> PosTotalInfoMap = new Dictionary<string, Q7PosInfoTotal>();
+        public Dictionary<string, PosInfoTotal> PosTotalInfoMap = new Dictionary<string, PosInfoTotal>();
 
         /// <summary>
         /// 用于记录持仓信息中未成交的平仓单
         /// </summary>
-        private Dictionary<string, List<Q7JYOrderData>> _FreezeOrder = new Dictionary<string, List<Q7JYOrderData>>();
+        private Dictionary<string, List<TradeOrderData>> _FreezeOrder = new Dictionary<string, List<TradeOrderData>>();
 
         /// <summary>
         /// 用于记录行权信息中未执行的平仓单
@@ -380,7 +377,7 @@ namespace TradingMaster
                     }
                 });
             }
-            
+
         }
 
         public void RtnDepthMarketDataEnqueue(object data)
@@ -425,9 +422,9 @@ namespace TradingMaster
                     }
                     else
                     {
-                        realDataDic.Add(tempData.CodeInfo,tempData);
+                        realDataDic.Add(tempData.CodeInfo, tempData);
                     }
-                    
+
                 }
             }
             if (_MainWindow != null)
@@ -447,7 +444,7 @@ namespace TradingMaster
         {
             if (_MultiUsersOrderDataDic.ContainsKey(user))
             {
-                foreach (Q7JYOrderData orderData in _MultiUsersOrderDataDic[user])
+                foreach (TradeOrderData orderData in _MultiUsersOrderDataDic[user])
                 {
                     string tempKey = orderData.BrokerOrderSeq + "_" + orderData.OrderRef + "_" + orderData.Exchange;
                     if (_OrderDataDic.ContainsKey(tempKey))
@@ -456,7 +453,7 @@ namespace TradingMaster
                     }
                 }
                 _MultiUsersOrderDataDic.Remove(user);
-                List<Q7JYOrderData> orderList = new List<Q7JYOrderData>();
+                List<TradeOrderData> orderList = new List<TradeOrderData>();
                 foreach (string userKey in _MultiUsersOrderDataDic.Keys)
                 {
                     orderList.AddRange(_MultiUsersOrderDataDic[userKey]);
@@ -514,7 +511,7 @@ namespace TradingMaster
         {
             if (_MultiUsersTradeDataDic.ContainsKey(user))
             {
-                foreach (Q7JYOrderData tradeData in _MultiUsersTradeDataDic[user])
+                foreach (TradeOrderData tradeData in _MultiUsersTradeDataDic[user])
                 {
                     if (_TradeDataLst.Contains(tradeData))
                     {
@@ -533,7 +530,7 @@ namespace TradingMaster
             {
                 if (_MultiUsersPosDetailDataDic.ContainsKey(user))
                 {
-                    foreach (Q7PosInfoDetail posData in _MultiUsersPosDetailDataDic[user])
+                    foreach (PosInfoDetail posData in _MultiUsersPosDetailDataDic[user])
                     {
                         if (_PositionDetailDataLst.Contains(posData))
                         {
@@ -541,7 +538,7 @@ namespace TradingMaster
                         }
                     }
                     _MultiUsersPosDetailDataDic.Remove(user);
-                    List<Q7PosInfoDetail> posList = new List<Q7PosInfoDetail>();
+                    List<PosInfoDetail> posList = new List<PosInfoDetail>();
                     foreach (string userKey in _MultiUsersPosDetailDataDic.Keys)
                     {
                         posList.AddRange(_MultiUsersPosDetailDataDic[userKey]);
@@ -552,7 +549,7 @@ namespace TradingMaster
             }
             else if (_MultiUsersPositionDataDic.ContainsKey(user))
             {
-                foreach (Q7PosInfoTotal posData in _MultiUsersPositionDataDic[user])
+                foreach (PosInfoTotal posData in _MultiUsersPositionDataDic[user])
                 {
                     if (_PositionSumDataLst.Contains(posData))
                     {
@@ -560,7 +557,7 @@ namespace TradingMaster
                     }
                 }
                 _MultiUsersPositionDataDic.Remove(user);
-                List<Q7PosInfoTotal> positionList = new List<Q7PosInfoTotal>();
+                List<PosInfoTotal> positionList = new List<PosInfoTotal>();
                 foreach (string userKey in _MultiUsersPositionDataDic.Keys)
                 {
                     positionList.AddRange(_MultiUsersPositionDataDic[userKey]);
@@ -751,16 +748,16 @@ namespace TradingMaster
             List<object> dataList = _OrderResponseQueue.DequeueAll(_TimeOut);
             foreach (object data in dataList)
             {
-                if (data is List<Q7JYOrderData>)
+                if (data is List<TradeOrderData>)
                 {
                     orderFlag = true;
-                    List<Q7JYOrderData> orderLst = data as List<Q7JYOrderData>;
+                    List<TradeOrderData> orderLst = data as List<TradeOrderData>;
                     if (orderLst.Count > 0)
                     {
                         RemoveUserOrderRecord(orderLst[0].InvestorID);
                     }
                     itemCount += orderLst.Count;
-                    foreach (Q7JYOrderData jyData in orderLst)
+                    foreach (TradeOrderData jyData in orderLst)
                     {
                         string orderKey = jyData.BrokerOrderSeq + "_" + jyData.OrderRef + "_" + jyData.Exchange;
                         if (_OrderDataDic.ContainsKey(orderKey))
@@ -773,10 +770,10 @@ namespace TradingMaster
                         }
                     }
                 }
-                if (data is Q7JYOrderData)
+                if (data is TradeOrderData)
                 {
                     orderFlag = true;
-                    Q7JYOrderData jyData = data as Q7JYOrderData;
+                    TradeOrderData jyData = data as TradeOrderData;
                     itemCount++;
                     ProcessNewComeOrderNotice(jyData);
                     string orderKey = jyData.BrokerOrderSeq + "_" + jyData.OrderRef + "_" + jyData.Exchange;
@@ -909,24 +906,24 @@ namespace TradingMaster
             List<object> dataList = _TradeResponseQueue.DequeueAll(_TimeOut);
             foreach (object data in dataList)
             {
-                if (data is List<Q7JYOrderData>)
+                if (data is List<TradeOrderData>)
                 {
                     tradeFlag = true;
-                    List<Q7JYOrderData> tradeLst = data as List<Q7JYOrderData>;
+                    List<TradeOrderData> tradeLst = data as List<TradeOrderData>;
                     if (tradeLst.Count > 0)
                     {
                         RemoveUserTradeRecord(tradeLst[0].InvestorID);
                     }
                     itemCount += tradeLst.Count;
-                    foreach (Q7JYOrderData tradedData in tradeLst)
+                    foreach (TradeOrderData tradedData in tradeLst)
                     {
                         AddTrededData(tradedData);
                     }
                 }
-                if (data is Q7JYOrderData)
+                if (data is TradeOrderData)
                 {
                     tradeFlag = true;
-                    Q7JYOrderData tradedData = data as Q7JYOrderData;
+                    TradeOrderData tradedData = data as TradeOrderData;
                     itemCount++;
                     AddTrededData(tradedData);
                 }
@@ -963,10 +960,10 @@ namespace TradingMaster
             List<object> dataList = _PositionResponseQueue.DequeueAll(_TimeOut);
             foreach (object data in dataList)
             {
-                if (data is List<Q7PosInfoTotal>)
+                if (data is List<PosInfoTotal>)
                 {
                     posFlag = true;
-                    List<Q7PosInfoTotal> positionLst = data as List<Q7PosInfoTotal>;
+                    List<PosInfoTotal> positionLst = data as List<PosInfoTotal>;
                     itemCount += positionLst.Count;
                     if (positionLst.Count > 0)
                     {
@@ -974,10 +971,10 @@ namespace TradingMaster
                     }
                     _PositionSumDataLst.AddRange(positionLst);
                 }
-                if (data is List<Q7PosInfoDetail>)
+                if (data is List<PosInfoDetail>)
                 {
                     posDetailFlag = true;
-                    List<Q7PosInfoDetail> posDetailLst = data as List<Q7PosInfoDetail>;
+                    List<PosInfoDetail> posDetailLst = data as List<PosInfoDetail>;
                     itemCount += posDetailLst.Count;
                     if (posDetailLst.Count > 0)
                     {
@@ -985,11 +982,11 @@ namespace TradingMaster
                     }
                     AddPositionDetailData(posDetailLst);
                 }
-                if (data is Q7JYOrderData)
+                if (data is TradeOrderData)
                 {
                     posFlag = true;
                     posDetailFlag = true;
-                    Q7JYOrderData tradedData = data as Q7JYOrderData;
+                    TradeOrderData tradedData = data as TradeOrderData;
                     itemCount++;
                     ProcessNewComePosInfo(tradedData);
                 }
@@ -1187,7 +1184,7 @@ namespace TradingMaster
             }
         }
 
-        private bool IsLatestOrderData(Q7JYOrderData orgOrderData, Q7JYOrderData laterOrderData)
+        private bool IsLatestOrderData(TradeOrderData orgOrderData, TradeOrderData laterOrderData)
         {
             if (CommonUtil.IsCancellable(laterOrderData))
             {
@@ -1196,7 +1193,7 @@ namespace TradingMaster
             return true;
         }
 
-        private void ProcessNewComeOrderNotice(Q7JYOrderData order)
+        private void ProcessNewComeOrderNotice(TradeOrderData order)
         {
             if (order == null)
             {
@@ -1264,7 +1261,7 @@ namespace TradingMaster
 
         private void ProcessOrderData()
         {
-            List<Q7JYOrderData> orderDataLst = new List<Q7JYOrderData>();
+            List<TradeOrderData> orderDataLst = new List<TradeOrderData>();
             Dictionary<string, object> userInstanceDict = new Dictionary<string, object>();
             foreach (string orderKey in _OrderDataDic.Keys)
             {
@@ -1290,10 +1287,10 @@ namespace TradingMaster
                 }
                 else if (userKey.Trim() != "")
                 {
-                    _MultiUsersOrderDataDic.Add(userKey, new List<Q7JYOrderData>() { _OrderDataDic[orderKey] });
+                    _MultiUsersOrderDataDic.Add(userKey, new List<TradeOrderData>() { _OrderDataDic[orderKey] });
                 }
             }
-            orderDataLst.Sort(Q7JYOrderData.CompareByCommitTime);
+            orderDataLst.Sort(TradeOrderData.CompareByCommitTime);
             ProcessJYOrderData(orderDataLst);
             foreach (string uKey in userInstanceDict.Keys)
             {
@@ -1308,7 +1305,7 @@ namespace TradingMaster
         /// 处理委托查询
         /// </summary>
         /// <param name="jyOrderData"></param>
-        private void ProcessJYOrderData(List<Q7JYOrderData> jyOrderData)
+        private void ProcessJYOrderData(List<TradeOrderData> jyOrderData)
         {
             if (_MainWindow != null && System.Windows.Application.Current != null)
             {
@@ -1323,13 +1320,13 @@ namespace TradingMaster
                         _MainWindow.TradedOrderCollection.Clear();
 
                         _FreezeOrder.Clear();
-                        foreach (Q7PosInfoTotal posInfoTotal in _MainWindow.PositionCollection_Total)
+                        foreach (PosInfoTotal posInfoTotal in _MainWindow.PositionCollection_Total)
                         {
                             posInfoTotal.FreezeCount = 0;
-                            string key = posInfoTotal.InvestorID + posInfoTotal.Code + posInfoTotal.BuySell.Contains("买").ToString()+ posInfoTotal.Hedge;
+                            string key = posInfoTotal.InvestorID + posInfoTotal.Code + posInfoTotal.BuySell.Contains("买").ToString() + posInfoTotal.Hedge;
                             if (!_FreezeOrder.ContainsKey(key))
                             {
-                                _FreezeOrder.Add(key, new List<Q7JYOrderData>());
+                                _FreezeOrder.Add(key, new List<TradeOrderData>());
                             }
                             if (posInfoTotal.BuySell.Contains("买") && posInfoTotal.ProductType.Contains("Option") && _FreezeExecOrderHandCount.ContainsKey(key))
                             {
@@ -1341,7 +1338,7 @@ namespace TradingMaster
                             }
                         }
 
-                        foreach (Q7JYOrderData orderData in jyOrderData)
+                        foreach (TradeOrderData orderData in jyOrderData)
                         {
                             _MainWindow.OrderDataCollection.Add(orderData);
                             string posTotalInfo = orderData.InvestorID + orderData.Code + (!orderData.BuySell.Contains("买")).ToString() + orderData.Hedge;
@@ -1362,7 +1359,7 @@ namespace TradingMaster
 
                                     if (_FreezeOrder.ContainsKey(posTotalInfo))
                                     {
-                                        List<Q7JYOrderData> orderList = _FreezeOrder[posTotalInfo];
+                                        List<TradeOrderData> orderList = _FreezeOrder[posTotalInfo];
                                         orderList.Add(orderData);
                                     }
                                 }
@@ -1479,7 +1476,7 @@ namespace TradingMaster
                 }
             }
         }
-        
+
         private void ProcessQuoteOrderData()
         {
             List<QuoteOrderData> quoteOrderDataLst = new List<QuoteOrderData>();
@@ -1671,7 +1668,7 @@ namespace TradingMaster
                         _MainWindow.ExecOrderPendingDataCollection.Clear();
 
                         _FreezeExecOrderHandCount.Clear();
-                        foreach (Q7PosInfoTotal posInfoTotal in _MainWindow.PositionCollection_Total)
+                        foreach (PosInfoTotal posInfoTotal in _MainWindow.PositionCollection_Total)
                         {
                             if (posInfoTotal.BuySell.Contains("买") && posInfoTotal.ProductType.Contains("Option"))
                             {
@@ -1708,8 +1705,8 @@ namespace TradingMaster
                 });
             }
         }
-        
-        private void AddTrededData(Q7JYOrderData tradedData)
+
+        private void AddTrededData(TradeOrderData tradedData)
         {
             _TradeDataLst.Add(tradedData);
             InitCommissionRate(CodeSetManager.GetContractInfo(tradedData.Code, CodeSetManager.ExNameToCtp(tradedData.Exchange)), tradedData.InvestorID, tradedData.BackEnd);
@@ -1720,17 +1717,17 @@ namespace TradingMaster
             }
             else if (userKey.Trim() != "")
             {
-                _MultiUsersTradeDataDic.Add(userKey, new List<Q7JYOrderData>() { tradedData });
+                _MultiUsersTradeDataDic.Add(userKey, new List<TradeOrderData>() { tradedData });
             }
         }
 
         private void ProcessTradeData()
         {
-            _TradeDataLst.Sort(Q7JYOrderData.CompareByTradeTime);
+            _TradeDataLst.Sort(TradeOrderData.CompareByTradeTime);
             ProcessTradedOrderData(_TradeDataLst);
             //lock (ServerLock)
             //{
-            //    _PositionDetailDataLst.Sort(Q7PosInfoDetail.CompareByExecID);
+            //    _PositionDetailDataLst.Sort(PosInfoDetail.CompareByExecID);
             //    ProcessPositions(_PositionDetailDataLst);
             //}
             //_TradeProcessingFlag = false;
@@ -1740,7 +1737,7 @@ namespace TradingMaster
         /// 处理成交数据
         /// </summary>
         /// <param name="jyOrderData"></param>
-        protected void ProcessTradedOrderData(List<Q7JYOrderData> jyOrderData)
+        protected void ProcessTradedOrderData(List<TradeOrderData> jyOrderData)
         {
             if (_MainWindow != null && System.Windows.Application.Current != null)
             {
@@ -1749,7 +1746,7 @@ namespace TradingMaster
                     try
                     {
                         _MainWindow.TradeCollection_MX.Clear();
-                        foreach (Q7JYOrderData tradedData in jyOrderData)
+                        foreach (TradeOrderData tradedData in jyOrderData)
                         {
                             if (tradedData.Code != null & tradedData.InvestorID != null)
                             {
@@ -1775,30 +1772,30 @@ namespace TradingMaster
         /// </summary>
         private void CodeCollection()
         {
-            Dictionary<string, Q7JYOrderData> dicCode = new Dictionary<string, Q7JYOrderData>();
+            Dictionary<string, TradeOrderData> dicCode = new Dictionary<string, TradeOrderData>();
             dicCode.Clear();
-            List<Q7JYOrderData> tradeSumLst = new List<Q7JYOrderData>();
+            List<TradeOrderData> tradeSumLst = new List<TradeOrderData>();
             _MainWindow.TradeCollection_Code.Clear();
 
-            foreach (Q7JYOrderData MXItem in _MainWindow.TradeCollection_MX)
+            foreach (TradeOrderData MXItem in _MainWindow.TradeCollection_MX)
             {
                 string tempkey = MXItem.InvestorID + "_" + MXItem.Code + "_" + MXItem.BuySell + "_" + MXItem.OpenClose + "_" + MXItem.Hedge;
                 if (dicCode.ContainsKey(tempkey))
                 {
-                    Q7JYOrderData codeItem = dicCode[tempkey];
+                    TradeOrderData codeItem = dicCode[tempkey];
                     codeItem.AvgPx = (codeItem.AvgPx * codeItem.TradeHandCount + MXItem.AvgPx * MXItem.TradeHandCount) / (MXItem.TradeHandCount + codeItem.TradeHandCount);
                     codeItem.TradeHandCount += MXItem.TradeHandCount;
                     codeItem.Charge += MXItem.Charge;
                 }
                 else
                 {
-                    Q7JYOrderData MXItem_rev = MXItem.Copy();
+                    TradeOrderData MXItem_rev = MXItem.Copy();
                     tradeSumLst.Add(MXItem_rev);
                     dicCode.Add(tempkey, MXItem_rev);
                 }
             }
-            tradeSumLst.Sort(Q7JYOrderData.CompareByCode);
-            foreach (Q7JYOrderData item in tradeSumLst)
+            tradeSumLst.Sort(TradeOrderData.CompareByCode);
+            foreach (TradeOrderData item in tradeSumLst)
             {
                 _MainWindow.TradeCollection_Code.Add(item);
             }
@@ -1822,10 +1819,10 @@ namespace TradingMaster
             }
         }
 
-        private void AddPositionDetailData(List<Q7PosInfoDetail> posDataLst)
+        private void AddPositionDetailData(List<PosInfoDetail> posDataLst)
         {
             //_PositionDetailDataLst.AddRange(posDataLst);
-            foreach (Q7PosInfoDetail posData in posDataLst)
+            foreach (PosInfoDetail posData in posDataLst)
             {
                 if (posData != null)
                 {
@@ -1834,7 +1831,7 @@ namespace TradingMaster
             }
         }
 
-        private void ProcessNewComePosInfo(Q7JYOrderData trade)
+        private void ProcessNewComePosInfo(TradeOrderData trade)
         {
             //Add for GHS 5.0.2
             if (trade == null)
@@ -1846,7 +1843,7 @@ namespace TradingMaster
             {
                 if (trade.OpenClose.Contains("开"))
                 {
-                    Q7PosInfoDetail newPosItem = new Q7PosInfoDetail();
+                    PosInfoDetail newPosItem = new PosInfoDetail();
                     newPosItem.InvestorID = trade.InvestorID;
                     newPosItem.ExecID = trade.TradeID;
                     newPosItem.Code = trade.Code;
@@ -1875,7 +1872,7 @@ namespace TradingMaster
             {
                 if (trade.OpenClose.Contains("开"))
                 {
-                    Q7PosInfoDetail newPosItem = new Q7PosInfoDetail();
+                    PosInfoDetail newPosItem = new PosInfoDetail();
                     newPosItem.InvestorID = trade.InvestorID;
                     newPosItem.ExecID = trade.TradeID;
                     newPosItem.Code = trade.Code;
@@ -1906,7 +1903,7 @@ namespace TradingMaster
         /// 添加一条持仓明细
         /// </summary>
         /// <param name="posInfoDetail"></param>
-        private void AddPosInfoDetail(Q7PosInfoDetail posInfoDetail)
+        private void AddPosInfoDetail(PosInfoDetail posInfoDetail)
         {
             if (posInfoDetail == null) return;
             _PositionDetailDataLst.Add(posInfoDetail);
@@ -1954,7 +1951,7 @@ namespace TradingMaster
         /// 移除一条持仓明细
         /// </summary>
         /// <param name="tradedInfo"></param>
-        private Boolean RemovePositionDetailFromTrade(Q7JYOrderData tradedInfo)
+        private Boolean RemovePositionDetailFromTrade(TradeOrderData tradedInfo)
         {
             if (tradedInfo == null) return false;
             if (!tradedInfo.OpenClose.Contains("平")) return false;
@@ -1966,11 +1963,11 @@ namespace TradingMaster
             //Boolean isSim = IsSim();
             //是否是上海的
             Boolean isShanghai = CodeSetManager.IsCloseTodaySupport(tradedInfo.Code);
-            List<Q7PosInfoDetail> posInfoToDelete = new List<Q7PosInfoDetail>();
+            List<PosInfoDetail> posInfoToDelete = new List<PosInfoDetail>();
             int yesterdayPosCount = 0;
             ///对于持仓明细中所有的记录，选出符合被平仓条件的记录
             //_ServerMutex.WaitOne();
-            foreach (Q7PosInfoDetail posInfoDetail in _PositionDetailDataLst)
+            foreach (PosInfoDetail posInfoDetail in _PositionDetailDataLst)
             {
                 if (posInfoDetail == null) continue;
                 if (posInfoDetail.Code != tradedInfo.Code) continue;
@@ -2011,7 +2008,7 @@ namespace TradingMaster
             }
             int totalHandCount = tradedInfo.TradeHandCount;
             //平仓posInfoToDelete中的内容
-            foreach (Q7PosInfoDetail posInfoDetail in posInfoToDelete)
+            foreach (PosInfoDetail posInfoDetail in posInfoToDelete)
             {
                 if (totalHandCount <= 0) break;
                 if (posInfoDetail.TradeHandCount > totalHandCount)
@@ -2089,9 +2086,9 @@ namespace TradingMaster
             return true;
         }
 
-        private void ProcessPositionDetailData(List<Q7PosInfoDetail> posDetailLst)
+        private void ProcessPositionDetailData(List<PosInfoDetail> posDetailLst)
         {
-            posDetailLst.Sort(Q7PosInfoDetail.CompareByExecID);
+            posDetailLst.Sort(PosInfoDetail.CompareByExecID);
             ProcessPositions(posDetailLst);
         }
 
@@ -2099,7 +2096,7 @@ namespace TradingMaster
         /// 处理持仓数据，明细
         /// </summary>
         /// <param name="posInfoDetail"></param>
-        protected void ProcessPositions(List<Q7PosInfoDetail> posInfoDetail)
+        protected void ProcessPositions(List<PosInfoDetail> posInfoDetail)
         {
             if (_MainWindow != null && System.Windows.Application.Current != null)
             {
@@ -2111,7 +2108,7 @@ namespace TradingMaster
                         List<Contract> lstCodeInfo = new List<Contract>();
                         _MultiUsersPosDetailDataDic.Clear();
 
-                        foreach (Q7PosInfoDetail record in posInfoDetail)
+                        foreach (PosInfoDetail record in posInfoDetail)
                         {
                             if (record.TradeHandCount == 0)
                                 continue;
@@ -2125,13 +2122,13 @@ namespace TradingMaster
                                 }
                                 else if (userKey.Trim() != "")
                                 {
-                                    _MultiUsersPosDetailDataDic.Add(userKey, new List<Q7PosInfoDetail>() { record });
+                                    _MultiUsersPosDetailDataDic.Add(userKey, new List<PosInfoDetail>() { record });
                                 }
                             }
 
                             Contract codeInfo = CodeSetManager.GetContractInfo(record.Code, CodeSetManager.ExNameToCtp(record.Exchange));
                             InitMarginRate(codeInfo, record, record.BackEnd);
-                            
+
                             _MainWindow.PositionDetailCollection.Add(record);
                             if (!lstCodeInfo.Contains(codeInfo))
                             {
@@ -2140,15 +2137,15 @@ namespace TradingMaster
                         }
 
                         _PositionSumDataLst.Clear();
-                        foreach (Q7PosInfoDetail posDetail in posInfoDetail)
+                        foreach (PosInfoDetail posDetail in posInfoDetail)
                         {
                             if (posDetail.TradeHandCount != 0)
                             {
-                                Q7PosInfoTotal posSum = PosExecutionReport(posDetail);
+                                PosInfoTotal posSum = PosExecutionReport(posDetail);
                                 _PositionSumDataLst.Add(posSum);
                             }
                         }
-                        _PositionSumDataLst.Sort(Q7PosInfoTotal.CompareByCode);
+                        _PositionSumDataLst.Sort(PosInfoTotal.CompareByCode);
                         ProcessPositions_Total(_PositionSumDataLst);
                         foreach (var item in _MainWindow.PositionCollection_Total)
                         {
@@ -2175,7 +2172,7 @@ namespace TradingMaster
         ///处理持仓数据，合计
         ///</summary>
         ///<param name="jyorderData"></param>
-        private void ProcessPositions_Total(List<Q7PosInfoTotal> posInfoSumsLst)
+        private void ProcessPositions_Total(List<PosInfoTotal> posInfoSumsLst)
         {
             if (_MainWindow != null && System.Windows.Application.Current != null)
             {
@@ -2184,13 +2181,13 @@ namespace TradingMaster
                     try
                     {
                         _MainWindow.PositionCollection_Total.Clear();
-                        Dictionary<string, Q7PosInfoTotal> posSumDic = new Dictionary<string, Q7PosInfoTotal>();
-                        foreach (Q7PosInfoTotal record in posInfoSumsLst)
+                        Dictionary<string, PosInfoTotal> posSumDic = new Dictionary<string, PosInfoTotal>();
+                        foreach (PosInfoTotal record in posInfoSumsLst)
                         {
                             string tempkey = record.InvestorID + "_" + record.Code + "_" + record.BuySell + "_" + record.Hedge;
                             if (posSumDic.ContainsKey(tempkey))
                             {
-                                Q7PosInfoTotal posItem = posSumDic[tempkey];
+                                PosInfoTotal posItem = posSumDic[tempkey];
                                 posItem.AvgPx = (posItem.AvgPx * posItem.TotalPosition + record.AvgPx * record.TotalPosition) / (record.TotalPosition + posItem.TotalPosition);
                                 posItem.AvgPositionPrice = (posItem.AvgPositionPrice * posItem.TotalPosition + record.AvgPositionPrice * record.TotalPosition) / (record.TotalPosition + posItem.TotalPosition);
 
@@ -2218,6 +2215,7 @@ namespace TradingMaster
                                 posItem.Fdyk += record.Fdyk;
                                 posItem.Ccyk += record.Ccyk;
                                 posItem.OccupyMarginAmt += record.OccupyMarginAmt;
+                                posItem.OptionMarketCap += record.OptionMarketCap;
 
                                 posItem.CanCloseCount = posItem.TotalPosition;
                                 string key = posItem.InvestorID + posItem.Code + posItem.BuySell.Contains("买").ToString();
@@ -2233,7 +2231,7 @@ namespace TradingMaster
                             }
                             else
                             {
-                                Q7PosInfoTotal record_rev = record.Copy();
+                                PosInfoTotal record_rev = record.Copy();
                                 if (record_rev.TotalPosition > 0)
                                 {
                                     record_rev.CanCloseCount = record_rev.TotalPosition;
@@ -2271,7 +2269,7 @@ namespace TradingMaster
                         _MultiUsersPositionDataDic.Clear();
                         foreach (string tempKey in posSumDic.Keys)
                         {
-                            Q7PosInfoTotal posInfoItem = posSumDic[tempKey];
+                            PosInfoTotal posInfoItem = posSumDic[tempKey];
                             string userKey = posInfoItem.InvestorID;
                             if (_MultiUsersPositionDataDic.ContainsKey(userKey))
                             {
@@ -2279,7 +2277,7 @@ namespace TradingMaster
                             }
                             else if (userKey.Trim() != "")
                             {
-                                _MultiUsersPositionDataDic.Add(userKey, new List<Q7PosInfoTotal>() { posInfoItem });
+                                _MultiUsersPositionDataDic.Add(userKey, new List<PosInfoTotal>() { posInfoItem });
                             }
                         }
                         //mainWindow.uscNewOrderPanel.SetHandCount();
@@ -2294,9 +2292,9 @@ namespace TradingMaster
             }
         }
 
-        private Q7PosInfoTotal PosExecutionReport(Q7PosInfoDetail pPosition)
+        private PosInfoTotal PosExecutionReport(PosInfoDetail pPosition)
         {
-            Q7PosInfoTotal posData = new Q7PosInfoTotal();
+            PosInfoTotal posData = new PosInfoTotal();
             try
             {
                 posData.InvestorID = pPosition.InvestorID;
@@ -2327,6 +2325,7 @@ namespace TradingMaster
                 posData.Hedge = pPosition.Hedge;
                 posData.Ccyk = pPosition.Ccyk;
                 posData.Fdyk = pPosition.Fdyk;
+                posData.OptionMarketCap = pPosition.OptionMarketCap;
                 posData.Exchange = pPosition.Exchange;
                 posData.Name = pPosition.Name;
                 posData.ProductType = pPosition.ProductType;
@@ -2340,7 +2339,7 @@ namespace TradingMaster
             return posData;
         }
 
-        private void InitMarginRate(Contract contract, Q7PosInfoDetail record, BACKENDTYPE backEnd)
+        private void InitMarginRate(Contract contract, PosInfoDetail record, BACKENDTYPE backEnd)
         {
             string tempKey = contract.Code + "_" + record.InvestorID;
             if (MarginDict.ContainsKey(tempKey))
@@ -2366,7 +2365,7 @@ namespace TradingMaster
             }
         }
 
-        private bool CheckValidMarginRate(MarginStruct marginStruct) 
+        private bool CheckValidMarginRate(MarginStruct marginStruct)
         {
             if (marginStruct.LongMarginRatioByMoney == marginStruct.LongMarginRatioByVolume && marginStruct.LongMarginRatioByMoney == 0.0
                 && marginStruct.ShortMarginRatioByMoney == marginStruct.ShortMarginRatioByVolume && marginStruct.ShortMarginRatioByMoney == 0.0
@@ -2381,7 +2380,7 @@ namespace TradingMaster
         /// 处理手续费数据
         /// </summary>
         /// <param name="jyorderData"></param>
-        private void ProcessCommissionData(string commKey, Q7JYOrderData tradedData)
+        private void ProcessCommissionData(string commKey, TradeOrderData tradedData)
         {
             Contract contract = CodeSetManager.GetContractInfo(tradedData.Code, CodeSetManager.ExNameToCtp(tradedData.Exchange));
             if (contract == null || commKey == null) return;
@@ -2409,7 +2408,7 @@ namespace TradingMaster
         /// 处理持仓明细保证金数据
         /// </summary>
         /// <param name="jyorderData"></param>
-        private void ProcessPositionDetailMarginData(string marginKey, Contract contract, Q7PosInfoDetail posDetail)
+        private void ProcessPositionDetailMarginData(string marginKey, Contract contract, PosInfoDetail posDetail)
         {
             if (MarginDict.ContainsKey(marginKey))
             {
@@ -2456,7 +2455,7 @@ namespace TradingMaster
         /// 处理持仓汇总保证金数据
         /// </summary>
         /// <param name="jyorderData"></param>
-        private void ProcessPositionMarginData(string marginKey, Contract contract, Q7PosInfoTotal posTotal)
+        private void ProcessPositionMarginData(string marginKey, Contract contract, PosInfoTotal posTotal)
         {
             if (MarginDict.ContainsKey(marginKey))
             {
@@ -2537,7 +2536,7 @@ namespace TradingMaster
                         double totalZBFY = 0;
                         double totalDSFY = 0;
                         double totalFdyk = 0;
-                        foreach (Q7PosInfoTotal detail in _MainWindow.PositionCollection_Total)
+                        foreach (PosInfoTotal detail in _MainWindow.PositionCollection_Total)
                         {
                             Contract tempContract = CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange));
                             if (tempContract != null && !tempContract.ProductType.Contains("Option"))
@@ -2611,7 +2610,7 @@ namespace TradingMaster
                 Util.Log("OpenOrDestroy: " + acctInfo.OpenOrDestroy);
                 Util.Log("RegDate: " + acctInfo.RegDate);
                 Util.Log("OutDate: " + acctInfo.OutDate);
-                string bankAcct = acctInfo.BankAccount.Length > 4? acctInfo.BankAccount.Substring(acctInfo.BankAccount.Length - 4, 4): "";
+                string bankAcct = acctInfo.BankAccount.Length > 4 ? acctInfo.BankAccount.Substring(acctInfo.BankAccount.Length - 4, 4) : "";
                 string bankCardItem = String.Format("{0}（****{1}）", bankName, bankAcct);
                 bankAcctInfoTuple.Item1.Add(bankCardItem); //bankCardList
                 if (!String.IsNullOrEmpty(acctInfo.CurrencyID))
@@ -2674,8 +2673,8 @@ namespace TradingMaster
         {
             if (_FreezeOrder.ContainsKey(orderString))
             {
-                List<Q7JYOrderData> orderList = _FreezeOrder[orderString];
-                foreach (Q7JYOrderData order in orderList)
+                List<TradeOrderData> orderList = _FreezeOrder[orderString];
+                foreach (TradeOrderData order in orderList)
                 {
                     RequestOrder(order.InvestorID, order.BackEnd, new RequestContent("CancelOrder", new List<object>() { order.Code, order.FrontID, order.SessionID, order.OrderRef, order.Exchange, order.OrderID }));
                 }
@@ -2724,11 +2723,11 @@ namespace TradingMaster
         /// 获取未成交的平仓单
         /// </summary>
         /// <param name="orderString"></param>
-        public List<Q7JYOrderData> GetFreezeOrder(string orderString)
+        public List<TradeOrderData> GetFreezeOrder(string orderString)
         {
             if (_FreezeOrder.ContainsKey(orderString))
             {
-                List<Q7JYOrderData> orderList = _FreezeOrder[orderString];
+                List<TradeOrderData> orderList = _FreezeOrder[orderString];
                 if (orderList != null)
                 {
                     return orderList;

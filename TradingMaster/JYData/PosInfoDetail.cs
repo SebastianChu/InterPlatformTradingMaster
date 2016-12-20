@@ -1,16 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 
 namespace TradingMaster
 {
     /// <summary>
-    /// 持仓明细
+    /// 快期界面的一条持仓记录
     /// </summary>
     public class PosInfoDetail : INotifyPropertyChanged
     {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        private string _InvestorID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        public string InvestorID
+        {
+            get { return _InvestorID; }
+            set
+            {
+                _InvestorID = value;
+                OnPropertyChanged("InvestorID");
+            }
+        }
+
+        /// <summary>
+        /// 用户代码
+        /// </summary>
+        private string _UserID;
+        /// <summary>
+        /// 用户代码
+        /// </summary>
+        public string UserID
+        {
+            get { return _UserID; }
+            set
+            {
+                _UserID = value;
+                OnPropertyChanged("UserID");
+            }
+        }
+
         /// <summary>
         /// 成交编号
         /// </summary>
@@ -267,14 +298,155 @@ namespace TradingMaster
             set { _MaintainMarginAmt = value; OnPropertyChanged("MaintainMarginAmt"); }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string info)
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        private string _Exchange;
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        public string Exchange
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
+            get { return _Exchange; }
+            set { _Exchange = value; OnPropertyChanged("Exchange"); }
+        }
+
+        private Double _PrevSettleMent;
+        /// <summary>
+        /// 昨结算
+        /// </summary>
+        public Double PrevSettleMent
+        {
+            get
             {
-                handler(this, new PropertyChangedEventArgs(info));
+                return _PrevSettleMent;
             }
+            set
+            {
+                _PrevSettleMent = value;
+                OnPropertyChanged("PrevSettleMent");
+            }
+        }
+
+        private double _INewPrice;			//最新价
+
+        public double INewPrice
+        {
+            get { return _INewPrice; }
+            set
+            {
+                _INewPrice = value;
+                OnPropertyChanged("INewPrice");
+            }
+        }
+
+        /// <summary>
+        /// 持仓盈亏
+        /// </summary>
+        private double _Ccyk;
+        /// <summary>
+        /// 持仓盈亏（盯市）
+        /// </summary>
+        public double Ccyk
+        {
+            get { return _Ccyk; }
+            set { _Ccyk = value; OnPropertyChanged("Ccyk"); }
+        }
+
+        /// <summary>
+        /// 浮动盈亏
+        /// </summary>
+        private double _Fdyk;
+        /// <summary>
+        /// 浮动盈亏
+        /// </summary>
+        public double Fdyk
+        {
+            get { return _Fdyk; }
+            set { _Fdyk = value; OnPropertyChanged("Fdyk"); }
+        }
+
+        /// <summary>
+        /// 期权盈亏
+        /// </summary>
+        private double _OptionProfit;
+        /// <summary>
+        /// 期权盈亏
+        /// </summary>
+        public double OptionProfit
+        {
+            get
+            {
+                return _OptionProfit;
+            }
+            set
+            {
+                _OptionProfit = value;
+                OnPropertyChanged("OptionProfit");
+            }
+        }
+
+        /// <summary>
+        /// 期权市值
+        /// </summary>
+        private double _OptionMarketCap;
+        /// <summary>
+        /// 期权市值
+        /// </summary>
+        public double OptionMarketCap
+        {
+            get
+            {
+                return _OptionMarketCap;
+            }
+            set
+            {
+                _OptionMarketCap = value;
+                OnPropertyChanged("OptionMarketCap");
+            }
+        }
+
+        /// <summary>
+        /// 权利金收付
+        /// </summary>
+        private double _Premium;
+        /// <summary>
+        /// 权利金收付
+        /// </summary>
+        public double Premium
+        {
+            get
+            {
+                return _Premium;// base.AvgPx * base.TradeHandCount;
+            }
+            set
+            {
+                _Premium = value;
+                OnPropertyChanged("Premium");
+            }
+        }
+
+        public double OccupyMarginAmtDouble
+        {
+            get
+            {
+                double doubleValue = 0.00;
+                double.TryParse(OccupyMarginAmt, out doubleValue);
+                return doubleValue;
+            }
+        }
+
+        /// <summary>
+        /// 后台接口类型
+        /// </summary
+        private BACKENDTYPE _BackEnd;
+        /// <summary>
+        /// 后台接口类型
+        /// </summary
+        public BACKENDTYPE BackEnd
+        {
+            get { return _BackEnd; }
+            set { _BackEnd = value; OnPropertyChanged("BackEnd"); }
         }
 
         public PosInfoDetail Copy()
@@ -283,6 +455,11 @@ namespace TradingMaster
             return ret;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string info)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+        }
 
         public override string ToString()
         {
@@ -320,6 +497,5 @@ namespace TradingMaster
             }
             return -1;
         }
-
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace TradingMaster
 {
@@ -568,9 +564,9 @@ namespace TradingMaster
             {
                 return DynamicEquity + _OptionMarketCap;
             }
-            set 
+            set
             {
-                _AccountCap = value; 
+                _AccountCap = value;
                 OnPropertyChanged("AccountCap");
                 OnPropertyChanged("DynamicEquity");
                 OnPropertyChanged("OptionMarketCap");

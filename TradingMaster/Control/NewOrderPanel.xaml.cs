@@ -1,20 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Threading;
 using TradingMaster.CodeSet;
-using System.Runtime.InteropServices;
-using System.IO;
 using TradingMaster.JYData;
 
 namespace TradingMaster.Control
@@ -272,7 +264,7 @@ namespace TradingMaster.Control
         /// </summary>
         /// <param name="buyOrSell"></param>
         /// <param name="realData"></param>
-        public void SetOrderInfoByExistingOrder(Q7JYOrderData orderData)
+        public void SetOrderInfoByExistingOrder(TradeOrderData orderData)
         {
             if (orderData.BuySell.Contains("买"))
             {
@@ -649,7 +641,7 @@ namespace TradingMaster.Control
         }
 
         private void btnXiadan_Click(object sender, RoutedEventArgs e)
-        {           
+        {
             OrderInsert_General(0);
         }
 

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using TradingMaster.CodeSet;
 using TradingMaster.Control;
 
@@ -70,10 +67,10 @@ namespace TradingMaster.JYData
         /// </summary>
         protected List<ExecOrderData> QryExecOrderDataLst = new List<ExecOrderData>();
         protected List<QuoteOrderData> QryQuoteOrderDataLst = new List<QuoteOrderData>();
-        protected List<Q7JYOrderData> PreOrderData = new List<Q7JYOrderData>();
-        protected List<Q7JYOrderData> QryTradeDataLst = new List<Q7JYOrderData>();
-        protected List<Q7PosInfoDetail> QryPosDetailData = new List<Q7PosInfoDetail>();
-        protected List<Q7PosInfoTotal> JYPosSumData = new List<Q7PosInfoTotal>();
+        protected List<TradeOrderData> PreOrderData = new List<TradeOrderData>();
+        protected List<TradeOrderData> QryTradeDataLst = new List<TradeOrderData>();
+        protected List<PosInfoDetail> QryPosDetailData = new List<PosInfoDetail>();
+        protected List<PosInfoTotal> JYPosSumData = new List<PosInfoTotal>();
 
         /// <summary>
         /// 其他查询数据
@@ -88,13 +85,13 @@ namespace TradingMaster.JYData
         /// 启动初始化时的报单回报标志位和记录
         /// </summary>
         protected bool TempOrderFlag;
-        protected List<Q7JYOrderData> TempOrderData = new List<Q7JYOrderData>();
+        protected List<TradeOrderData> TempOrderData = new List<TradeOrderData>();
 
         /// <summary>
         /// 启动初始化时的成交回报标志位和记录
         /// </summary>
         protected bool TempTradeFlag;
-        protected List<Q7JYOrderData> TempTradeData = new List<Q7JYOrderData>();
+        protected List<TradeOrderData> TempTradeData = new List<TradeOrderData>();
 
         /// <summary>
         /// 启动初始化时的成交回报的持仓标志位
@@ -116,7 +113,7 @@ namespace TradingMaster.JYData
         /// <summary>
         /// 报单记录更新
         /// </summary>
-        protected Dictionary<string, Q7JYOrderData> QryOrderDataDic = new Dictionary<string, Q7JYOrderData>();
+        protected Dictionary<string, TradeOrderData> QryOrderDataDic = new Dictionary<string, TradeOrderData>();
 
         /// <summary>
         /// 报价记录更新

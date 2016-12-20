@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 
 namespace TradingMaster
@@ -23,7 +20,7 @@ namespace TradingMaster
         /// <summary>
         /// 银行名称
         /// </summary>
-        public string BankName { get; set; }       
+        public string BankName { get; set; }
     }
 
     public class BankAccountInfo

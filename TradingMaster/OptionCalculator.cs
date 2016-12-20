@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TradingMaster.CodeSet;
-using TradingMaster.JYData;
 using System.Threading;
 using System.Threading.Tasks;
+using TradingMaster.CodeSet;
+using TradingMaster.JYData;
 
 namespace TradingMaster
 {
     public class OptionCalculator
     {
         private static CancellationTokenSource cts = new CancellationTokenSource();
-        private static SynQueue<object>  _RealDataQueue = new SynQueue<object>();
+        private static SynQueue<object> _RealDataQueue = new SynQueue<object>();
 
         public static void Enqueue(object data)
         {
@@ -249,9 +247,9 @@ namespace TradingMaster
                 double d2 = d1 - sigma * Math.Sqrt(T);
                 double diffNd1 = Math.Exp(-d2 * d2 / 2 - sigma * d2 * Math.Sqrt(T) - sigma * sigma * T / 2) / Math.Sqrt(2 * Math.PI);
                 double diffNd2 = s0 * diffNd1 / (k * Math.Exp(-r * T));
-                Util.Log(String.Format("sigma = {0}, calError = {1}, step = {2}", sigma, calError, (EuCallOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T)) ));
+                Util.Log(String.Format("sigma = {0}, calError = {1}, step = {2}", sigma, calError, (EuCallOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T))));
                 sigma = sigma - ((EuCallOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T)));
-                    //((s * Math.Exp(-q * T) * diffNd1 + k * Math.Exp(-r * T) * diffNd2) * Math.Sqrt(T) + (k * Math.Exp(-r * T) * d2 * diffNd2 - s * Math.Exp(-q * T) * d1 * diffNd1) / sigma));
+                //((s * Math.Exp(-q * T) * diffNd1 + k * Math.Exp(-r * T) * diffNd2) * Math.Sqrt(T) + (k * Math.Exp(-r * T) * d2 * diffNd2 - s * Math.Exp(-q * T) * d1 * diffNd1) / sigma));
                 calError = EuCallOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal;
             }
             if (double.IsInfinity(sigma) || double.IsNaN(sigma))
@@ -273,9 +271,9 @@ namespace TradingMaster
                 double d2 = d1 - sigma * Math.Sqrt(T);
                 double diffNd1 = Math.Exp(-d2 * d2 / 2 - sigma * d2 * Math.Sqrt(T) - sigma * sigma * T / 2) / Math.Sqrt(2 * Math.PI);
                 double diffNd2 = s0 * diffNd1 / (k * Math.Exp(-r * T));
-                Util.Log(String.Format("sigma = {0}, calError = {1}, step = {2}", sigma, calError, (EuPutOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T)) ));
+                Util.Log(String.Format("sigma = {0}, calError = {1}, step = {2}", sigma, calError, (EuPutOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T))));
                 sigma = sigma - ((EuPutOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T)));
-                    //((-s * Math.Exp(-q * T) * diffNd1 - k * Math.Exp(-r * T) * diffNd2) * Math.Sqrt(T) - (k * Math.Exp(-r * T) * d2 * diffNd2 - s * Math.Exp(-q * T) * d1 * diffNd1) / sigma));
+                //((-s * Math.Exp(-q * T) * diffNd1 - k * Math.Exp(-r * T) * diffNd2) * Math.Sqrt(T) - (k * Math.Exp(-r * T) * d2 * diffNd2 - s * Math.Exp(-q * T) * d1 * diffNd1) / sigma));
                 calError = EuPutOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal;
             }
             if (double.IsInfinity(sigma) || double.IsNaN(sigma))
@@ -914,16 +912,16 @@ namespace TradingMaster
             if (futures != null && underlyingPrice > 0)
             {
                 double k = option.Strike;
-                double T = CodeSetManager.GetContractRemainingDays(option) ;
+                double T = CodeSetManager.GetContractRemainingDays(option);
 
                 // BiTree Parameter
-                double deltaT = 1 ; // Trading days
+                double deltaT = 1; // Trading days
                 double tBiTree = T - deltaT;
 
                 // Futures Price Bias
                 double futuresValueUp = underlyingPrice * Math.Exp(sigma * Math.Sqrt(deltaT));
                 double futuresValueDown = underlyingPrice * Math.Exp(-sigma * Math.Sqrt(deltaT));
-                
+
                 if (option.ExchCode == "CFFEX" || option.ExchCode == "SHFE") // European Option
                 {
                     if (isBiTreeUsed) // 二叉树算法
@@ -984,7 +982,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Warning in delta! Invalid Futures for the Option " + option.Code + ", price = " +  underlyingPrice);
+                Util.Log("Warning in delta! Invalid Futures for the Option " + option.Code + ", price = " + underlyingPrice);
             }
             //Util.Log(option.Code + ": delta = " + delta);
             return delta;
@@ -1002,10 +1000,10 @@ namespace TradingMaster
             if (futures != null && underlyingPrice > 0)
             {
                 double k = option.Strike;
-                double T = CodeSetManager.GetContractRemainingDays(option) ;
+                double T = CodeSetManager.GetContractRemainingDays(option);
 
                 // BiTree Parameters
-                double deltaT = 1 ; // Trading days
+                double deltaT = 1; // Trading days
                 double tBiTree = T - 2 * deltaT;
                 double u = Math.Exp(sigma * Math.Sqrt(deltaT));
                 double d = Math.Exp(-sigma * Math.Sqrt(deltaT));
@@ -1092,7 +1090,7 @@ namespace TradingMaster
             if (futures != null && underlyingPrice > 0)
             {
                 double k = option.Strike;
-                double T = CodeSetManager.GetContractRemainingDays(option) ;
+                double T = CodeSetManager.GetContractRemainingDays(option);
 
                 double sigmaDelta = 0.01;
                 double upSigma = sigma + sigmaDelta;
@@ -1169,10 +1167,10 @@ namespace TradingMaster
             if (futures != null && underlyingPrice > 0)
             {
                 double k = option.Strike;
-                double T = CodeSetManager.GetContractRemainingDays(option) ;
+                double T = CodeSetManager.GetContractRemainingDays(option);
 
                 // BiTree Parameters
-                double deltaT = 1 ; // Trading days
+                double deltaT = 1; // Trading days
                 double tBiTree = T - 2 * deltaT;
                 double u = Math.Exp(sigma * Math.Sqrt(deltaT));
                 double d = Math.Exp(-sigma * Math.Sqrt(deltaT));
@@ -1255,7 +1253,7 @@ namespace TradingMaster
         //        return false;
         //}
 
-        public static double UsOption_ControlVariate(double euBiTreeValue, double usBiTreeValue, double bsValue) 
+        public static double UsOption_ControlVariate(double euBiTreeValue, double usBiTreeValue, double bsValue)
         {
             return usBiTreeValue + bsValue - euBiTreeValue;
         }

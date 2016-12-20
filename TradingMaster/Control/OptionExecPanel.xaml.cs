@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TradingMaster.CodeSet;
 
 namespace TradingMaster.Control
@@ -64,7 +55,7 @@ namespace TradingMaster.Control
                 txtCodeName.Text = newCode.Name;
 
                 //iudNum.Value = DefaultCodeHandInstance.GetDefaultCodeHand(txtCode.Text);
-            }      
+            }
         }
 
         private void rbExec_KeyDown(object sender, KeyEventArgs e)
@@ -91,7 +82,7 @@ namespace TradingMaster.Control
 
         public void SetExecOrderInfoByPositionData(string buyOrSell, string kp, int num, RealData realData)
         {
-            if (buyOrSell == "卖" && realData.CodeInfo != null && realData.CodeInfo.ProductType.Contains("Option") )
+            if (buyOrSell == "卖" && realData.CodeInfo != null && realData.CodeInfo.ProductType.Contains("Option"))
             {
                 if (realData.CodeInfo != null && realData.CodeInfo.Code != null)
                 {
@@ -112,7 +103,7 @@ namespace TradingMaster.Control
                 {
                     Util.Log("Warning! realData.CodeInfo or its code is null!");
                 }
-                
+
             }
         }
 

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
 using System.Windows;
 using TradingMaster.CodeSet;
-using TradingMaster.JYData;
 
 namespace TradingMaster
 {
@@ -113,8 +111,8 @@ namespace TradingMaster
         public void ChangeType(Dictionary<Contract, RealData> tempDataDict)
         {
             Dictionary<Contract, RealData> futuresDataDict = new Dictionary<Contract, RealData>();
-            Dictionary<Contract, RealData> combinationDataDict = new Dictionary<Contract,RealData>();
-            foreach(Contract contract in tempDataDict.Keys)
+            Dictionary<Contract, RealData> combinationDataDict = new Dictionary<Contract, RealData>();
+            foreach (Contract contract in tempDataDict.Keys)
             {
                 RealData tempData = tempDataDict[contract];
                 if (tempData == null || tempData.CodeInfo == null) return;
@@ -138,7 +136,7 @@ namespace TradingMaster
 
                 if (tempData.CodeInfo.ProductType == "Futures" || tempData.CodeInfo.ProductType == "Combination" || tempData.CodeInfo.ProductType.Contains("Stock") || tempData.CodeInfo.ProductType.Contains("ETF"))
                 {
-                    if(futuresDataDict.ContainsKey(contract))
+                    if (futuresDataDict.ContainsKey(contract))
                     {
                         futuresDataDict[contract] = tempData;
                     }
@@ -150,7 +148,7 @@ namespace TradingMaster
 
                 if (tempData.CodeInfo.ProductType == "Combination")
                 {
-                    if(combinationDataDict.ContainsKey(contract))
+                    if (combinationDataDict.ContainsKey(contract))
                     {
                         combinationDataDict[contract] = tempData;
                     }
@@ -180,7 +178,7 @@ namespace TradingMaster
                     SetPositionInfo(tempDataDict);
                 });
             }
-            
+
         }
 
         public void SavedDataInit(RealData savedData)
@@ -331,7 +329,7 @@ namespace TradingMaster
 
                 if (mainWindow != null)
                 {
-                    foreach (Q7PosInfoDetail detail in mainWindow.PositionDetailCollection)
+                    foreach (PosInfoDetail detail in mainWindow.PositionDetailCollection)
                     {
                         if (detail.Code == contract.Code)
                         {
@@ -403,7 +401,7 @@ namespace TradingMaster
                         }
                     }
 
-                    foreach (Q7PosInfoTotal posTotal in mainWindow.PositionCollection_Total)
+                    foreach (PosInfoTotal posTotal in mainWindow.PositionCollection_Total)
                     {
                         if (posTotal.Code == realData.CodeInfo.Code)
                         {
@@ -476,7 +474,7 @@ namespace TradingMaster
                     double totalPremium = 0;
                     double totalOptionCap = 0;
                     double totalOptionProfit = 0;
-                    foreach (Q7PosInfoTotal detail in mainWindow.PositionCollection_Total)
+                    foreach (PosInfoTotal detail in mainWindow.PositionCollection_Total)
                     {
                         if (CodeSetManager.GetContractInfo(detail.Code, CodeSetManager.ExNameToCtp(detail.Exchange)).ProductType == "Futures")
                         {
@@ -600,7 +598,7 @@ namespace TradingMaster
             }
         }
 
-         /// <summary>
+        /// <summary>
         /// 期货行情
         /// </summary>
         /// <param name="realData"></param>
@@ -760,7 +758,7 @@ namespace TradingMaster
             get { return _RequestingCodes; }
             set { _RequestingCodes = value; }
         }
-        
+
         public BackgroundReportTableCommObj(BackgroundDataServer parent)
         {
             _Owner = parent;
@@ -808,7 +806,7 @@ namespace TradingMaster
                     mainWindow.ClearUpdate(cancelList.ToList());
                 }
             }
-            else 
+            else
             {
                 Util.Log("Warning!: mainWindow in BackgroundDataServer is NULL! ");
             }
