@@ -45,7 +45,7 @@ namespace TradingMaster.Control
         private void cb_Banks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _BankID = BankManager.GetBankIdFromName(cb_Banks.SelectedItem as string);
-            if (_BankID != null && _BankID != "")
+            if (string.IsNullOrEmpty(_BankID))
             {
                 //JYDataServer.getServerInstance().AddToQryQueue(new CTPRequestContent("QryTransferSerial", new List<object>() { BankID }));
             }
@@ -56,7 +56,7 @@ namespace TradingMaster.Control
             }
 
             _BankBrchID = BankManager.GetBankBranchIdFromName(cb_Banks.SelectedItem as string);
-            if (_BankBrchID == null || _BankBrchID == "")
+            if (string.IsNullOrEmpty(_BankBrchID))
             {
                 Util.Log("Warning! Invalid Bank ID.");
                 return;
@@ -65,7 +65,7 @@ namespace TradingMaster.Control
 
         private void cb_Currency_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!String.IsNullOrEmpty(cb_Currency.SelectedValue.ToString().Trim()))
+            if (!string.IsNullOrEmpty(cb_Currency.SelectedValue.ToString().Trim()))
             {
                 _Currency = cb_Currency.SelectedValue.ToString();
             }
@@ -76,7 +76,7 @@ namespace TradingMaster.Control
             string capitalPwd = pb_CapPwd.Password;
             string bankPwd = pb_BankPwd.Password;
 
-            if (String.IsNullOrEmpty(_Currency))
+            if (string.IsNullOrEmpty(_Currency))
             {
                 if (cb_Currency.SelectedValue != null && !String.IsNullOrEmpty(cb_Currency.SelectedValue.ToString().Trim()))
                 {

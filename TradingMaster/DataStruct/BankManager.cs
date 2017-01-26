@@ -16,7 +16,7 @@ namespace TradingMaster
                     return bItem.BankID;
                 }
             }
-            return null;
+            return string.Empty;
         }
 
         public static string GetBankNameFromBankID(string bankID)
@@ -29,7 +29,7 @@ namespace TradingMaster
                     return bItem.BankName;
                 }
             }
-            return null;
+            return string.Empty;
         }
 
         public static string GetBankBranchIdFromName(string bankName)
@@ -42,7 +42,7 @@ namespace TradingMaster
                     return bItem.BankBrchID;
                 }
             }
-            return null;
+            return string.Empty;
         }
     }
 }

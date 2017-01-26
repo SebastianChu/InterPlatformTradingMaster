@@ -31,6 +31,7 @@
       <host name="中期实盘一" brokerID="8070"  ip="zjzx-front1.ctp.shcifco.com"       port="41205" selected="False" />
       <host name="中期实盘五" brokerID="8070"  ip="zjzx-front5.ctp.shcifco.com"       port="41205" selected="False" />
       <host name="期货模拟一" brokerID="2030"  ip="asp-sim2-front1.financial-trading-platform.com" port="26205" selected="False" />
+      <host name="海风模拟一"         brokerID="9999"  ip="180.168.146.187"    port="10000" selected="False" />
       <host name="模拟做市"           brokerID="7070"  ip="192.168.3.182"      port="41205" selected="False" />
       <host name="飞马1.03测试"       brokerID="7070"  ip="117.185.125.9"      port="6666"  selected="False" />
       <host name="飞马2.00两所测试"   brokerID="7070"  ip="117.185.125.9"      port="53126" selected="False" />
@@ -72,6 +73,7 @@
       <host name="中期实盘二" brokerID="8070"  ip="zjzx-md2.ctp.shcifco.com"        port="41213" selected="False" />
       <host name="中期实盘四" brokerID="8070"  ip="zjzx-md4.ctp.shcifco.com"        port="41213" selected="False" />
       <host name="期货模拟一" brokerID="2030"  ip="asp-sim2-md1.financial-trading-platform.com" port="26213" selected="False" />
+      <host name="海风模拟一"         brokerID="9999"  ip="180.168.146.187"    port="10010" selected="False" />
       <host name="模拟做市"           brokerID="7070"  ip="192.168.3.182"      port="41213" selected="False" />
       <host name="飞马1.03测试"       brokerID="7070"  ip="117.185.125.9"      port="8888"  selected="False" />
       <host name="飞马2.00两所测试"   brokerID="7070"  ip="117.185.125.9"      port="52004" selected="False" />

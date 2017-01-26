@@ -2611,9 +2611,9 @@ namespace TradingMaster
                 Util.Log("RegDate: " + acctInfo.RegDate);
                 Util.Log("OutDate: " + acctInfo.OutDate);
                 string bankAcct = acctInfo.BankAccount.Length > 4 ? acctInfo.BankAccount.Substring(acctInfo.BankAccount.Length - 4, 4) : "";
-                string bankCardItem = String.Format("{0}（****{1}）", bankName, bankAcct);
+                string bankCardItem = string.IsNullOrEmpty(bankName.Trim()) ? "" : string.Format("{0}（****{1}）", bankName, bankAcct);
                 bankAcctInfoTuple.Item1.Add(bankCardItem); //bankCardList
-                if (!String.IsNullOrEmpty(acctInfo.CurrencyID))
+                if (!string.IsNullOrEmpty(acctInfo.CurrencyID))
                 {
                     bankAcctInfoTuple.Item2.Add(acctInfo.CurrencyID);//currencyList
                 }
