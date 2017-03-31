@@ -17,20 +17,21 @@ namespace TradingMaster
             //#if DEBUG
             try
             {
-                string s = System.AppDomain.CurrentDomain.BaseDirectory + "Log\\";
-                if (!Directory.Exists(s))
-                {
-                    Directory.CreateDirectory(s);
-                }
-                string file = s + DateTime.Now.ToString("yyyyMMdd HHmmss") + ".txt";
-                if (File.Exists(file))
-                {
-                    file = s + DateTime.Now.ToString("yyyyMMdd HHmmss") + "_1.txt";
-                }
-                FileStream fs = new FileStream(file, FileMode.Create);
-                StreamWriter ws = new StreamWriter(fs);
-                ws.AutoFlush = true;
-                Console.SetOut(ws);
+                log4net.Config.XmlConfigurator.Configure();
+                //string s = System.AppDomain.CurrentDomain.BaseDirectory + "Log\\";
+                //if (!Directory.Exists(s))
+                //{
+                //    Directory.CreateDirectory(s);
+                //}
+                //string file = s + DateTime.Now.ToString("yyyyMMdd HHmmss") + ".txt";
+                //if (File.Exists(file))
+                //{
+                //    file = s + DateTime.Now.ToString("yyyyMMdd HHmmss") + "_1.txt";
+                //}
+                //FileStream fs = new FileStream(file, FileMode.Create);
+                //StreamWriter ws = new StreamWriter(fs);
+                //ws.AutoFlush = true;
+                //Console.SetOut(ws);
                 Util.Log("程序启动");
             }
             catch (Exception e)

@@ -8,7 +8,9 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using log4net;
 
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 namespace TradingMaster
 {
     public class Util
@@ -76,34 +78,11 @@ namespace TradingMaster
         {
             StackTrace st = new StackTrace(true);
             StackFrame sf = st.GetFrame(1);
-            System.Reflection.MethodBase method = sf.GetMethod();
-            string lastcallmethod = method.DeclaringType.ToString() + "." + method.Name;
-
-            string dateTime = DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff");
-            string currentThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId.ToString();
-            try
-            {
-                Console.WriteLine("[" + dateTime + "]" + "[" + currentThreadID + "][" + System.Threading.Thread.CurrentThread.Priority.ToString() + "][" + lastcallmethod + "]\t" + content);
-                Console.WriteLine("");
-            }
-            catch (IOException e)
-            {
-                if (System.Windows.Application.Current != null)
-                {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
-                    {
-                        System.Windows.MessageBox.Show(e.Message + "\n" + e.StackTrace, "日志读写错误", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-                        Environment.Exit(0);
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
-            }
+            MethodBase method = sf.GetMethod();
+            string lastcallmethod = string.Format("[{0}.{1}]", method.DeclaringType.ToString(), method.Name);
+            ILog log = LogManager.GetLogger(lastcallmethod);
+            log.Info(content);
         }
-
 
         public static string GetMD5(string content)
         {
