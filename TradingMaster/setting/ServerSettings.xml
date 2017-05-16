@@ -43,6 +43,10 @@
       <host name="华宝期权实验室环境" brokerID="2011"  ip="211.144.195.164"    port="24505" selected="False" />
       <host name="证券模拟一"         brokerID="2011"  ip="ctp24-front1.financial-trading-platform.com"    port="41205" selected="False" />
       <host name="证券模拟二"         brokerID="2011"  ip="ctp24-front2.financial-trading-platform.com"    port="41205" selected="False" />
+      <host name="同信实盘一"         brokerID="9099"  ip="180.166.13.41"      port="41205" selected="False" />
+      <host name="同信实盘二"         brokerID="9099"  ip="180.166.13.42"      port="41205" selected="False" />
+      <host name="同信实盘三"         brokerID="9099"  ip="180.166.13.43"      port="41205" selected="False" />
+      <host name="同信实盘四"         brokerID="9099"  ip="180.166.13.44"      port="41205" selected="False" />
     </server>
     <server type="HQ">
       <host name="东航实盘一" brokerID="7070"  ip="ctp1.kiiik.com"     port="41213" selected="False" />
@@ -90,6 +94,10 @@
       <host name="华宝期权实验室环境" brokerID="2011"  ip="211.144.195.164"    port="24513" selected="False" />
       <host name="证券模拟三"         brokerID="2011"  ip="ctp24-front3.financial-trading-platform.com" port="41213" selected="False" />
       <host name="证券模拟四"         brokerID="2011"  ip="ctp24-front4.financial-trading-platform.com" port="41213" selected="False" />
+      <host name="同信实盘一"         brokerID="9099"  ip="180.166.13.41"      port="41213" selected="False" />
+      <host name="同信实盘二"         brokerID="9099"  ip="180.166.13.42"      port="41213" selected="False" />
+      <host name="同信实盘三"         brokerID="9099"  ip="180.166.13.43"      port="41213" selected="False" />
+      <host name="同信实盘四"         brokerID="9099"  ip="180.166.13.44"      port="41213" selected="False" />
     </server>
   </servers>
 </config>

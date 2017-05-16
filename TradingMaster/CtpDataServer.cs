@@ -1429,7 +1429,7 @@ namespace TradingMaster
             }
             else
             {
-                if (BankManager.GetBankIdFromName(pContractBank.BankName) == null)
+                if (string.IsNullOrEmpty(BankManager.GetBankIdFromName(pContractBank.BankName)))
                 {
                     ContractBank bankItem = ContractBanksReport(pContractBank);
                     BankManager.ContractBanks.Add(bankItem);

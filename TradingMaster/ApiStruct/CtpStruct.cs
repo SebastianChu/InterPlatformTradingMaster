@@ -17318,7 +17318,12 @@ namespace TradingMaster
         /// <summary>
         /// 套保
         /// </summary>
-        Hedge = (byte)'3'
+        Hedge = (byte)'3',
+
+        /// <summary>
+        /// 做市商
+        /// </summary>
+        MarketMaker = (byte)'5'
     }
 
     /// <summary>
@@ -17339,7 +17344,12 @@ namespace TradingMaster
         /// <summary>
         /// 套保
         /// </summary>
-        Hedge = (byte)'3'
+        Hedge = (byte)'3',
+
+        /// <summary>
+        /// 做市商
+        /// </summary>
+        MarketMaker = (byte)'5'
     }
 
     /// <summary>
