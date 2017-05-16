@@ -848,6 +848,27 @@ TRADEAPI_API void WINAPI RegRspQryExchangeRate(DefOnRspQryExchangeRate cb) ///请
 TRADEAPI_API void WINAPI RegRspQryProductExchRate(DefOnRspQryProductExchRate cb) ///请求查询产品报价汇率
 {	_OnRspQryProductExchRate = cb;	}
 
+TRADEAPI_API void WINAPI RegRspBatchOrderAction(DefOnRspBatchOrderAction cb) ///请求查询汇率响应
+{	_OnRspBatchOrderAction = cb;		}
+
+TRADEAPI_API void WINAPI RegRspQryProductGroup(DefOnRspQryProductGroup cb) ///请求查询汇率响应
+{	_OnRspQryProductGroup = cb;		}
+
+TRADEAPI_API void WINAPI RegRspQryMMInstrumentCommissionRate(DefOnRspQryMMInstrumentCommissionRate cb) ///请求查询汇率响应
+{	_OnRspQryMMInstrumentCommissionRate = cb;		}
+
+TRADEAPI_API void WINAPI RegRspQryMMOptionInstrCommRate(DefOnRspQryMMOptionInstrCommRate cb) ///请求查询汇率响应
+{	_OnRspQryMMOptionInstrCommRate = cb;		}
+
+TRADEAPI_API void WINAPI RegRspQryInstrumentOrderCommRate(DefOnRspQryInstrumentOrderCommRate cb) ///请求查询汇率响应
+{	_OnRspQryInstrumentOrderCommRate = cb;		}
+
+TRADEAPI_API void WINAPI RegRtnBulletin(DefOnRtnBulletin cb) ///请求查询汇率响应
+{	_OnRtnBulletin = cb;		}
+
+TRADEAPI_API void WINAPI RegErrRtnBatchOrderAction(DefOnErrRtnBatchOrderAction cb) ///请求查询汇率响应
+{	_OnErrRtnBatchOrderAction = cb;		}
+
 // 请求编号
 //extern int iRequestID;
 
@@ -1367,8 +1388,10 @@ void CTraderSpi::OnRspQryCFMMCTradingAccountKey(CThostFtdcCFMMCTradingAccountKey
 }
 
 ///保证金监控中心用户令牌
-void CTraderSpi::OnRtnCFMMCTradingAccountToken(CThostFtdcCFMMCTradingAccountTokenField *pCFMMCTradingAccountToken)
-{}
+void CTraderSpi::OnRtnCFMMCTradingAccountToken(CThostFtdcCFMMCTradingAccountTokenField *pCFMMCTradingAccountToken) {};
+
+///批量报单操作错误回报
+void CTraderSpi::OnErrRtnBatchOrderAction(CThostFtdcBatchOrderActionField *pBatchOrderAction, CThostFtdcRspInfoField *pRspInfo) {};
 
 ///请求查询转帐银行响应
 void CTraderSpi::OnRspQryAccountregister(CThostFtdcAccountregisterField *pAccountregister, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -1498,6 +1521,9 @@ void CTraderSpi::OnRtnInstrumentStatus(CThostFtdcInstrumentStatusField *pInstrum
 			((DefOnRtnInstrumentStatus)_OnRtnInstrumentStatus)(pInstrumentStatus);
 	}
 }
+
+///交易所公告通知
+void CTraderSpi::OnRtnBulletin(CThostFtdcBulletinField *pBulletin) {};
 
 ///交易通知
 void CTraderSpi::OnRtnTradingNotice(CThostFtdcTradingNoticeInfoField *pTradingNoticeInfo) 
@@ -1980,8 +2006,7 @@ void CTraderSpi::OnRspQryOptionInstrTradeCost(CThostFtdcOptionInstrTradeCostFiel
 }
 
 ///请求查询仓单折抵信息响应
-void CTraderSpi::OnRspQryEWarrantOffset(CThostFtdcEWarrantOffsetField *pEWarrantOffset, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-{}
+void CTraderSpi::OnRspQryEWarrantOffset(CThostFtdcEWarrantOffsetField *pEWarrantOffset, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
 
 ///请求查询投资者品种/跨品种保证金响应
 void CTraderSpi::OnRspQryInvestorProductGroupMargin(CThostFtdcInvestorProductGroupMarginField *pInvestorProductGroupMargin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -2018,6 +2043,19 @@ void CTraderSpi::OnRspQryExchangeMarginRateAdjust(CThostFtdcExchangeMarginRateAd
 			((DefOnRspQryExchangeMarginRateAdjust)_OnRspQryExchangeMarginRateAdjust)(pExchangeMarginRateAdjust,repareInfo(pRspInfo), nRequestID, bIsLast);
 	}
 }
+
+
+///请求查询产品组
+void CTraderSpi::OnRspQryProductGroup(CThostFtdcProductGroupField *pProductGroup, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+
+///请求查询做市商合约手续费率响应
+void CTraderSpi::OnRspQryMMInstrumentCommissionRate(CThostFtdcMMInstrumentCommissionRateField *pMMInstrumentCommissionRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+
+///请求查询做市商期权合约手续费响应
+void CTraderSpi::OnRspQryMMOptionInstrCommRate(CThostFtdcMMOptionInstrCommRateField *pMMOptionInstrCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+
+///请求查询报单手续费响应
+void CTraderSpi::OnRspQryInstrumentOrderCommRate(CThostFtdcInstrumentOrderCommRateField *pInstrumentOrderCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
 
 ///请求查询汇率响应
 void CTraderSpi::OnRspQryExchangeRate(CThostFtdcExchangeRateField *pExchangeRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -2312,6 +2350,9 @@ void CTraderSpi::OnErrRtnExecOrderAction(CThostFtdcExecOrderActionField *pExecOr
 			((DefOnErrRtnExecOrderAction)_OnErrRtnExecOrderAction)(pExecOrderAction,repareInfo(pRspInfo));
 	}
 }
+
+///批量报单操作请求响应
+void CTraderSpi::OnRspBatchOrderAction(CThostFtdcInputBatchOrderActionField *pInputBatchOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
 
 ///申请组合录入请求响应
 void CTraderSpi::OnRspCombActionInsert(CThostFtdcInputCombActionField *pInputCombAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)

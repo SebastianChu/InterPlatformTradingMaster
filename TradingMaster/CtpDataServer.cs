@@ -660,7 +660,7 @@ namespace TradingMaster
             {
                 string tempKey = pInstrumentMarginRate.InstrumentID;
                 MarginStruct marginRate = GetMarginRateReport(pInstrumentMarginRate);
-                Util.Log(String.Format("Margin Rate {0}: LongMarginRatioByMoney = {1},LongMarginRatioByVolume = {2}, ShortMarginRatioByMoney = {3}, ShortMarginRatioByVolume = {4}"
+                Util.Log(string.Format("Margin Rate {0}: LongMarginRatioByMoney = {1},LongMarginRatioByVolume = {2}, ShortMarginRatioByMoney = {3}, ShortMarginRatioByVolume = {4}"
                     , tempKey, marginRate.LongMarginRatioByMoney, marginRate.LongMarginRatioByVolume, marginRate.ShortMarginRatioByMoney, marginRate.ShortMarginRatioByVolume));
                 TradeDataClient.GetClientInstance().RtnPositionEnqueue(marginRate);
             }
@@ -677,7 +677,7 @@ namespace TradingMaster
             {
                 //Util.Log("TradeApiCTP CtpDataServer: OnRspQryInstrumentCommissionRate is received. Code: " + pInstrumentCommissionRate.InstrumentID);
                 CommissionStruct commRate = GetCommissionRateReport(pInstrumentCommissionRate);
-                Util.Log(String.Format("Commission Rate {0}: CloseRatioByMoney = {1},CloseRatioByVolume = {2}, CloseTodayRatioByMoney= {3}, CloseTodayRatioByVolume= {4}, OpenRatioByMoney = {5},OpenRatioByVolume = {6}"
+                Util.Log(string.Format("Commission Rate {0}: CloseRatioByMoney = {1},CloseRatioByVolume = {2}, CloseTodayRatioByMoney= {3}, CloseTodayRatioByVolume= {4}, OpenRatioByMoney = {5},OpenRatioByVolume = {6}"
                     , pInstrumentCommissionRate.InstrumentID, commRate.CloseRatioByMoney, commRate.CloseRatioByVolume, commRate.CloseTodayRatioByMoney, commRate.CloseTodayRatioByVolume
                     , commRate.OpenRatioByMoney, commRate.OpenRatioByVolume));
                 TradeDataClient.GetClientInstance().RtnTradeEnqueue(commRate);
@@ -695,7 +695,7 @@ namespace TradingMaster
             {
                 Util.Log("TradeApiCTP CtpDataServer: OnRspQryInstrumentCommissionRate is received.");
                 CommissionStruct commRate = GetOptionCommissionRateReport(pOptionInstrCommRate);
-                Util.Log(String.Format("Option Commission Rate {0}: CloseRatioByMoney = {1},CloseRatioByVolume = {2}, CloseTodayRatioByMoney= {3}, CloseTodayRatioByVolume= {4}, OpenRatioByMoney = {5},OpenRatioByVolume = {6}, StrikeRatioByMoney = {7}, StrikeRatioByVolume = {8}"
+                Util.Log(string.Format("Option Commission Rate {0}: CloseRatioByMoney = {1},CloseRatioByVolume = {2}, CloseTodayRatioByMoney= {3}, CloseTodayRatioByVolume= {4}, OpenRatioByMoney = {5},OpenRatioByVolume = {6}, StrikeRatioByMoney = {7}, StrikeRatioByVolume = {8}"
                     , pOptionInstrCommRate.InstrumentID, commRate.CloseRatioByMoney, commRate.CloseRatioByVolume, commRate.CloseTodayRatioByMoney, commRate.CloseTodayRatioByVolume
                     , commRate.OpenRatioByMoney, commRate.OpenRatioByVolume, commRate.StrikeRatioByMoney, commRate.StrikeRatioByVolume));
                 TradeDataClient.GetClientInstance().RtnTradeEnqueue(commRate);
@@ -712,13 +712,14 @@ namespace TradingMaster
 
         void CtpTraderApi_OnRtnInstrumentStatus(ref CThostFtdcInstrumentStatusField pInstrumentStatus)
         {
-            Util.Log("TradeApiCTP CtpDataServer: OnRtnInstrumentStatus is received: " + pInstrumentStatus.EnterTime + " " + CodeSetManager.CtpToExName(pInstrumentStatus.ExchangeID.Trim()) + " " + pInstrumentStatus.ExchangeInstID.Trim() + "：" + GetExchangeStatus(pInstrumentStatus.InstrumentStatus) + ", reason: " + pInstrumentStatus.EnterReason);
-            TradeDataClient.GetClientInstance().RtnMessageEnqueue(CodeSetManager.CtpToExName(pInstrumentStatus.ExchangeID.Trim()) + "：" + GetExchangeStatus(pInstrumentStatus.InstrumentStatus));
+            Util.Log(string.Format("TradeApiCTP CtpDataServer: OnRtnInstrumentStatus is received: {0} {1} {2}：{3}, reason: {4}"
+                , pInstrumentStatus.EnterTime, CodeSetManager.CtpToExName(pInstrumentStatus.ExchangeID.Trim()), pInstrumentStatus.ExchangeInstID.Trim(), GetExchangeStatus(pInstrumentStatus.InstrumentStatus), pInstrumentStatus.EnterReason));
+            TradeDataClient.GetClientInstance().RtnMessageEnqueue(string.Format("{0} {1}：{2}", CodeSetManager.CtpToExName(pInstrumentStatus.ExchangeID.Trim()), pInstrumentStatus.ExchangeInstID.Trim(), GetExchangeStatus(pInstrumentStatus.InstrumentStatus)));
         }
 
         void CtpTraderApi_OnRspQryBrokerTradingParams(ref CThostFtdcBrokerTradingParamsField pBrokerTradingParams, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
         {
-            Util.Log(String.Format("MarginPriceType: {0}, Algorithm: {1}, AvailIncludeCloseProfit: {2}, OptionRoyaltyPriceType: {3}"
+            Util.Log(string.Format("MarginPriceType: {0}, Algorithm: {1}, AvailIncludeCloseProfit: {2}, OptionRoyaltyPriceType: {3}"
                 , pBrokerTradingParams.MarginPriceType, pBrokerTradingParams.Algorithm, pBrokerTradingParams.AvailIncludeCloseProfit, pBrokerTradingParams.OptionRoyaltyPriceType));
             if (!bIsLast)
             { }
@@ -851,7 +852,7 @@ namespace TradingMaster
         void CtpTraderApi_OnRtnOrder(ref CThostFtdcOrderField pOrder)
         {
             TradeOrderData jyData = OrderExecutionReport(pOrder);
-            Util.Log(String.Format("OnRtnOrder pOrder: Code {0}, BrokerOrderSeq {1}, OrderSysID {2}, OrderRef {3}, Status {4}, Hedge {5}",
+            Util.Log(string.Format("OnRtnOrder pOrder: Code {0}, BrokerOrderSeq {1}, OrderSysID {2}, OrderRef {3}, Status {4}, Hedge {5}",
                 jyData.Code, jyData.BrokerOrderSeq, jyData.OrderID, jyData.OrderRef, jyData.FeedBackInfo, jyData.Hedge));
             if (TempOrderFlag) //接收同步的报单回报
             {
@@ -956,7 +957,7 @@ namespace TradingMaster
         void CtpTraderApi_OnRtnTrade(ref CThostFtdcTradeField pTrade)
         {
             TradeOrderData tradedData = TradeExecutionReport(pTrade);
-            Util.Log(String.Format("OnRtnTrade Code {0}, TradeID {1}, OrderSysID {2}, BrokerOrderSeq {3}, Volume {4}, Hedge {5}",
+            Util.Log(string.Format("OnRtnTrade Code {0}, TradeID {1}, OrderSysID {2}, BrokerOrderSeq {3}, Volume {4}, Hedge {5}",
                 tradedData.Code, tradedData.TradeID, tradedData.OrderID, tradedData.BrokerOrderSeq, tradedData.TradeHandCount, tradedData.Hedge));
             if (TempTradeFlag)
             {
@@ -1429,7 +1430,7 @@ namespace TradingMaster
             }
             else
             {
-                if (BankManager.GetBankIdFromName(pContractBank.BankName) == null)
+                if (string.IsNullOrEmpty(BankManager.GetBankIdFromName(pContractBank.BankName)))
                 {
                     ContractBank bankItem = ContractBanksReport(pContractBank);
                     BankManager.ContractBanks.Add(bankItem);
@@ -1730,7 +1731,7 @@ namespace TradingMaster
             else
             {
                 MarginStruct optMarginRate = GetOptionMarginRateReport(pOptionInstrTradeCost);
-                Util.Log(String.Format("Option Margin {0}: FixedMargin = {1}, MiniMargin = {2}, Royalty = {3}",
+                Util.Log(string.Format("Option Margin {0}: FixedMargin = {1}, MiniMargin = {2}, Royalty = {3}",
                     pOptionInstrTradeCost.InstrumentID, optMarginRate.FixedMargin, optMarginRate.MiniMargin, optMarginRate.Royalty));
                 TradeDataClient.GetClientInstance().RtnPositionEnqueue(optMarginRate);
             }
@@ -1872,8 +1873,8 @@ namespace TradingMaster
 
         void CtpTraderApi_OnRtnForQuoteRsp(ref CThostFtdcForQuoteRspField pForQuoteRsp)
         {
-            Util.Log(String.Format("TradeApiCTP CtpDataServer: OnRtnForQuoteRsp is received. InstrumentID = {0}, ForQuoteSysID = {1}, ForQuoteTime = {2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID, pForQuoteRsp.ForQuoteTime));
-            string msg = String.Format("询价信息：{0}, 询价号：{1}, 询价时间：{2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID.Trim(), pForQuoteRsp.ForQuoteTime);
+            Util.Log(string.Format("TradeApiCTP CtpDataServer: OnRtnForQuoteRsp is received. InstrumentID = {0}, ForQuoteSysID = {1}, ForQuoteTime = {2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID, pForQuoteRsp.ForQuoteTime));
+            string msg = string.Format("询价信息：{0}, 询价号：{1}, 询价时间：{2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID.Trim(), pForQuoteRsp.ForQuoteTime);
             TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
         }
 
@@ -2272,7 +2273,7 @@ namespace TradingMaster
             }
             ExecQueue.ReqTime = DateTime.Now;
             int maxQryFlag = _CtpTraderApi.ReqQueryMaxOrderVolume(req);
-            Util.Log(String.Format("TradeApiCTP CtpDataServer: QueryMaxOrderVolume is Executed: {0} {1} {2} {3}", codeInfo.Code, sideType.ToString(), posEffect.ToString(), GetHedgeString(req.HedgeFlag)));
+            Util.Log(string.Format("TradeApiCTP CtpDataServer: QueryMaxOrderVolume is Executed: {0} {1} {2} {3}", codeInfo.Code, sideType.ToString(), posEffect.ToString(), GetHedgeString(req.HedgeFlag)));
             if (maxQryFlag == -1)
             {
                 Util.Log("Warning! Network Connection Error. ReqQueryMaxOrderVolume() = " + maxQryFlag);
@@ -4099,7 +4100,7 @@ namespace TradingMaster
                 instItem.Strike = pInstrument.StrikePrice;
                 instItem.LongMarginRatio = pInstrument.LongMarginRatio;
                 instItem.ShortMarginRatio = pInstrument.ShortMarginRatio;
-                Util.Log(String.Format("Contract item: {0}, Name: {1}, SpeciesCode: {2}, Hycs: {3}, Fluct: {4}, Exchange: {5}, OpenDate:{6}, ExpireDate: {7}, BaseCode: {8}, ProductType: {9}, OptionType: {10}, IsMaxMarginSingleSide: {11}, MaxLimitOrderVolume: {12}, MaxMarketOrderVolume: {13}"
+                Util.Log(string.Format("Contract item: {0}, Name: {1}, SpeciesCode: {2}, Hycs: {3}, Fluct: {4}, Exchange: {5}, OpenDate:{6}, ExpireDate: {7}, BaseCode: {8}, ProductType: {9}, OptionType: {10}, IsMaxMarginSingleSide: {11}, MaxLimitOrderVolume: {12}, MaxMarketOrderVolume: {13}"
                     , instItem.Code, instItem.Name, instItem.SpeciesCode, instItem.Hycs, instItem.Fluct, instItem.ExchCode, instItem.OpenDate, instItem.ExpireDate, instItem.BaseCode, instItem.ProductType, instItem.OptionType, instItem.IsMaxMarginSingleSide, instItem.MaxLimitOrderVolume, instItem.MaxMarketOrderVolume));
             }
             catch (Exception ex)
@@ -4128,7 +4129,7 @@ namespace TradingMaster
                     newSpec.ExchangeCode = contract.ExchCode;
                     CodeSetManager.SpeciesDict[contract.SpeciesCode] = newSpec;
 
-                    if (contract.ProductType.Contains("Option"))
+                    if (!string.IsNullOrEmpty(contract.ProductType) && contract.ProductType.Contains("Option"))
                     {
                         CodeSetManager.OptionSpecList.Add(newSpec);
                     }
@@ -5393,8 +5394,8 @@ namespace TradingMaster
                 acctDetail.IdentifiedCardNo = pNotifyQueryAccount.IdentifiedCardNo;
                 acctDetail.Password = pNotifyQueryAccount.Password;
                 acctDetail.PlateSerial = pNotifyQueryAccount.PlateSerial;
-                Util.Log(String.Format("User: AccountID {0}, Password {1}, IdCardType {2}, IdentifiedCardNo {3};", acctDetail.AccountID, acctDetail.Password, Enum.GetName(typeof(EnumThostIdCardTypeType), acctDetail.IdCardType), acctDetail.IdentifiedCardNo));
-                Util.Log(String.Format("Bank: BankAccount {0}, BankAccType {1}, BankPassWord {2}, BankSecuAccType {3}, BankSecuAcc {4}, BankFetchAmount {5}, BankUseAmount {6}, BrokerIDByBank {7}, CurrencyID {8}."
+                Util.Log(string.Format("User: AccountID {0}, Password {1}, IdCardType {2}, IdentifiedCardNo {3};", acctDetail.AccountID, acctDetail.Password, Enum.GetName(typeof(EnumThostIdCardTypeType), acctDetail.IdCardType), acctDetail.IdentifiedCardNo));
+                Util.Log(string.Format("Bank: BankAccount {0}, BankAccType {1}, BankPassWord {2}, BankSecuAccType {3}, BankSecuAcc {4}, BankFetchAmount {5}, BankUseAmount {6}, BrokerIDByBank {7}, CurrencyID {8}."
                     , acctDetail.AccountID, Enum.GetName(typeof(EnumThostBankAccTypeType), acctDetail.BankAccType), acctDetail.BankPassWord, Enum.GetName(typeof(EnumThostBankAccTypeType), acctDetail.BankSecuAccType), acctDetail.BankSecuAcc,
                     acctDetail.BankFetchAmount, acctDetail.BankUseAmount, acctDetail.BrokerIDByBank, acctDetail.CurrencyID));
             }
@@ -5923,8 +5924,8 @@ namespace TradingMaster
 
         void mdApi_OnRtnForQuoteRsp(ref CThostFtdcForQuoteRspField pForQuoteRsp)
         {
-            Util.Log(String.Format("MdApiCTP CtpDataServer: OnRtnForQuoteRsp is received. InstrumentID = {0}, ForQuoteSysID = {1}, ForQuoteTime = {2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID, pForQuoteRsp.ForQuoteTime));
-            string msg = String.Format("询价信息：{0}, 询价号：{1}, 询价时间：{2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID.Trim(), pForQuoteRsp.ForQuoteTime);
+            Util.Log(string.Format("MdApiCTP CtpDataServer: OnRtnForQuoteRsp is received. InstrumentID = {0}, ForQuoteSysID = {1}, ForQuoteTime = {2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID, pForQuoteRsp.ForQuoteTime));
+            string msg = string.Format("询价信息：{0}, 询价号：{1}, 询价时间：{2}", pForQuoteRsp.InstrumentID, pForQuoteRsp.ForQuoteSysID.Trim(), pForQuoteRsp.ForQuoteTime);
             TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
         }
 
@@ -5967,7 +5968,7 @@ namespace TradingMaster
                 ctpRealData.PrevSettlementPrice = pDepthMarketData.PreSettlementPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.PreSettlementPrice;
                 ctpRealData.SettlmentPrice = pDepthMarketData.SettlementPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.SettlementPrice;
                 ctpRealData.Sum = pDepthMarketData.Turnover;
-                ctpRealData.UpdateTime = pDepthMarketData.UpdateTime;
+                ctpRealData.UpdateTime = string.Format("{0}.{1:D3}", pDepthMarketData.UpdateTime, pDepthMarketData.UpdateMillisec);
                 ctpRealData.UpperLimitPrice = pDepthMarketData.UpperLimitPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.UpperLimitPrice;
                 ctpRealData.Volumn = (ulong)pDepthMarketData.Volume;
             }

@@ -829,7 +829,7 @@ namespace TradingMaster
                     {
                         _ExecOrderDataDic.Add(execKey, execData);
                     }
-                    Util.Log(String.Format("OnRtnExecOrder pExecOrder: Code {0}, BrokerExecOrderSeq {1}, ExecOrderSysID {2}, ExecOrderRef {3}, Status {4}",
+                    Util.Log(string.Format("OnRtnExecOrder pExecOrder: Code {0}, BrokerExecOrderSeq {1}, ExecOrderSysID {2}, ExecOrderRef {3}, Status {4}",
                         execData.Code, execData.BrokerExecOrderSeq, execData.ExecOrderID, execData.ExecOrderRef, execData.StatusMsg));
                 }
 
@@ -873,7 +873,7 @@ namespace TradingMaster
                     {
                         _QuoteOrderDataDic.Add(quoteKey, quoteData);
                     }
-                    Util.Log(String.Format("OnRtnQuote pQuote: Code {0}, BrokerQuoteSeq {1}, QuoteSysID {2}, QuoteRef {3}, Status {4}",
+                    Util.Log(string.Format("OnRtnQuote pQuote: Code {0}, BrokerQuoteSeq {1}, QuoteSysID {2}, QuoteRef {3}, Status {4}",
                         quoteData.Code, quoteData.BrokerQuoteSeq, quoteData.QuoteOrderID, quoteData.QuoteRef, quoteData.StatusMsg));
                 }
                 //else

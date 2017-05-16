@@ -124,7 +124,7 @@ namespace TradingMaster
             }
             if (this.PtrHandle == IntPtr.Zero)
             {
-                throw (new Exception(String.Format(" 没有找到 :{0}.", _DllFile)));
+                throw (new Exception(string.Format(" 没有找到 :{0}.", _DllFile)));
             }
         }
 

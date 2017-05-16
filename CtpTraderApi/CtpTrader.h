@@ -113,6 +113,14 @@ void* _OnRspQryExchangeMarginRateAdjust;///请求查询交易所调整保证金率响应
 void* _OnRspQryExchangeRate;///请求查询汇率响应
 void* _OnRspQryProductExchRate;///请求查询产品报价汇率
 
+void* _OnRspBatchOrderAction;///批量报单操作请求响应
+void* _OnRspQryProductGroup;///请求查询产品组
+void* _OnRspQryMMInstrumentCommissionRate;///请求查询做市商合约手续费率响应
+void* _OnRspQryMMOptionInstrCommRate;///请求查询做市商期权合约手续费响应
+void* _OnRspQryInstrumentOrderCommRate;///请求查询报单手续费响应
+void* _OnRtnBulletin;///交易所公告通知
+void* _OnErrRtnBatchOrderAction;///批量报单操作错误回报
+
 ///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
 typedef int (WINAPI *DefOnFrontConnected)();
 ///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
@@ -306,6 +314,20 @@ typedef int (WINAPI *DefOnRspQryExchangeMarginRateAdjust)(CThostFtdcExchangeMarg
 typedef int (WINAPI *DefOnRspQryExchangeRate)(CThostFtdcExchangeRateField *pExchangeRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 ///请求查询产品报价汇率
 typedef int (WINAPI *DefOnRspQryProductExchRate)(CThostFtdcProductExchRateField *pProductExchRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+///批量报单操作请求响应
+typedef int (WINAPI *DefOnRspBatchOrderAction)(CThostFtdcInputBatchOrderActionField *pInputBatchOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+///请求查询产品组
+typedef int (WINAPI *DefOnRspQryProductGroup)(CThostFtdcProductGroupField *pProductGroup, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+///请求查询做市商合约手续费率响应
+typedef int (WINAPI *DefOnRspQryMMInstrumentCommissionRate)(CThostFtdcMMInstrumentCommissionRateField *pMMInstrumentCommissionRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+///请求查询做市商期权合约手续费响应
+typedef int (WINAPI *DefOnRspQryMMOptionInstrCommRate)(CThostFtdcMMOptionInstrCommRateField *pMMOptionInstrCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+///请求查询报单手续费响应
+typedef int (WINAPI *DefOnRspQryInstrumentOrderCommRate)(CThostFtdcInstrumentOrderCommRateField *pInstrumentOrderCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+///交易所公告通知
+typedef int (WINAPI *DefOnRtnBulletin)(CThostFtdcBulletinField *pBulletin);
+///批量报单操作错误回报
+typedef int (WINAPI *DefOnErrRtnBatchOrderAction)(CThostFtdcBatchOrderActionField *pBatchOrderAction, CThostFtdcRspInfoField *pRspInfo);
 
 class CTraderSpi : public CThostFtdcTraderSpi
 {
@@ -379,6 +401,9 @@ public:
 
 	///报价操作请求响应
 	virtual void OnRspQuoteAction(CThostFtdcInputQuoteActionField *pInputQuoteAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+
+	///批量报单操作请求响应
+	virtual void OnRspBatchOrderAction(CThostFtdcInputBatchOrderActionField *pInputBatchOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///申请组合录入请求响应
 	virtual void OnRspCombActionInsert(CThostFtdcInputCombActionField *pInputCombAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
@@ -461,6 +486,18 @@ public:
 	///请求查询产品报价汇率
 	virtual void OnRspQryProductExchRate(CThostFtdcProductExchRateField *pProductExchRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
+	///请求查询产品组
+	virtual void OnRspQryProductGroup(CThostFtdcProductGroupField *pProductGroup, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+
+	///请求查询做市商合约手续费率响应
+	virtual void OnRspQryMMInstrumentCommissionRate(CThostFtdcMMInstrumentCommissionRateField *pMMInstrumentCommissionRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+
+	///请求查询做市商期权合约手续费响应
+	virtual void OnRspQryMMOptionInstrCommRate(CThostFtdcMMOptionInstrCommRateField *pMMOptionInstrCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+
+	///请求查询报单手续费响应
+	virtual void OnRspQryInstrumentOrderCommRate(CThostFtdcInstrumentOrderCommRateField *pInstrumentOrderCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+
 	///请求查询期权交易成本响应
 	virtual void OnRspQryOptionInstrTradeCost(CThostFtdcOptionInstrTradeCostField *pOptionInstrTradeCost, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
@@ -506,6 +543,9 @@ public:
 	///合约交易状态通知
 	virtual void OnRtnInstrumentStatus(CThostFtdcInstrumentStatusField *pInstrumentStatus);
 
+	///交易所公告通知
+	virtual void OnRtnBulletin(CThostFtdcBulletinField *pBulletin);
+
 	///交易通知
 	virtual void OnRtnTradingNotice(CThostFtdcTradingNoticeInfoField *pTradingNoticeInfo);
 
@@ -538,6 +578,9 @@ public:
 
 	///保证金监控中心用户令牌
 	virtual void OnRtnCFMMCTradingAccountToken(CThostFtdcCFMMCTradingAccountTokenField *pCFMMCTradingAccountToken);
+
+	///批量报单操作错误回报
+	virtual void OnErrRtnBatchOrderAction(CThostFtdcBatchOrderActionField *pBatchOrderAction, CThostFtdcRspInfoField *pRspInfo);
 
 	///申请组合通知
 	virtual void OnRtnCombAction(CThostFtdcCombActionField *pCombAction);

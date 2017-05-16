@@ -47,7 +47,7 @@ namespace TradingMaster
         {
             //Util.Log("未处理的Exception:" + ex.ExceptionObject);
             Exception exception = (Exception)ex.ExceptionObject;
-            Util.Log(String.Format("UnhandledException({0}): {1} ---> {2}",
+            Util.Log(string.Format("UnhandledException({0}): {1} ---> {2}",
                 exception.GetType().Name, exception.Message, exception.InnerException.Message));
         }
 

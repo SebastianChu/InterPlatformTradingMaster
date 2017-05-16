@@ -159,4 +159,11 @@ EXPORTS
         RegRspQryExchangeMarginRateAdjust             @154
         RegRspQryExchangeRate                         @155
         RegRspQryProductExchRate                      @156
+		RegRspBatchOrderAction						  @157
+		RegRspQryProductGroup						  @158
+		RegRspQryMMInstrumentCommissionRate           @159
+		RegRspQryMMOptionInstrCommRate                @160
+		RegRspQryInstrumentOrderCommRate              @161
+		RegRtnBulletin								  @162
+		RegErrRtnBatchOrderAction                     @163
 ;										

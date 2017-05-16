@@ -560,7 +560,7 @@
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
                 <!--现量-->
-                <DataGridTextColumn Header="现量 " Width="70" Binding="{Binding Path=CurrentHand, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"/>
+                <!--<DataGridTextColumn Header="现量 " Width="70" Binding="{Binding Path=CurrentHand, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"/>-->
                 <!--成交额-->
                 <DataGridTextColumn Header="成交额 " Width="auto" Binding="{Binding Path=I64Sum, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
                 <!--交易所-->
@@ -1089,7 +1089,7 @@
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
                 <!--现量-->
-                <DataGridTextColumn Header="现量 " Width="70" Binding="{Binding Path=CurrentHand, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
+                <!--<DataGridTextColumn Header="现量 " Width="70" Binding="{Binding Path=CurrentHand, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>-->
                 <!--成交额-->
                 <DataGridTextColumn Header="成交额 " Width="70" Binding="{Binding Path=I64Sum, Converter={StaticResource fconverter}}" CellStyle="{StaticResource CellStyle_Default}"></DataGridTextColumn>
                 <!--交易所-->

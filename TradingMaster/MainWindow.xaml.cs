@@ -21,7 +21,7 @@ namespace TradingMaster
             Application.Current.Resources.MergedDictionaries.Add(o);
             InitializeComponent();
             InitControls();
-            this.Title += String.Format("  【当前账号：{0}  经纪号：{1}  交易服务器：{2}  行情服务器：{3}】",
+            this.Title += string.Format("  【当前账号：{0}  经纪号：{1}  交易服务器：{2}  行情服务器：{3}】",
                 CtpDataServer.GetUserInstance().GetCurrentInvestorID(), CtpDataServer.GetUserInstance().GetCurrentBroker(),
                 CtpDataServer.GetUserInstance().GetCurrentTradeAddress(), CtpDataServer.GetUserInstance().GetCurrentQuoteAddress());
             TradeDataClient.GetClientInstance().SetMainWindow(this);

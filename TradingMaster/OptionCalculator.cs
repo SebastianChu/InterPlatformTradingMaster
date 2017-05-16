@@ -115,7 +115,7 @@ namespace TradingMaster
                     }
                     else
                     {
-                        Util.Log(String.Format("Warning! illegal Contract Quote Data: fCode = {0}", fCode.Code));
+                        Util.Log(string.Format("Warning! illegal Contract Quote Data: fCode = {0}", fCode.Code));
                     }
                 }
                 else
@@ -247,7 +247,7 @@ namespace TradingMaster
                 double d2 = d1 - sigma * Math.Sqrt(T);
                 double diffNd1 = Math.Exp(-d2 * d2 / 2 - sigma * d2 * Math.Sqrt(T) - sigma * sigma * T / 2) / Math.Sqrt(2 * Math.PI);
                 double diffNd2 = s0 * diffNd1 / (k * Math.Exp(-r * T));
-                Util.Log(String.Format("sigma = {0}, calError = {1}, step = {2}", sigma, calError, (EuCallOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T))));
+                Util.Log(string.Format("sigma = {0}, calError = {1}, step = {2}", sigma, calError, (EuCallOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T))));
                 sigma = sigma - ((EuCallOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T)));
                 //((s * Math.Exp(-q * T) * diffNd1 + k * Math.Exp(-r * T) * diffNd2) * Math.Sqrt(T) + (k * Math.Exp(-r * T) * d2 * diffNd2 - s * Math.Exp(-q * T) * d1 * diffNd1) / sigma));
                 calError = EuCallOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal;
@@ -271,7 +271,7 @@ namespace TradingMaster
                 double d2 = d1 - sigma * Math.Sqrt(T);
                 double diffNd1 = Math.Exp(-d2 * d2 / 2 - sigma * d2 * Math.Sqrt(T) - sigma * sigma * T / 2) / Math.Sqrt(2 * Math.PI);
                 double diffNd2 = s0 * diffNd1 / (k * Math.Exp(-r * T));
-                Util.Log(String.Format("sigma = {0}, calError = {1}, step = {2}", sigma, calError, (EuPutOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T))));
+                Util.Log(string.Format("sigma = {0}, calError = {1}, step = {2}", sigma, calError, (EuPutOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T))));
                 sigma = sigma - ((EuPutOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal) / (s0 * Math.Sqrt(T) * diffNd1 * Math.Exp(-q * T)));
                 //((-s * Math.Exp(-q * T) * diffNd1 - k * Math.Exp(-r * T) * diffNd2) * Math.Sqrt(T) - (k * Math.Exp(-r * T) * d2 * diffNd2 - s * Math.Exp(-q * T) * d1 * diffNd1) / sigma));
                 calError = EuPutOpt_BsFormula(s0, k, T, sigma, q, r) - bsOptVal;

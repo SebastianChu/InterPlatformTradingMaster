@@ -134,7 +134,7 @@ namespace TradingMaster
                     dataList.AddRange(orderLst);
                     if (dataList.Count > 0)
                     {
-                        Util.Log(String.Format("Order Count: {0}; Cancel Quote Order: {1}, Quote Order: {2}, Cancel Order: {3}, Order: {4}"
+                        Util.Log(string.Format("Order Count: {0}; Cancel Quote Order: {1}, Quote Order: {2}, Cancel Order: {3}, Order: {4}"
                             , dataList.Count, cancelQuoteOrderLst.Count, quoteOrderLst.Count, cancelOrderLst.Count, orderLst.Count));
                     }
                     cancelQuoteOrderLst.Clear();
