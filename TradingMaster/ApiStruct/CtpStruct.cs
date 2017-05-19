@@ -19129,7 +19129,7 @@ namespace TradingMaster
         /// </summary>
         Hedge = (byte)'3',
 
-        // <summary>
+        /// <summary>
         /// 做市商
         /// </summary>
         MarketMaker = (byte)'5'
