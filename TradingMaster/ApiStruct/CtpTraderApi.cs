@@ -2982,5 +2982,146 @@ namespace TradingMaster
                 (Invoke(this.PtrHandle, "RegErrRtnCombActionInsert", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnErrRtnCombActionInsert));
             }
         }
+
+        ///批量报单操作请求响应
+        public delegate void RspBatchOrderAction(ref CThostFtdcInputBatchOrderActionField pInputBatchOrderAction, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
+        private RspBatchOrderAction _OnRspBatchOrderAction;
+        /// <summary>
+        /// 批量报单操作请求响应
+        /// </summary>
+        public event RspBatchOrderAction OnRspBatchOrderAction
+        {
+            add
+            {
+                _OnRspBatchOrderAction += value;
+                (Invoke(this.PtrHandle, "RegRspBatchOrderAction", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspBatchOrderAction));
+            }
+            remove
+            {
+                _OnRspBatchOrderAction -= value;
+                (Invoke(this.PtrHandle, "RegRspBatchOrderAction", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspBatchOrderAction));
+            }
+        }
+
+        ///请求查询产品组
+        public delegate void RspQryProductGroup(ref CThostFtdcProductGroupField pProductGroup, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
+        private RspQryProductGroup _OnRspQryProductGroup;
+        /// <summary>
+        /// 请求查询产品组
+        /// </summary>
+        public event RspQryProductGroup OnRspQryProductGroup
+        {
+            add
+            {
+                _OnRspQryProductGroup += value;
+                (Invoke(this.PtrHandle, "RegRspQryProductGroup", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspQryProductGroup));
+            }
+            remove
+            {
+                _OnRspQryProductGroup -= value;
+                (Invoke(this.PtrHandle, "RegRspQryProductGroup", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspQryProductGroup));
+            }
+        }
+
+        ///请求查询做市商合约手续费率响应
+        public delegate void RspQryMMInstrumentCommissionRate(ref CThostFtdcMMInstrumentCommissionRateField pMMInstrumentCommissionRate, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
+        private RspQryMMInstrumentCommissionRate _OnRspQryMMInstrumentCommissionRate;
+        /// <summary>
+        /// 请求查询做市商合约手续费率响应
+        /// </summary>
+        public event RspQryMMInstrumentCommissionRate OnRspQryMMInstrumentCommissionRate
+        {
+            add
+            {
+                _OnRspQryMMInstrumentCommissionRate += value;
+                (Invoke(this.PtrHandle, "RegRspQryMMInstrumentCommissionRate", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspQryMMInstrumentCommissionRate));
+            }
+            remove
+            {
+                _OnRspQryMMInstrumentCommissionRate -= value;
+                (Invoke(this.PtrHandle, "RegRspQryMMInstrumentCommissionRate", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspQryMMInstrumentCommissionRate));
+            }
+        }
+
+        ///请求查询做市商期权合约手续费响应
+        public delegate void RspQryMMOptionInstrCommRate(ref CThostFtdcMMOptionInstrCommRateField pMMOptionInstrCommRate, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
+        private RspQryMMOptionInstrCommRate _OnRspQryMMOptionInstrCommRate;
+        /// <summary>
+        /// 请求查询做市商期权合约手续费响应
+        /// </summary>
+        public event RspQryMMOptionInstrCommRate OnRspQryMMOptionInstrCommRate
+        {
+            add
+            {
+                _OnRspQryMMOptionInstrCommRate += value;
+                (Invoke(this.PtrHandle, "RegRspQryMMOptionInstrCommRate", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspQryMMOptionInstrCommRate));
+            }
+            remove
+            {
+                _OnRspQryMMOptionInstrCommRate -= value;
+                (Invoke(this.PtrHandle, "RegRspQryMMOptionInstrCommRate", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspQryMMOptionInstrCommRate));
+            }
+        }
+
+        ///请求查询报单手续费响应
+        public delegate void RspQryInstrumentOrderCommRate(ref CThostFtdcInstrumentOrderCommRateField pInstrumentOrderCommRate, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
+        private RspQryInstrumentOrderCommRate _OnRspQryInstrumentOrderCommRate;
+        /// <summary>
+        /// 请求查询报单手续费响应
+        /// </summary>
+        public event RspQryInstrumentOrderCommRate OnRspQryInstrumentOrderCommRate
+        {
+            add
+            {
+                _OnRspQryInstrumentOrderCommRate += value;
+                (Invoke(this.PtrHandle, "RegRspQryInstrumentOrderCommRate", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspQryInstrumentOrderCommRate));
+            }
+            remove
+            {
+                _OnRspQryInstrumentOrderCommRate -= value;
+                (Invoke(this.PtrHandle, "RegRspQryInstrumentOrderCommRate", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspQryInstrumentOrderCommRate));
+            }
+        }
+
+        ///交易所公告通知
+        public delegate void RtnBulletin(ref CThostFtdcBulletinField pBulletin);
+        private RtnBulletin _OnRtnBulletin;
+        /// <summary>
+        /// 交易所公告通知
+        /// </summary>
+        public event RtnBulletin OnRtnBulletin
+        {
+            add
+            {
+                _OnRtnBulletin += value;
+                (Invoke(this.PtrHandle, "RegRtnBulletin", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRtnBulletin));
+            }
+            remove
+            {
+                _OnRtnBulletin -= value;
+                (Invoke(this.PtrHandle, "RegRtnBulletin", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRtnBulletin));
+            }
+        }
+
+        ///批量报单操作错误回报
+        public delegate void ErrRtnBatchOrderAction(ref CThostFtdcBatchOrderActionField pBatchOrderAction, ref CThostFtdcRspInfoField pRspInfo);
+        private ErrRtnBatchOrderAction _OnErrRtnBatchOrderAction;
+        /// <summary>
+        /// 批量报单操作错误回报
+        /// </summary>
+        public event ErrRtnBatchOrderAction OnErrRtnBatchOrderAction
+        {
+            add
+            {
+                _OnErrRtnBatchOrderAction += value;
+                (Invoke(this.PtrHandle, "RegErrRtnBatchOrderAction", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnErrRtnBatchOrderAction));
+            }
+            remove
+            {
+                _OnErrRtnBatchOrderAction -= value;
+                (Invoke(this.PtrHandle, "RegErrRtnBatchOrderAction", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnErrRtnBatchOrderAction));
+            }
+        }
+
     }
 }

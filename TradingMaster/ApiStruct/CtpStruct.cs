@@ -8357,7 +8357,7 @@ namespace TradingMaster
 
     ///输入批量报单操作
     [StructLayout(LayoutKind.Sequential)]
-    struct CThostFtdcInputBatchOrderActionField
+    public struct CThostFtdcInputBatchOrderActionField
     {
         /// <summary>
         /// 经纪公司代码
@@ -8414,7 +8414,7 @@ namespace TradingMaster
 
     ///批量报单操作
     [StructLayout(LayoutKind.Sequential)]
-    struct CThostFtdcBatchOrderActionField
+    public struct CThostFtdcBatchOrderActionField
     {
         /// <summary>
         /// 经纪公司代码
@@ -8519,7 +8519,7 @@ namespace TradingMaster
 
     ///交易所批量报单操作
     [StructLayout(LayoutKind.Sequential)]
-    struct CThostFtdcExchangeBatchOrderActionField
+    public struct CThostFtdcExchangeBatchOrderActionField
     {
         /// <summary>
         /// 交易所代码
@@ -8588,7 +8588,7 @@ namespace TradingMaster
 
     ///查询批量报单操作
     [StructLayout(LayoutKind.Sequential)]
-    struct CThostFtdcQryBatchOrderActionField
+    public struct CThostFtdcQryBatchOrderActionField
     {
         /// <summary>
         /// 经纪公司代码
@@ -9029,7 +9029,7 @@ namespace TradingMaster
     };
 
     ///查询询价价差参数
-    struct CThostFtdcQryForQuoteParamField
+    public struct CThostFtdcQryForQuoteParamField
     {
         /// <summary>
         /// 经纪公司代码
@@ -9049,7 +9049,7 @@ namespace TradingMaster
     };
 
     ///询价价差参数
-    struct CThostFtdcForQuoteParamField
+    public struct CThostFtdcForQuoteParamField
     {
         /// <summary>
         /// 经纪公司代码
@@ -9077,7 +9077,7 @@ namespace TradingMaster
     };
 
     ///当前做市商期权合约手续费的详细内容
-    struct CThostFtdcMMOptionInstrCommRateField
+    public struct CThostFtdcMMOptionInstrCommRateField
     {
         /// <summary>
         /// 合约代码
@@ -9133,7 +9133,7 @@ namespace TradingMaster
     };
 
     ///做市商期权手续费率查询
-    struct CThostFtdcQryMMOptionInstrCommRateField
+    public struct CThostFtdcQryMMOptionInstrCommRateField
     {
         /// <summary>
         /// 经纪公司代码
@@ -9153,7 +9153,7 @@ namespace TradingMaster
     };
 
     ///做市商合约手续费率
-    struct CThostFtdcMMInstrumentCommissionRateField
+    public struct CThostFtdcMMInstrumentCommissionRateField
     {
         /// <summary>
         /// 合约代码
@@ -9201,7 +9201,7 @@ namespace TradingMaster
     };
 
     ///查询做市商合约手续费率
-    struct CThostFtdcQryMMInstrumentCommissionRateField
+    public struct CThostFtdcQryMMInstrumentCommissionRateField
     {
         /// <summary>
         /// 经纪公司代码
@@ -9221,7 +9221,7 @@ namespace TradingMaster
     };
 
     ///当前报单手续费的详细内容
-    struct CThostFtdcInstrumentOrderCommRateField
+    public struct CThostFtdcInstrumentOrderCommRateField
     {
         /// <summary>
         /// 合约代码
@@ -9257,7 +9257,7 @@ namespace TradingMaster
     };
 
     ///报单手续费率查询
-    struct CThostFtdcQryInstrumentOrderCommRateField
+    public struct CThostFtdcQryInstrumentOrderCommRateField
     {
         /// <summary>
         /// 经纪公司代码
@@ -12821,7 +12821,7 @@ namespace TradingMaster
     };
 
     ///查询产品组
-    struct CThostFtdcQryProductGroupField
+    public struct CThostFtdcQryProductGroupField
     {
         /// <summary>
         /// 产品代码
@@ -12836,7 +12836,7 @@ namespace TradingMaster
     };
 
     ///投资者品种/跨品种保证金产品组
-    struct CThostFtdcProductGroupField
+    public struct CThostFtdcProductGroupField
     {
         /// <summary>
         /// 产品代码
@@ -12856,7 +12856,7 @@ namespace TradingMaster
     };
 
     ///交易所公告
-    struct CThostFtdcBulletinField
+    public struct CThostFtdcBulletinField
     {
         /// <summary>
         /// 交易所代码
@@ -12918,7 +12918,7 @@ namespace TradingMaster
     };
 
     ///查询交易所公告
-    struct CThostFtdcQryBulletinField
+    public struct CThostFtdcQryBulletinField
     {
         /// <summary>
         /// 交易所代码
@@ -17853,7 +17853,7 @@ namespace TradingMaster
     };
 
     ///银期预约开户确认请求
-    struct CThostFtdcReserveOpenAccountConfirmField
+    public struct CThostFtdcReserveOpenAccountConfirmField
     {
         /// <summary>
         /// 业务功能码
@@ -18050,7 +18050,7 @@ namespace TradingMaster
     };
 
     ///银期预约开户
-    struct CThostFtdcReserveOpenAccountField
+    public struct CThostFtdcReserveOpenAccountField
     {
         /// <summary>
         /// 业务功能码

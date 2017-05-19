@@ -1388,10 +1388,36 @@ void CTraderSpi::OnRspQryCFMMCTradingAccountKey(CThostFtdcCFMMCTradingAccountKey
 }
 
 ///保证金监控中心用户令牌
-void CTraderSpi::OnRtnCFMMCTradingAccountToken(CThostFtdcCFMMCTradingAccountTokenField *pCFMMCTradingAccountToken) {};
+void CTraderSpi::OnRtnCFMMCTradingAccountToken(CThostFtdcCFMMCTradingAccountTokenField *pCFMMCTradingAccountToken)
+{
+	//if (_OnRtnCFMMCTradingAccountToken != NULL)
+	//{
+	//	if (pCFMMCTradingAccountToken == NULL)
+	//	{
+	//		CThostFtdcCFMMCTradingAccountTokenField req;
+	//		memset(&req, 0, sizeof(req));
+	//		((DefOnRtnCFMMCTradingAccountToken)_OnErrRtnOrderInsert)(&req);
+	//	}
+	//	else
+	//		((DefOnRtnCFMMCTradingAccountToken)_OnErrRtnOrderInsert)(pCFMMCTradingAccountToken);
+	//}
+}
 
 ///批量报单操作错误回报
-void CTraderSpi::OnErrRtnBatchOrderAction(CThostFtdcBatchOrderActionField *pBatchOrderAction, CThostFtdcRspInfoField *pRspInfo) {};
+void CTraderSpi::OnErrRtnBatchOrderAction(CThostFtdcBatchOrderActionField *pBatchOrderAction, CThostFtdcRspInfoField *pRspInfo)
+{
+	if (_OnErrRtnBatchOrderAction != NULL)
+	{
+		if (pBatchOrderAction == NULL)
+		{
+			CThostFtdcBatchOrderActionField req;
+			memset(&req, 0, sizeof(req));
+			((DefOnErrRtnBatchOrderAction)_OnErrRtnBatchOrderAction)(&req, repareInfo(pRspInfo));
+		}
+		else
+			((DefOnErrRtnBatchOrderAction)_OnErrRtnBatchOrderAction)(pBatchOrderAction, repareInfo(pRspInfo));
+	}
+}
 
 ///请求查询转帐银行响应
 void CTraderSpi::OnRspQryAccountregister(CThostFtdcAccountregisterField *pAccountregister, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -1523,7 +1549,21 @@ void CTraderSpi::OnRtnInstrumentStatus(CThostFtdcInstrumentStatusField *pInstrum
 }
 
 ///交易所公告通知
-void CTraderSpi::OnRtnBulletin(CThostFtdcBulletinField *pBulletin) {};
+void CTraderSpi::OnRtnBulletin(CThostFtdcBulletinField *pBulletin)
+{
+	if (_OnRtnBulletin != NULL)
+	{
+		if (pBulletin == NULL)
+		{
+			CThostFtdcBulletinField req;
+			memset(&req, 0, sizeof(req));
+			((DefOnRtnBulletin)_OnRtnBulletin)(&req);
+		}
+		else
+			((DefOnRtnBulletin)_OnRtnBulletin)(pBulletin);
+	}
+}
+
 
 ///交易通知
 void CTraderSpi::OnRtnTradingNotice(CThostFtdcTradingNoticeInfoField *pTradingNoticeInfo) 
@@ -1655,7 +1695,20 @@ void CTraderSpi::OnRspQryBrokerTradingAlgos(CThostFtdcBrokerTradingAlgosField *p
 
 ///请求查询监控中心用户令牌
 void CTraderSpi::OnRspQueryCFMMCTradingAccountToken(CThostFtdcQueryCFMMCTradingAccountTokenField *pQueryCFMMCTradingAccountToken, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-{}
+{
+	//if (_OnRspQueryCFMMCTradingAccountToken != NULL)
+	//{
+	//	if (pQueryCFMMCTradingAccountToken == NULL)
+	//	{
+	//		CThostFtdcQueryCFMMCTradingAccountTokenField req;
+	//		memset(&req, 0, sizeof(req));
+	//		((DefOnRspQueryCFMMCTradingAccountToken)_OnRspQueryCFMMCTradingAccountToken)(&req, repareInfo(pRspInfo), nRequestID, bIsLast);
+	//	}
+	//	else
+	//		((DefOnRspQueryCFMMCTradingAccountToken)_OnRspQueryCFMMCTradingAccountToken)(pQueryCFMMCTradingAccountToken, repareInfo(pRspInfo), nRequestID, bIsLast);
+	//}
+}
+
 
 ///银行发起银行资金转期货通知
 void CTraderSpi::OnRtnFromBankToFutureByBank(CThostFtdcRspTransferField *pRspTransfer) 
@@ -2046,16 +2099,68 @@ void CTraderSpi::OnRspQryExchangeMarginRateAdjust(CThostFtdcExchangeMarginRateAd
 
 
 ///请求查询产品组
-void CTraderSpi::OnRspQryProductGroup(CThostFtdcProductGroupField *pProductGroup, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+void CTraderSpi::OnRspQryProductGroup(CThostFtdcProductGroupField *pProductGroup, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	if (_OnRspQryProductGroup != NULL)
+	{
+		if (pProductGroup == NULL)
+		{
+			CThostFtdcProductGroupField req;
+			memset(&req, 0, sizeof(req));
+			((DefOnRspQryProductGroup)_OnRspQryProductGroup)(&req, repareInfo(pRspInfo), nRequestID, bIsLast);
+		}
+		else
+			((DefOnRspQryProductGroup)_OnRspQryProductGroup)(pProductGroup, repareInfo(pRspInfo), nRequestID, bIsLast);
+	}
+}
 
 ///请求查询做市商合约手续费率响应
-void CTraderSpi::OnRspQryMMInstrumentCommissionRate(CThostFtdcMMInstrumentCommissionRateField *pMMInstrumentCommissionRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+void CTraderSpi::OnRspQryMMInstrumentCommissionRate(CThostFtdcMMInstrumentCommissionRateField *pMMInstrumentCommissionRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	if (_OnRspQryMMInstrumentCommissionRate != NULL)
+	{
+		if (pMMInstrumentCommissionRate == NULL)
+		{
+			CThostFtdcMMInstrumentCommissionRateField req;
+			memset(&req, 0, sizeof(req));
+			((DefOnRspQryMMInstrumentCommissionRate)_OnRspQryMMInstrumentCommissionRate)(&req, repareInfo(pRspInfo), nRequestID, bIsLast);
+		}
+		else
+			((DefOnRspQryMMInstrumentCommissionRate)_OnRspQryMMInstrumentCommissionRate)(pMMInstrumentCommissionRate, repareInfo(pRspInfo), nRequestID, bIsLast);
+	}
+}
 
 ///请求查询做市商期权合约手续费响应
-void CTraderSpi::OnRspQryMMOptionInstrCommRate(CThostFtdcMMOptionInstrCommRateField *pMMOptionInstrCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+void CTraderSpi::OnRspQryMMOptionInstrCommRate(CThostFtdcMMOptionInstrCommRateField *pMMOptionInstrCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	if (_OnRspQryMMOptionInstrCommRate != NULL)
+	{
+		if (pMMOptionInstrCommRate == NULL)
+		{
+			CThostFtdcMMOptionInstrCommRateField req;
+			memset(&req, 0, sizeof(req));
+			((DefOnRspQryMMOptionInstrCommRate)_OnRspQryMMOptionInstrCommRate)(&req, repareInfo(pRspInfo), nRequestID, bIsLast);
+		}
+		else
+			((DefOnRspQryMMOptionInstrCommRate)_OnRspQryMMOptionInstrCommRate)(pMMOptionInstrCommRate, repareInfo(pRspInfo), nRequestID, bIsLast);
+	}
+}
 
 ///请求查询报单手续费响应
-void CTraderSpi::OnRspQryInstrumentOrderCommRate(CThostFtdcInstrumentOrderCommRateField *pInstrumentOrderCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+void CTraderSpi::OnRspQryInstrumentOrderCommRate(CThostFtdcInstrumentOrderCommRateField *pInstrumentOrderCommRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	if (_OnRspQryInstrumentOrderCommRate != NULL)
+	{
+		if (pInstrumentOrderCommRate == NULL)
+		{
+			CThostFtdcInstrumentOrderCommRateField req;
+			memset(&req, 0, sizeof(req));
+			((DefOnRspQryInstrumentOrderCommRate)_OnRspQryInstrumentOrderCommRate)(&req, repareInfo(pRspInfo), nRequestID, bIsLast);
+		}
+		else
+			((DefOnRspQryInstrumentOrderCommRate)_OnRspQryInstrumentOrderCommRate)(pInstrumentOrderCommRate, repareInfo(pRspInfo), nRequestID, bIsLast);
+	}
+}
 
 ///请求查询汇率响应
 void CTraderSpi::OnRspQryExchangeRate(CThostFtdcExchangeRateField *pExchangeRate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -2352,7 +2457,20 @@ void CTraderSpi::OnErrRtnExecOrderAction(CThostFtdcExecOrderActionField *pExecOr
 }
 
 ///批量报单操作请求响应
-void CTraderSpi::OnRspBatchOrderAction(CThostFtdcInputBatchOrderActionField *pInputBatchOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+void CTraderSpi::OnRspBatchOrderAction(CThostFtdcInputBatchOrderActionField *pInputBatchOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	if (_OnRspCombActionInsert != NULL)
+	{
+		if (pInputBatchOrderAction == NULL)
+		{
+			CThostFtdcInputBatchOrderActionField req;
+			memset(&req, 0, sizeof(req));
+			((DefOnRspBatchOrderAction)_OnRspBatchOrderAction)(&req, repareInfo(pRspInfo), nRequestID, bIsLast);
+		}
+		else
+			((DefOnRspBatchOrderAction)_OnRspBatchOrderAction)(pInputBatchOrderAction, repareInfo(pRspInfo), nRequestID, bIsLast);
+	}
+}
 
 ///申请组合录入请求响应
 void CTraderSpi::OnRspCombActionInsert(CThostFtdcInputCombActionField *pInputCombAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
