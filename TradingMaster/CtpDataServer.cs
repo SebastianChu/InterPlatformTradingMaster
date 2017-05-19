@@ -364,6 +364,7 @@ namespace TradingMaster
             _CtpTraderApi.OnRspQryInstrument += new CtpTraderApi.RspQryInstrument(CtpTraderApi_OnRspQryInstrument);
             _CtpTraderApi.OnRspQryInstrumentMarginRate += new CtpTraderApi.RspQryInstrumentMarginRate(CtpTraderApi_OnRspQryInstrumentMarginRate);
             _CtpTraderApi.OnRspQryInstrumentCommissionRate += new CtpTraderApi.RspQryInstrumentCommissionRate(CtpTraderApi_OnRspQryInstrumentCommissionRate);
+            _CtpTraderApi.OnRspQryInstrumentOrderCommRate += new CtpTraderApi.RspQryInstrumentOrderCommRate(CtpTraderApi_OnRspQryInstrumentOrderCommRate);
             _CtpTraderApi.OnRspQryInvestorProductGroupMargin += new CtpTraderApi.RspQryInvestorProductGroupMargin(CtpTraderApi_OnRspQryInvestorProductGroupMargin);
 
             _CtpTraderApi.OnRspSettlementInfoConfirm += new CtpTraderApi.RspSettlementInfoConfirm(CtpTraderApi_OnRspSettlementInfoConfirm);
@@ -374,6 +375,8 @@ namespace TradingMaster
             _CtpTraderApi.OnRtnTradingNotice += new CtpTraderApi.RtnTradingNotice(CtpTraderApi_OnRtnTradingNotice);
             _CtpTraderApi.OnRtnInstrumentStatus += new CtpTraderApi.RtnInstrumentStatus(CtpTraderApi_OnRtnInstrumentStatus);
             _CtpTraderApi.OnRspQryBrokerTradingParams += new CtpTraderApi.RspQryBrokerTradingParams(CtpTraderApi_OnRspQryBrokerTradingParams);
+            _CtpTraderApi.OnRspQryProductGroup += new CtpTraderApi.RspQryProductGroup(CtpTraderApi_OnRspQryProductGroup);
+            _CtpTraderApi.OnRtnBulletin += new CtpTraderApi.RtnBulletin(CtpTraderApi_OnRtnBulletin);
 
             _CtpTraderApi.OnRtnOrder += new CtpTraderApi.RtnOrder(CtpTraderApi_OnRtnOrder);
             _CtpTraderApi.OnRspOrderInsert += new CtpTraderApi.RspOrderInsert(CtpTraderApi_OnRspOrderInsert);
@@ -381,6 +384,8 @@ namespace TradingMaster
             _CtpTraderApi.OnRspOrderAction += new CtpTraderApi.RspOrderAction(CtpTraderApi_OnRspOrderAction);
             _CtpTraderApi.OnErrRtnOrderAction += new CtpTraderApi.ErrRtnOrderAction(CtpTraderApi_OnErrRtnOrderAction);
             _CtpTraderApi.OnRtnTrade += new CtpTraderApi.RtnTrade(CtpTraderApi_OnRtnTrade);
+            _CtpTraderApi.OnRspBatchOrderAction += new CtpTraderApi.RspBatchOrderAction(CtpTraderApi_OnRspBatchOrderAction);
+            _CtpTraderApi.OnErrRtnBatchOrderAction += new CtpTraderApi.ErrRtnBatchOrderAction(CtpTraderApi_OnErrRtnBatchOrderAction);
 
             _CtpTraderApi.OnRspQryOrder += new CtpTraderApi.RspQryOrder(CtpTraderApi_OnRspQryOrder);
             _CtpTraderApi.OnRspQryTrade += new CtpTraderApi.RspQryTrade(CtpTraderApi_OnRspQryTrade);
@@ -403,7 +408,7 @@ namespace TradingMaster
 
             _CtpTraderApi.OnRspQryContractBank += new CtpTraderApi.RspQryContractBank(CtpTraderApi_OnRspQryContractBank);
             _CtpTraderApi.OnRspQryAccountregister += new CtpTraderApi.RspQryAccountregister(CtpTraderApi_OnRspQryAccountregister);
-            //tradeApi.OnRspQryTransferBank += new TradeApi.RspQryTransferBank(CtpTraderApi_OnRspQryTransferBank);
+            //_CtpTraderApi.OnRspQryTransferBank += new TradeApi.RspQryTransferBank(CtpTraderApi_OnRspQryTransferBank);
             _CtpTraderApi.OnRspTradingAccountPasswordUpdate += new CtpTraderApi.RspTradingAccountPasswordUpdate(CtpTraderApi_OnRspTradingAccountPasswordUpdate);
             _CtpTraderApi.OnRspQryTransferSerial += new CtpTraderApi.RspQryTransferSerial(CtpTraderApi_OnRspQryTransferSerial);
 
@@ -438,9 +443,11 @@ namespace TradingMaster
             _CtpTraderApi.OnRspQryQuote += new CtpTraderApi.RspQryQuote(CtpTraderApi_OnRspQryQuote);
             _CtpTraderApi.OnRtnQuote += new CtpTraderApi.RtnQuote(CtpTraderApi_OnRtnQuote);
             _CtpTraderApi.OnRspQuoteInsert += new CtpTraderApi.RspQuoteInsert(CtpTraderApi_OnRspQuoteInsert);
-            //_CtpTraderApi.OnErrRtnQuoteInsert += new CtpTraderApi.ErrRtnQuoteInsert(CtpTraderApi_OnErrRtnQuoteInsert);
+            _CtpTraderApi.OnErrRtnQuoteInsert += new CtpTraderApi.ErrRtnQuoteInsert(CtpTraderApi_OnErrRtnQuoteInsert);
             _CtpTraderApi.OnRspQuoteAction += new CtpTraderApi.RspQuoteAction(CtpTraderApi_OnRspQuoteAction);
-            //_CtpTraderApi.OnErrRtnQuoteAction += new CtpTraderApi.ErrRtnQuoteAction(CtpTraderApi_OnErrRtnQuoteAction);
+            _CtpTraderApi.OnErrRtnQuoteAction += new CtpTraderApi.ErrRtnQuoteAction(CtpTraderApi_OnErrRtnQuoteAction);
+            _CtpTraderApi.OnRspQryMMInstrumentCommissionRate += new CtpTraderApi.RspQryMMInstrumentCommissionRate(CtpTraderApi_OnRspQryMMInstrumentCommissionRate);
+            _CtpTraderApi.OnRspQryMMOptionInstrCommRate += new CtpTraderApi.RspQryMMOptionInstrCommRate(CtpTraderApi_OnRspQryMMOptionInstrCommRate);
 
             //组合保证金指令
             _CtpTraderApi.OnRtnCombAction += new CtpTraderApi.RtnCombAction(CtpTraderApi_OnRtnCombAction);
@@ -702,6 +709,10 @@ namespace TradingMaster
             }
         }
 
+        private void CtpTraderApi_OnRspQryInstrumentOrderCommRate(ref CThostFtdcInstrumentOrderCommRateField pInstrumentOrderCommRate, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
+        {
+        }
+
         void CtpTraderApi_OnRspQryInvestorProductGroupMargin(ref CThostFtdcInvestorProductGroupMarginField pInvestorProductGroupMargin, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
         {
             if (bIsLast)
@@ -730,6 +741,14 @@ namespace TradingMaster
                 _MarginPriceType = pBrokerTradingParams.MarginPriceType;
                 _OptionRoyaltyPriceType = pBrokerTradingParams.OptionRoyaltyPriceType;
             }
+        }
+
+        private void CtpTraderApi_OnRspQryProductGroup(ref CThostFtdcProductGroupField pProductGroup, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
+        {
+        }
+
+        private void CtpTraderApi_OnRtnBulletin(ref CThostFtdcBulletinField pBulletin)
+        {
         }
 
         void CtpTraderApi_OnRspQrySettlementInfo(ref CThostFtdcSettlementInfoField pSettlementInfo, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
@@ -1083,6 +1102,15 @@ namespace TradingMaster
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputOrderAction.InstrumentID);
             }
         }
+
+        private void CtpTraderApi_OnRspBatchOrderAction(ref CThostFtdcInputBatchOrderActionField pInputBatchOrderAction, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
+        {
+        }
+
+        private void CtpTraderApi_OnErrRtnBatchOrderAction(ref CThostFtdcBatchOrderActionField pBatchOrderAction, ref CThostFtdcRspInfoField pRspInfo)
+        {
+        }
+
 
         void CtpTraderApi_OnRspQryOrder(ref CThostFtdcOrderField pOrder, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
         {
@@ -2024,6 +2052,15 @@ namespace TradingMaster
                 Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnQuoteAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pQuoteAction.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pQuoteAction.InstrumentID);
             }
+        }
+
+
+        private void CtpTraderApi_OnRspQryMMInstrumentCommissionRate(ref CThostFtdcMMInstrumentCommissionRateField pMMInstrumentCommissionRate, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
+        {
+        }
+
+        private void CtpTraderApi_OnRspQryMMOptionInstrCommRate(ref CThostFtdcMMOptionInstrCommRateField pMMOptionInstrCommRate, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
+        {
         }
 
         void CtpTraderApi_OnRtnCombAction(ref CThostFtdcCombActionField pCombAction)
@@ -5356,7 +5393,7 @@ namespace TradingMaster
                 bankAcct.BrokerBranchID = pAccountregister.BrokerBranchID;
                 bankAcct.BrokerID = pAccountregister.BrokerID;
                 bankAcct.CurrencyID = pAccountregister.CurrencyID;
-                bankAcct.CustomerName = pAccountregister.CustomerName;
+                bankAcct.CustomerName = pAccountregister.LongCustomerName;
                 bankAcct.CustType = Enum.GetName(typeof(EnumThostCustTypeType), pAccountregister.CustType);
                 bankAcct.IdCardType = Enum.GetName(typeof(EnumThostIdCardTypeType), pAccountregister.IdCardType);
                 bankAcct.IdentifiedCardNo = pAccountregister.IdentifiedCardNo;
