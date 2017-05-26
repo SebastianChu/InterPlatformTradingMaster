@@ -204,7 +204,7 @@ namespace TradingMaster
                 else if (item is FemasDataServer && backEnd == BACKENDTYPE.FEMAS)
                 {
                     FemasDataServer femasServer = item as FemasDataServer;
-                    //if (femasServer.InvestorID == investorID)
+                    if (femasServer.InvestorID == investorID)
                     {
                         return femasServer;
                     }
@@ -217,7 +217,7 @@ namespace TradingMaster
         {
             if (backEnd == BACKENDTYPE.CTP)
             {
-                CtpDataServer ctpServer = CtpDataServer.GetUserInstance();//GetDataServerInstance(account, backEnd) as CtpDataServer;
+                CtpDataServer ctpServer = CtpDataServer.GetUserInstance();
                 if (ctpServer != null)
                 {
                     _DataServerLst.Add(ctpServer);
@@ -230,7 +230,19 @@ namespace TradingMaster
                 }
             }
             if (backEnd == BACKENDTYPE.FEMAS)
-            { }
+            {
+                FemasDataServer femasServer = FemasDataServer.GetUserInstance();
+                if (femasServer != null)
+                {
+                    _DataServerLst.Add(femasServer);
+                    femasServer.InitTradeApi(account, password, tradeBrokerId, tradeIp);
+                    femasServer.InitQuoteApi(account, password, quoteBrokerID, quoteIp);
+                }
+                else
+                {
+                    Util.Log("Error! Illegal Counter: " + backEnd);
+                }
+            }
         }
 
         public bool IsTradeServerLogon(BACKENDTYPE backEnd, string account)
@@ -240,7 +252,7 @@ namespace TradingMaster
                 CtpDataServer ctpServer = GetDataServerInstance(account, backEnd) as CtpDataServer;
                 if (ctpServer != null)
                 {
-                    return ctpServer.TradeServerLogOn;
+                    return ctpServer.TradeServerLogOn();
                 }
                 else
                 {
@@ -249,6 +261,15 @@ namespace TradingMaster
             }
             if (backEnd == BACKENDTYPE.FEMAS)
             {
+                FemasDataServer femasServer = GetDataServerInstance(account, backEnd) as FemasDataServer;
+                if (femasServer != null)
+                {
+                    return femasServer.TradeServerLogOn();
+                }
+                else
+                {
+                    Util.Log("Error! Illegal Counter: " + backEnd);
+                }
             }
             return false;
         }
@@ -341,10 +362,11 @@ namespace TradingMaster
         {
             if (_MainWindow != null)
             {
-                _MainWindow.HQBackgroundRealData.Request();
-                _MainWindow.uscHangqing.HQRealData.Request();
-                _MainWindow.uscHangqing.GroupHQRealData.Request();
-                _MainWindow.uscOptionHangqing.OptionQuotesRealData.Request();
+                _MainWindow.HQBackgroundRealData.RefreshAutoPushMarketData();
+                //_MainWindow.HQBackgroundRealData.Request();
+                _MainWindow.uscHangqing.HQRealData.RefreshAutoPushMarketData();
+                _MainWindow.uscHangqing.GroupHQRealData.RefreshAutoPushMarketData();
+                _MainWindow.uscOptionHangqing.OptionQuotesRealData.RefreshAutoPushMarketData();
             }
         }
 
@@ -1132,11 +1154,9 @@ namespace TradingMaster
             {
                 System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    _MainWindow.UscStatementsInquiry.txtStatementOrder.Text = "";
-                    _MainWindow.SystemMessageCollection.Clear();
-                    _MainWindow.CapitalDataCollection.Clear();
                     _MainWindow.uscStatusBar.SetJYImageStatus(false);
                     _MainWindow.uscStatusBar.TxnImage.ToolTip = "交易：断开";
+                    _MainWindow.ClearEvents();
                 });
             }
         }

@@ -179,7 +179,52 @@ namespace TradingMaster.CodeSet
             }
         }
 
+        public static string FemasToExName(string ctpName)
+        {
+            if (ctpName == "SHFE")
+                return "上期所";
+            else if (ctpName == "CZCE")
+                return "郑商所";
+            else if (ctpName == "DCE")
+                return "大商所";
+            else if (ctpName == "CFFEX")
+                return "中金所";
+            // Securities
+            else if (ctpName == "SSE")
+                return "上证所";
+            else if (ctpName == "SZE")
+                return "深交所";
+            else
+            {
+                Util.Log("Warning! Unknown ctpName：" + ctpName);
+                return "未知";
+            }
+        }
+
+
         public static string ExNameToCtp(string exName)
+        {
+            if (exName == "上期所")
+                return "SHFE";
+            else if (exName == "郑商所")
+                return "CZCE";
+            else if (exName == "大商所")
+                return "DCE";
+            else if (exName == "中金所")
+                return "CFFEX";
+            // Securities
+            else if (exName == "上证所")
+                return "SSE";
+            else if (exName == "深交所")
+                return "SZE";
+            else
+            {
+                Util.Log("Warning! Unknown Exchange Name：" + exName);
+                return "未知";
+            }
+        }
+
+        public static string ExNameToFemas(string exName)
         {
             if (exName == "上期所")
                 return "SHFE";

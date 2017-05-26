@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TradingMaster.CodeSet;
 using TradingMaster.Control;
+using System.Threading;
 
 namespace TradingMaster.JYData
 {
@@ -49,11 +50,43 @@ namespace TradingMaster.JYData
             }
         }
 
+        protected BACKENDTYPE _BackEnd;
         /// <summary>
         /// 交易前置连接
         /// </summary>
         protected bool IsLoggedOn = false;
         protected bool IsConnected = false;
+
+        protected StatementOrderAffirm _AffirmWindow;
+        protected Login _LogWindow;
+        protected MainWindow _MainWindow;
+        protected string _TradingDay = String.Empty;
+
+        protected const int LOGWINDOWMEDIUNHEIGHT = 505;
+        protected const int LOGWINDOWSMALLHEIGHT = 305;
+        protected const int DATASERVERERROR = -4;
+
+        /// <summary>
+        /// 交易查询/执行报单队列
+        /// </summary>
+        protected ExecQueue _TradeDataReqQueue = null;
+
+        /// <summary>
+        /// 行情请求队列
+        /// </summary>
+        protected ExecQueue _MarketDataReqQueue = null;
+
+        /// <summary>
+        /// 交易成员变量线程取消控制阀
+        /// </summary>
+        protected CancellationTokenSource _TradingCts = null;
+
+        /// <summary>
+        /// 行情变量线程取消控制阀
+        /// </summary>
+        protected CancellationTokenSource _MdCts = null;
+
+        public string InvestorID { get; set; }
 
         /// <summary>
         /// 已提交报单记录
@@ -153,6 +186,134 @@ namespace TradingMaster.JYData
         protected List<PosInfoOrder> ResetOrderList = new List<PosInfoOrder>();
         protected Dictionary<PosInfoOrder, int> ReOpenOrderDict = new Dictionary<PosInfoOrder, int>();
         protected static object ResetOrderLocker = new object();
+
+        protected static DataContainer _CounterInstance = null;
+
+        public static DataContainer GetUserInstance()
+        {
+            return _CounterInstance;
+        }
+
+        public void setMainWindow(MainWindow mainWindow)
+        {
+            this._MainWindow = mainWindow;
+        }
+
+        public MainWindow getMainWindow()
+        {
+            return _MainWindow;
+        }
+
+        public void setLogWindow(Login logWindowSrc)
+        {
+            _LogWindow = logWindowSrc;
+        }
+
+        public Login getLoginWindow()
+        {
+            return _LogWindow;
+        }
+
+        virtual public Boolean TradeServerLogOn()
+        {
+            return false;
+        }
+
+        virtual public Boolean QuoteServerLogOn()
+        {
+            return false;
+        }
+
+        virtual public string GetCurrentInvestorID()
+        {
+            return "未获取";
+        }
+
+        virtual public string GetCurrentBroker()
+        {
+            return "未获取";
+        }
+
+        virtual public string GetCurrentTradeAddress()
+        {
+            return "未获取";
+        }
+
+        virtual public string GetCurrentQuoteAddress()
+        {
+            return "未获取";
+        }
+
+        virtual public string GetCounter()
+        {
+            return "未获取";
+        }
+
+        public void AddToTradeDataRspQueue(object data)
+        {
+            //if (_TradeDataRspQueue == null)
+            //{
+            //    Util.Log("Warning! _TradeDataRspQueue hasn't been initialized!");
+            //    return;
+            //}
+            //_TradeDataRspQueue.Enqueue(data);
+        }
+
+        public void AddToTradeDataQryQueue(RequestContent cmd)
+        {
+            if (_TradeDataReqQueue == null)
+            {
+                Util.Log("Warning! _TradeDataReqQueue hasn't been initialized!");
+                return;
+            }
+            _TradeDataReqQueue.QryEnqueue(cmd);
+        }
+
+        public void AddToOrderQueue(RequestContent cmd)
+        {
+            if (_TradeDataReqQueue == null)
+            {
+                Util.Log("Warning! _TradeDataReqQueue hasn't been initialized!");
+                return;
+            }
+            _TradeDataReqQueue.OrdEnqueue(cmd);
+        }
+
+        public void AddToMarketDataQryQueue(RequestContent cmd)
+        {
+            if (_MarketDataReqQueue == null)
+            {
+                Util.Log("Warning! reqQueue hasn't been initialized!");
+                return;
+            }
+            _MarketDataReqQueue.QryEnqueue(cmd);
+        }
+
+        public void ProcessNewComeTradeInfo(TradeOrderData trade, bool isInited = true)
+        {
+            //Add for GHS 5.0.2
+            if (trade == null)
+            {
+                return;
+            }
+
+            //Synchronizing the trading info when initialized
+            List<TradeOrderData> removeItems = new List<TradeOrderData>();
+            if (!isInited)
+            {
+                foreach (TradeOrderData item in QryTradeDataLst)
+                {
+                    if (trade.TradeID != "" && item.TradeID == trade.TradeID && item.OrderID == trade.OrderID && item.Exchange == trade.Exchange)
+                    {
+                        removeItems.Add(item);
+                    }
+                }
+                foreach (TradeOrderData rItem in removeItems)
+                {
+                    QryTradeDataLst.Remove(rItem);
+                }
+            }
+        }
     }
 
     public class PosHandCount

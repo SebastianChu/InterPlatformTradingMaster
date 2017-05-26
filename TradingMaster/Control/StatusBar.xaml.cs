@@ -4,6 +4,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using TradingMaster.JYData;
 
 namespace TradingMaster.Control
 {
@@ -218,9 +219,8 @@ namespace TradingMaster.Control
         {
             try
             {
-
-                jyLogOn = CtpDataServer.GetUserInstance().TradeServerLogOn;
-                hqLogOn = CtpDataServer.GetUserInstance().QuoteServerLogOn;
+                jyLogOn = DataContainer.GetUserInstance().TradeServerLogOn();
+                hqLogOn = DataContainer.GetUserInstance().QuoteServerLogOn();
 
                 Run run1 = new Run(jyLogOn ? "交易主机正常" : "交易主机断开");
                 Run run2 = new Run(hqLogOn ? "行情主机正常" : "行情主机断开");

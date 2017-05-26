@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using TradingMaster.JYData;
 
 namespace TradingMaster.Control
 {
@@ -21,7 +22,7 @@ namespace TradingMaster.Control
         public void Init(MainWindow parent)
         {
             this._MainWindow = parent;
-            _UserAccount = CtpDataServer.GetUserInstance().InvestorID;
+            _UserAccount = DataContainer.GetUserInstance().InvestorID;
             tb_User.IsEnabled = true;
             tb_User.Text = _UserAccount;
             tb_User.IsEnabled = false;

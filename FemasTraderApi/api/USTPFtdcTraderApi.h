@@ -86,6 +86,12 @@ public:
 	///客户申请组合应答
 	virtual void OnRspMarginCombAction(CUstpFtdcInputMarginCombActionField *pInputMarginCombAction, CUstpFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
 
+	///用户请求出入金应答
+	virtual void OnRspUserDeposit(CUstpFtdcstpUserDepositField *pstpUserDeposit, CUstpFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+
+	///用户主次席出入金应答
+	virtual void OnRspTransferMoney(CUstpFtdcstpTransferMoneyField *pstpTransferMoney, CUstpFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+
 	///数据流回退通知
 	virtual void OnRtnFlowMessageCancel(CUstpFtdcFlowMessageCancelField *pFlowMessageCancel) {};
 
@@ -113,6 +119,9 @@ public:
 	///报价录入错误回报
 	virtual void OnErrRtnQuoteInsert(CUstpFtdcInputQuoteField *pInputQuote, CUstpFtdcRspInfoField *pRspInfo) {};
 
+	///报价撤单错误回报
+	virtual void OnErrRtnQuoteAction(CUstpFtdcOrderActionField *pOrderAction, CUstpFtdcRspInfoField *pRspInfo) {};
+
 	///询价回报
 	virtual void OnRtnForQuote(CUstpFtdcReqForQuoteField *pReqForQuote) {};
 
@@ -121,6 +130,9 @@ public:
 
 	///客户申请组合确认
 	virtual void OnRtnMarginCombAction(CUstpFtdcInputMarginCombActionField *pInputMarginCombAction) {};
+
+	///用户请求出入金
+	virtual void OnRtnUserDeposit(CUstpFtdcstpUserDepositField *pstpUserDeposit) {};
 
 	///报单查询应答
 	virtual void OnRspQryOrder(CUstpFtdcOrderField *pOrder, CUstpFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
@@ -166,9 +178,6 @@ public:
 
 	///交易编码单腿持仓查询应答
 	virtual void OnRspQryInvestorLegPosition(CUstpFtdcRspInvestorLegPositionField *pRspInvestorLegPosition, CUstpFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
-
-	///交叉汇率查询应答
-	virtual void OnRspQryExchangeRate(CUstpFtdcRspExchangeRateField *pRspExchangeRate, CUstpFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
 };
 
 class TRADER_API_EXPORT CUstpFtdcTraderApi
@@ -308,6 +317,12 @@ public:
 	///客户申请组合请求
 	virtual int ReqMarginCombAction(CUstpFtdcInputMarginCombActionField *pInputMarginCombAction, int nRequestID) = 0;
 
+	///用户请求出入金
+	virtual int ReqUserDeposit(CUstpFtdcstpUserDepositField *pstpUserDeposit, int nRequestID) = 0;
+
+	///用户主次席出入金
+	virtual int ReqTransferMoney(CUstpFtdcstpTransferMoneyField *pstpTransferMoney, int nRequestID) = 0;
+
 	///报单查询请求
 	virtual int ReqQryOrder(CUstpFtdcQryOrderField *pQryOrder, int nRequestID) = 0;
 
@@ -352,9 +367,6 @@ public:
 
 	///交易编码单腿持仓查询请求
 	virtual int ReqQryInvestorLegPosition(CUstpFtdcQryInvestorLegPositionField *pQryInvestorLegPosition, int nRequestID) = 0;
-
-	///交叉汇率查询请求
-	virtual int ReqQryExchangeRate(CUstpFtdcQryExchangeRateField *pQryExchangeRate, int nRequestID) = 0;
 protected:
 	~CUstpFtdcTraderApi(){};
 };

@@ -59,8 +59,8 @@ namespace TradingMaster
                 {
                     RequestContent cmd = _CmdQueue.Dequeue();
                     Util.Log("TradeApi CommandThreadProc: " + cmd.FunctionName + " dequeues.");
-                    MethodInfo serverMethod = CtpDataServer.GetUserInstance().GetType().GetMethod(cmd.FunctionName);
-                    serverMethod.Invoke(CtpDataServer.GetUserInstance(), cmd.Params.ToArray());
+                    MethodInfo serverMethod = DataContainer.GetUserInstance().GetType().GetMethod(cmd.FunctionName);
+                    serverMethod.Invoke(DataContainer.GetUserInstance(), cmd.Params.ToArray());
                     ReqTime = DateTime.Now;
                     Sleeping(1024);
                     // Windows 8，Windows 7 和 Windows Vista 的时钟频率，这是DateTime.Ticks，
@@ -122,8 +122,8 @@ namespace TradingMaster
                         }
 
                         Util.Log("TradeApi OrderThreadProc: " + cmd.FunctionName + " dequeues.");
-                        MethodInfo serverMethod = CtpDataServer.GetUserInstance().GetType().GetMethod(cmd.FunctionName);
-                        serverMethod.Invoke(CtpDataServer.GetUserInstance(), cmd.Params.ToArray());
+                        MethodInfo serverMethod = DataContainer.GetUserInstance().GetType().GetMethod(cmd.FunctionName);
+                        serverMethod.Invoke(DataContainer.GetUserInstance(), cmd.Params.ToArray());
                         //Thread.Sleep(175);
                     }
 

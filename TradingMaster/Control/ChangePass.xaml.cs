@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using TradingMaster.JYData;
 
 namespace TradingMaster.Control
 {
@@ -13,7 +14,7 @@ namespace TradingMaster.Control
         {
             InitializeComponent();
             tbUserAcct.IsEnabled = true;
-            _UserAccount = CtpDataServer.GetUserInstance().InvestorID;
+            _UserAccount = DataContainer.GetUserInstance().InvestorID;
             tbUserAcct.Text = _UserAccount;
             tbUserAcct.IsEnabled = false;
         }

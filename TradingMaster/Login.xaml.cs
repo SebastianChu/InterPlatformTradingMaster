@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using TradingMaster.JYData;
 
 namespace TradingMaster
 {
@@ -199,7 +200,7 @@ namespace TradingMaster
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    if (this.Visibility == Visibility.Visible && !CtpDataServer.GetUserInstance().TradeServerLogOn)
+                    if (this.Visibility == Visibility.Visible && !DataContainer.GetUserInstance().TradeServerLogOn())
                     {
                         SetStatusMessage("连接超时，服务器连接中断！", false);
                         _LoginTicker.Close();

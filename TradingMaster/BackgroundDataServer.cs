@@ -226,6 +226,20 @@ namespace TradingMaster
             tempData.LowerLimitPrice = realTimeDataArr.LowerLimitPrice;
         }
 
+        public void RefreshAutoPushMarketData()
+        {
+            foreach (string code in _CommObj.RequestingCodes)
+            {
+                Contract item = CodeSetManager.GetContractInfo(code);
+                if (item != null)
+                {
+                    _CodesList.Add(item);
+                }
+            }
+            _CommObj.RequestingCodes.Clear();
+            Request();
+        }
+
         /// <summary>
         /// 处理分档行情
         /// </summary>

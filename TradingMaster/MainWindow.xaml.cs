@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using TradingMaster.CodeSet;
 using TradingMaster.Control;
+using TradingMaster.JYData;
 
 namespace TradingMaster
 {
@@ -21,11 +22,10 @@ namespace TradingMaster
             Application.Current.Resources.MergedDictionaries.Add(o);
             InitializeComponent();
             InitControls();
-            this.Title += string.Format("  【当前账号：{0}  经纪号：{1}  交易服务器：{2}  行情服务器：{3}】",
-                CtpDataServer.GetUserInstance().GetCurrentInvestorID(), CtpDataServer.GetUserInstance().GetCurrentBroker(),
-                CtpDataServer.GetUserInstance().GetCurrentTradeAddress(), CtpDataServer.GetUserInstance().GetCurrentQuoteAddress());
+            this.Title += string.Format("  【当前账号：{0}  经纪号：{1}  柜台：{2} 交易服务器：{3}  行情服务器：{4}】",
+                DataContainer.GetUserInstance().GetCurrentInvestorID(), DataContainer.GetUserInstance().GetCurrentBroker(), DataContainer.GetUserInstance().GetCounter(),
+                DataContainer.GetUserInstance().GetCurrentTradeAddress(), DataContainer.GetUserInstance().GetCurrentQuoteAddress());
             TradeDataClient.GetClientInstance().SetMainWindow(this);
-            //CtpDataServer.getServerInstance().setMainWindow(this);
             uscStatusBar.Init(this);
             _SystemTips = new SystemTips();
             _SystemTips.Init(this);
@@ -74,7 +74,7 @@ namespace TradingMaster
             uscOptionHangqing.LvOptQuotesPanel.LevelRealDataMouseLeftButtonDown += new LevelsQuotes.LeftRealDataMouseLeftButtonDownDelegate(LvOptQuotesPanel_LevelRealDataMouseLeftButtonDown);
         }
 
-        private void ClearEvents()
+        public void ClearEvents()
         {
             uscHangqing.RealDataMouseLeftButtonDown -= FuturesQuotes_RealDataMouseLeftButtonDown;
             uscHangqing.RealDataMouseDoubleClicked -= FuturesQuotes_RealDataMouseDoubleClicked;
@@ -226,7 +226,7 @@ namespace TradingMaster
             {
                 //如果是上海的品种，则先平今后平仓
                 ord = new OrderAffirmItem();
-                ord.InvestorID = CtpDataServer.GetUserInstance().InvestorID;
+                ord.InvestorID = DataContainer.GetUserInstance().InvestorID;
                 ord.Code = code;
                 ord.HandCount = todayPosCount;
                 ord.Buysell = buySell;
@@ -243,7 +243,7 @@ namespace TradingMaster
             if (closeCount != 0)
             {
                 ord = new OrderAffirmItem();
-                ord.InvestorID = CtpDataServer.GetUserInstance().InvestorID;
+                ord.InvestorID = DataContainer.GetUserInstance().InvestorID;
                 ord.Code = code;
                 ord.HandCount = closeCount;
                 ord.Buysell = buySell;
@@ -1230,6 +1230,7 @@ namespace TradingMaster
             PositionCollection_Total.Clear();
             CapitalDataCollection.Clear();
             SystemMessageCollection.Clear();
+            UscStatementsInquiry.txtStatementOrder.Text = "";
             ClearEvents();
         }
 
@@ -1244,7 +1245,7 @@ namespace TradingMaster
                     TradeDataClient.GetClientInstance().RequestTradeData("", BACKENDTYPE.CTP, new RequestContent("RequestTradeDataDisConnect", new List<object>()));
                     TradeDataClient.GetClientInstance().RequestMarketData("", BACKENDTYPE.CTP, new RequestContent("RequestMarketDataDisConnect", new List<object>()));
                     Login.IsTerminated = false;
-                    CtpDataServer.GetUserInstance().getLoginWindow().ClearToInit();
+                    DataContainer.GetUserInstance().getLoginWindow().ClearToInit();
                 }
                 else
                 {

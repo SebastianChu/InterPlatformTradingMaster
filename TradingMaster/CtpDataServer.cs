@@ -11,19 +11,9 @@ namespace TradingMaster
 {
     public class CtpDataServer : DataContainer
     {
-        const int LOGWINDOWMEDIUNHEIGHT = 505;
-        const int LOGWINDOWSMALLHEIGHT = 305;
-        const int CTPDATASERVERERROR = -4;
-
         private static CtpDataServer _CtpServerInstance = null;
-        private StatementOrderAffirm _AffirmWindow;
-        private Login _LogWindow;
-        private MainWindow _MainWindow;
-        private string _TradingDay = String.Empty;
-
         private CtpTraderApi _CtpTraderApi = null;
         private CtpMdApi _CtpMdApi = null;
-        private BACKENDTYPE _BackEnd = BACKENDTYPE.CTP;
 
         /// <summary>
         /// 经纪公司设定
@@ -38,51 +28,25 @@ namespace TradingMaster
         /// </summary>
         //private int _ServerStartTime = 0;
 
-        /// <summary>
-        /// 交易查询/执行报单队列
-        /// </summary>
-        private ExecQueue _TradeDataReqQueue = null;
-
-        /// <summary>
-        /// 行情请求队列
-        /// </summary>
-        private ExecQueue _MarketDataReqQueue = null;
-
-        /// <summary>
-        /// 交易成员变量线程取消控制阀
-        /// </summary>
-        private CancellationTokenSource _TradingCts = null;
-
-        /// <summary>
-        /// 行情变量线程取消控制阀
-        /// </summary>
-        private CancellationTokenSource _MdCts = null;
-
-        public Boolean TradeServerLogOn
+        public override Boolean TradeServerLogOn()
         {
-            get
+            if (_CtpTraderApi != null)
             {
-                if (_CtpTraderApi != null)
-                {
-                    return IsLoggedOn;
-                }
-                return false;
+                return IsLoggedOn;
             }
+            return false;
         }
 
-        public Boolean QuoteServerLogOn
+        public override Boolean QuoteServerLogOn()
         {
-            get
+            if (_CtpMdApi != null)
             {
-                if (_CtpMdApi != null)
-                {
-                    return IsConnected;
-                }
-                return false;
+                return IsConnected;
             }
+            return false;
         }
 
-        public string GetCurrentInvestorID()
+        public override string GetCurrentInvestorID()
         {
             if (_CtpTraderApi != null)
             {
@@ -91,7 +55,7 @@ namespace TradingMaster
             return "未获取";
         }
 
-        public string GetCurrentBroker()
+        public override string GetCurrentBroker()
         {
             if (_CtpTraderApi != null)
             {
@@ -100,7 +64,7 @@ namespace TradingMaster
             return "未获取";
         }
 
-        public string GetCurrentTradeAddress()
+        public override string GetCurrentTradeAddress()
         {
             if (_CtpTraderApi != null)
             {
@@ -109,7 +73,7 @@ namespace TradingMaster
             return "未获取";
         }
 
-        public string GetCurrentQuoteAddress()
+        public override string GetCurrentQuoteAddress()
         {
             if (_CtpMdApi != null)
             {
@@ -118,7 +82,10 @@ namespace TradingMaster
             return "未获取";
         }
 
-        public string InvestorID { get; set; }
+        public override string GetCounter()
+        {
+            return "CTP";
+        }
 
         private CtpDataServer()
         {
@@ -141,14 +108,16 @@ namespace TradingMaster
             TempPosFlag = true;
             TempQuoteInsertFlag = true;
             TempExecFlag = true;
+            _BackEnd = BACKENDTYPE.CTP;
         }
 
-        public static CtpDataServer GetUserInstance()
+        public new static CtpDataServer GetUserInstance()
         {
             if (_CtpServerInstance == null)
             {
                 _CtpServerInstance = new CtpDataServer();
             }
+            _CounterInstance = _CtpServerInstance;
             return _CtpServerInstance;
         }
 
@@ -194,26 +163,6 @@ namespace TradingMaster
                     _OrderAfterCancelList.Add(cancelOrder);
                 }
             }
-        }
-
-        public void setMainWindow(MainWindow mainWindow)
-        {
-            this._MainWindow = mainWindow;
-        }
-
-        public MainWindow getMainWindow()
-        {
-            return _MainWindow;
-        }
-
-        public void setLogWindow(Login logWindowSrc)
-        {
-            _LogWindow = logWindowSrc;
-        }
-
-        public Login getLoginWindow()
-        {
-            return _LogWindow;
         }
 
         public void RequestCapital()
@@ -313,32 +262,6 @@ namespace TradingMaster
                     }
                 }
                 );
-            }
-        }
-
-        public void ProcessNewComeTradeInfo(TradeOrderData trade, bool isInited = true)
-        {
-            //Add for GHS 5.0.2
-            if (trade == null)
-            {
-                return;
-            }
-
-            //Synchronizing the trading info when initialized
-            List<TradeOrderData> removeItems = new List<TradeOrderData>();
-            if (!isInited)
-            {
-                foreach (TradeOrderData item in QryTradeDataLst)
-                {
-                    if (trade.TradeID != "" && item.TradeID == trade.TradeID && item.OrderID == trade.OrderID && item.Exchange == trade.Exchange)
-                    {
-                        removeItems.Add(item);
-                    }
-                }
-                foreach (TradeOrderData rItem in removeItems)
-                {
-                    QryTradeDataLst.Remove(rItem);
-                }
             }
         }
 
@@ -2170,7 +2093,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! RequestContractCode: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int contractQryFlag = _CtpTraderApi.QryInstrument();
@@ -2197,7 +2120,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! RequestMarginRate: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int marginFlag = _CtpTraderApi.QryInstrumentMarginRate(contract);
@@ -2224,7 +2147,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! RequestCommissionRate: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int commissionFlag = _CtpTraderApi.QryInstrumentCommissionRate(contract);
@@ -2251,7 +2174,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! RequestOptionsCommissionRate: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int commOptionFlag = _CtpTraderApi.QryOptionInstrCommRate(contract);
@@ -2278,13 +2201,13 @@ namespace TradingMaster
             Util.Log("请求某个品种可操作的最大手数:" + codeInfo.Code + " " + sideType.ToString() + " " + posEffect.ToString());
             if (codeInfo.Code == "")
             {
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
 
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! RequsetMaxOperation: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
 
             if (positionHand != 0)
@@ -2306,7 +2229,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! RequsetMaxOperation: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int maxQryFlag = _CtpTraderApi.ReqQueryMaxOrderVolume(req);
@@ -2342,7 +2265,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! RequestSettlementInstructions: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int settleQryFlag = _CtpTraderApi.QrySettlementInfo(queryDate);
@@ -2377,7 +2300,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! RequestSettlementInfoConfirm: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int settleQryFlag = _CtpTraderApi.QrySettlementInfoConfirm();
@@ -2411,7 +2334,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! RequestSettlementInfoConfirm: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int settleCfmFlag = _CtpTraderApi.SettlementInfoConfirm();
@@ -2447,7 +2370,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! ChangeTradingPassword: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int pwdFlag = _CtpTraderApi.TradingAccountPasswordUpdate(_CtpTraderApi.InvestorID, oldPassword, newPassword);
@@ -2483,7 +2406,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! ChangeUserPassword: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int passFlag = _CtpTraderApi.UserPasswordupdate(_CtpTraderApi.InvestorID, oldPassword, newPassword);
@@ -2519,7 +2442,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryBrokerTradingParams: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int passFlag = _CtpTraderApi.ReqQryBrokerTradingParams();
@@ -2575,46 +2498,6 @@ namespace TradingMaster
             }
         }
 
-        public void AddToTradeDataRspQueue(object data)
-        {
-            //if (_TradeDataRspQueue == null)
-            //{
-            //    Util.Log("Warning! _TradeDataRspQueue hasn't been initialized!");
-            //    return;
-            //}
-            //_TradeDataRspQueue.Enqueue(data);
-        }
-
-        public void AddToTradeDataQryQueue(RequestContent cmd)
-        {
-            if (_TradeDataReqQueue == null)
-            {
-                Util.Log("Warning! _TradeDataReqQueue hasn't been initialized!");
-                return;
-            }
-            _TradeDataReqQueue.QryEnqueue(cmd);
-        }
-
-        public void AddToOrderQueue(RequestContent cmd)
-        {
-            if (_TradeDataReqQueue == null)
-            {
-                Util.Log("Warning! _TradeDataReqQueue hasn't been initialized!");
-                return;
-            }
-            _TradeDataReqQueue.OrdEnqueue(cmd);
-        }
-
-        public void AddToMarketDataQryQueue(RequestContent cmd)
-        {
-            if (_MarketDataReqQueue == null)
-            {
-                Util.Log("Warning! reqQueue hasn't been initialized!");
-                return;
-            }
-            _MarketDataReqQueue.QryEnqueue(cmd);
-        }
-
         //public void AddToMarketDataRspQueue(object data)
         //{
         //    if (_MarketDataRspQueue == null)
@@ -2633,7 +2516,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! ReqOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int orderFlag = _CtpTraderApi.QryOrder();
@@ -2664,7 +2547,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! reqTrade: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int tradeFlag = _CtpTraderApi.QryTrade();
@@ -2695,7 +2578,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! reqPosition: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int posFlag = _CtpTraderApi.QryInvestorPosition();
@@ -2727,7 +2610,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! reqPosition: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int posDetailFlag = _CtpTraderApi.QryInvestorPositionDetail();
@@ -2756,7 +2639,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! ReqPositionCombineDetail: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int posComDetailFlag = _CtpTraderApi.QryInvestorPositionCombineDetail();
@@ -2785,7 +2668,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryUserInfo: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int userFlag = _CtpTraderApi.QryInvestor();
@@ -2814,7 +2697,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryUserTradingCode: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int userTdCodeFlag = _CtpTraderApi.QryTradingCode();
@@ -2843,7 +2726,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! ReqCapital: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int capitalFlag = _CtpTraderApi.QryTradingAccount();
@@ -2872,7 +2755,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! ClientLogin: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int logFlag = _CtpTraderApi.ReqUserLogin();
@@ -2900,7 +2783,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! ClientLogOff: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int logOffFlag = _CtpTraderApi.ReqUserLogout();
@@ -2931,7 +2814,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! NewOrderSingle: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             int orderFlag = 0;
             EnumThostDirectionType sideType = GetCtpSideType(side);
@@ -3024,7 +2907,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! CancelOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int cancelFlag = _CtpTraderApi.OrderAction(code, frontID, sessioID, orderRef, CodeSetManager.ExNameToCtp(exchange), orderId.Trim());
@@ -3073,7 +2956,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! NewPreOrderSingle: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int pOrdInsertFlag = 0;
@@ -3198,7 +3081,7 @@ namespace TradingMaster
                         System.Windows.MessageBox.Show("未处理请求超过许可数，如发现数据有误，请尝试重新埋单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
                 }
-                CtpDataServer.GetUserInstance().AddToOrderQueue(new RequestContent("NewPreOrderSingle", new List<object>() { code, sideType, posEffect, price, handCount, isAuto, orderId, touchMethod, touchCondition, touchPrice }));
+                GetUserInstance().AddToOrderQueue(new RequestContent("NewPreOrderSingle", new List<object>() { code, sideType, posEffect, price, handCount, isAuto, orderId, touchMethod, touchCondition, touchPrice }));
             }
             else if (pOrdInsertFlag == -3)
             {
@@ -3211,7 +3094,7 @@ namespace TradingMaster
                         System.Windows.MessageBox.Show("每秒发送请求数超过许可数，如发现数据有误，请尝试重新埋单", "信息", MessageBoxButton.OK, MessageBoxImage.Warning);
                     });
                 }
-                CtpDataServer.GetUserInstance().AddToOrderQueue(new RequestContent("NewPreOrderSingle", new List<object>() { code, sideType, posEffect, price, handCount, isAuto, orderId, touchMethod, touchCondition, touchPrice }));
+                GetUserInstance().AddToOrderQueue(new RequestContent("NewPreOrderSingle", new List<object>() { code, sideType, posEffect, price, handCount, isAuto, orderId, touchMethod, touchCondition, touchPrice }));
             }
             return pOrdInsertFlag;
         }
@@ -3221,7 +3104,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! PreCancelOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int pCancelFlag = _CtpTraderApi.ReqParkedOrderAction(code, frontID, sessionID, orderRef, CodeSetManager.ExNameToCtp(exchange), orderId.Trim());
@@ -3270,7 +3153,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! DeletePreOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int deletePreFlag = _CtpTraderApi.ReqRemoveParkedOrder(parkedOrderId.Trim());
@@ -3319,7 +3202,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! DeletePreCancelOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int deletePreFlag = _CtpTraderApi.ReqRemoveParkedOrderAction(parkerOrderActionId.Trim());
@@ -3369,7 +3252,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryPreOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int qryPreOrderFlag = _CtpTraderApi.ReqQryParkedOrder();
@@ -3399,7 +3282,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryPreCancelOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int qryPreOrderFlag = _CtpTraderApi.ReqQryParkedOrderAction();
@@ -3427,7 +3310,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryInterBanks: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int BankFlag = _CtpTraderApi.ReqQryContractBank();
@@ -3462,7 +3345,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryExchangeRate: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int exchRateFlag = _CtpTraderApi.ReqQryExchangeRate(srcCurr, destCurr);
@@ -3489,7 +3372,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryExchangeRate: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int prodExchRateFlag = _CtpTraderApi.ReqQryProductExchRate(productID);
@@ -3516,7 +3399,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryAccountRegistered: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             QryBankAcctInfoLst.Clear();
@@ -3552,7 +3435,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryTransferSerial: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             QryTransferRecords.Clear();
@@ -3588,7 +3471,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryBankAccount: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
 
@@ -3638,7 +3521,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! TransferFromFutureToBankByFuture: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
 
@@ -3689,7 +3572,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! TransferFromBankToFutureByFuture: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
 
@@ -3741,7 +3624,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryOptionContractTradeCost: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int qryOptTradeCostFlag = _CtpTraderApi.ReqQryOptionInstrTradeCost(code, price, basePrice);
@@ -3772,7 +3655,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! NewQryQuote: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int quoteFlag = _CtpTraderApi.ReqForQuoteInsert(code);
@@ -3801,7 +3684,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryInvestorProductMargin: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int qryProdMarginFlag = _CtpTraderApi.ReqQryInvestorProductGroupMargin(code);
@@ -3832,7 +3715,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryForQuote: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             CThostFtdcQryForQuoteField qryForQuote = new CThostFtdcQryForQuoteField();
 
@@ -3865,7 +3748,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! NewQuoteOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int orderFlag = _CtpTraderApi.ReqQuoteInsert(code, bidOffset, bidPrice, bidVolume, askOffset, askPrice, askVolume, forQuoteID);
@@ -3912,7 +3795,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryQuoteOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int orderFlag = _CtpTraderApi.ReqQryQuote();
@@ -3942,7 +3825,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! CancelQuoteOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int qryQuoteActionFlag = _CtpTraderApi.ReqQuoteAction(code, frontID, sessioID, quoteRef, CodeSetManager.ExNameToCtp(exchange), quoteOrderID.Trim());
@@ -3974,7 +3857,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryExecOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int qryExecOrderFlag = _CtpTraderApi.ReqQryExecOrder();
@@ -4005,7 +3888,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! NewRequestExecOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int execOrderFlag = _CtpTraderApi.ReqExecOrderInsert(code, volume, CodeSetManager.ExNameToCtp(exchange), isExecuted, offsetFlag);
@@ -4034,7 +3917,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! CancelExecOrder: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int execOrderActionFlag = _CtpTraderApi.ReqExecOrderAction(code, frontID, sessioID, execRef, CodeSetManager.ExNameToCtp(exchange), execOrderID);
@@ -4063,7 +3946,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! QryCombinationAction: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int qryCombActionFlag = _CtpTraderApi.ReqQryCombAction(code, CodeSetManager.ExNameToCtp(exchange));
@@ -4092,7 +3975,7 @@ namespace TradingMaster
             if (_CtpTraderApi == null)
             {
                 Util.Log("Error! NewCombinationAction: tradeApi is null!");
-                return CTPDATASERVERERROR;
+                return DATASERVERERROR;
             }
             ExecQueue.ReqTime = DateTime.Now;
             int reqCombActionFlag = _CtpTraderApi.ReqCombActionInsert(code, direction, handCount, combDir);
@@ -4343,6 +4226,10 @@ namespace TradingMaster
                 else if (hedgeFlag == EnumThostHedgeFlagType.Hedge)
                 {
                     return "套保";
+                }
+                else if (hedgeFlag == EnumThostHedgeFlagType.MarketMaker)
+                {
+                    return "做市商";
                 }
                 return "未知";
             }

@@ -38,6 +38,8 @@ struct CUstpFtdcReqUserLoginField
 	TUstpFtdcMacAddressType	MacAddress;
 	///数据中心代码
 	TUstpFtdcDataCenterIDType	DataCenterID;
+	///客户端运行文件大小
+	TUstpFtdcFileSizeType	UserProductFileSize;
 };
 ///系统用户登录应答
 struct CUstpFtdcRspUserLoginField
@@ -69,7 +71,7 @@ struct CUstpFtdcReqUserLogoutField
 	///交易用户代码
 	TUstpFtdcUserIDType	UserID;
 };
-///用户登出请求
+///用户登出响应
 struct CUstpFtdcRspUserLogoutField
 {
 	///经纪公司编号
@@ -110,6 +112,8 @@ struct CUstpFtdcInputOrderField
 	TUstpFtdcInvestorIDType	InvestorID;
 	///用户代码
 	TUstpFtdcUserIDType	UserID;
+	///指定通过此席位序号下单
+	TUstpFtdcSeatNoType	SeatNo;
 	///合约代码
 	TUstpFtdcInstrumentIDType	InstrumentID;
 	///用户本地报单号
@@ -175,6 +179,44 @@ struct CUstpFtdcMemDbField
 	///内存表名
 	TUstpFtdcMemTableNameType	MemTableName;
 };
+///用户请求出入金
+struct CUstpFtdcstpUserDepositField
+{
+	///经纪公司编号
+	TUstpFtdcBrokerIDType	BrokerID;
+	///用户代码
+	TUstpFtdcUserIDType	UserID;
+	///投资者编号
+	TUstpFtdcInvestorIDType	InvestorID;
+	///金额
+	TUstpFtdcMoneyType	Amount;
+	///出入金方向
+	TUstpFtdcAccountDirectionType	AmountDirection;
+	///用户本地报单号
+	TUstpFtdcUserOrderLocalIDType	UserOrderLocalID;
+};
+///用户主次席出入金
+struct CUstpFtdcstpTransferMoneyField
+{
+	///经纪公司编号
+	TUstpFtdcBrokerIDType	BrokerID;
+	///用户代码
+	TUstpFtdcUserIDType	UserID;
+	///投资者编号
+	TUstpFtdcInvestorIDType	InvestorID;
+	///金额
+	TUstpFtdcMoneyType	Amount;
+	///出入金方向
+	TUstpFtdcAccountDirectionType	AmountDirection;
+	///用户本地报单号
+	TUstpFtdcUserOrderLocalIDType	UserOrderLocalID;
+	///银行机构代码
+	TUstpFtdcBankIDType	BankID;
+	///银行转账密码
+	TUstpFtdcBankPasswdType	BankPasswd;
+	///主席转账密码
+	TUstpFtdcAccountPasswdType	AccountPasswd;
+};
 ///响应信息
 struct CUstpFtdcRspInfoField
 {
@@ -198,6 +240,8 @@ struct CUstpFtdcQryOrderField
 	TUstpFtdcOrderSysIDType	OrderSysID;
 	///合约代码
 	TUstpFtdcInstrumentIDType	InstrumentID;
+	///报单状态
+	TUstpFtdcOrderStatusType	OrderStatus;
 };
 ///成交查询
 struct CUstpFtdcQryTradeField
@@ -644,6 +688,10 @@ struct CUstpFtdcInvestorFeeField
 	TUstpFtdcRatioType	OTFeeRate;
 	///平今仓手续费按手数
 	TUstpFtdcRatioType	OTFeeAmt;
+	///每笔订单收取的申报费
+	TUstpFtdcRatioType	PerOrderAmt;
+	///每笔撤单收取的申报费
+	TUstpFtdcRatioType	PerCancelAmt;
 };
 ///投资者保证金率查询
 struct CUstpFtdcQryInvestorMarginField
@@ -681,24 +729,6 @@ struct CUstpFtdcInvestorMarginField
 	///空头保证金按手数
 	TUstpFtdcRatioType	ShortMarginAmt;
 };
-///交叉外汇汇率查询
-struct CUstpFtdcQryExchangeRateField
-{
-	///交易所代码
-	TUstpFtdcExchangeIDType	ExchangeID;
-	///品种代码
-	TUstpFtdcProductIDType	ProductID;
-};
-///交叉外汇汇率查询应答
-struct CUstpFtdcRspExchangeRateField
-{
-	///交易所代码
-	TUstpFtdcExchangeIDType	ExchangeID;
-	///品种代码
-	TUstpFtdcProductIDType	ProductID;
-	///折算汇率
-	TUstpFtdcExchangeRateType	ExchangeRate;
-};
 ///成交
 struct CUstpFtdcTradeField
 {
@@ -718,6 +748,8 @@ struct CUstpFtdcTradeField
 	TUstpFtdcClientIDType	ClientID;
 	///用户编号
 	TUstpFtdcUserIDType	UserID;
+	///下单用户编号
+	TUstpFtdcUserIDType	OrderUserID;
 	///成交编号
 	TUstpFtdcTradeIDType	TradeID;
 	///报单编号
@@ -740,6 +772,22 @@ struct CUstpFtdcTradeField
 	TUstpFtdcTimeType	TradeTime;
 	///清算会员编号
 	TUstpFtdcParticipantIDType	ClearingPartID;
+	///本次成交手续费
+	TUstpFtdcMoneyType	UsedFee;
+	///本次成交占用保证金
+	TUstpFtdcMoneyType	UsedMargin;
+	///本次成交占用权利金
+	TUstpFtdcMoneyType	Premium;
+	///持仓表今持仓量
+	TUstpFtdcVolumeType	Position;
+	///持仓表今日持仓成本
+	TUstpFtdcPriceType	PositionCost;
+	///资金表可用资金
+	TUstpFtdcMoneyType	Available;
+	///资金表占用保证金
+	TUstpFtdcMoneyType	Margin;
+	///资金表冻结的保证金
+	TUstpFtdcMoneyType	FrozenMargin;
 };
 ///报单
 struct CUstpFtdcOrderField
@@ -754,6 +802,8 @@ struct CUstpFtdcOrderField
 	TUstpFtdcInvestorIDType	InvestorID;
 	///用户代码
 	TUstpFtdcUserIDType	UserID;
+	///指定通过此席位序号下单
+	TUstpFtdcSeatNoType	SeatNo;
 	///合约代码
 	TUstpFtdcInstrumentIDType	InstrumentID;
 	///用户本地报单号
@@ -792,6 +842,8 @@ struct CUstpFtdcOrderField
 	TUstpFtdcTradingDayType	TradingDay;
 	///会员编号
 	TUstpFtdcParticipantIDType	ParticipantID;
+	///最初下单用户编号
+	TUstpFtdcUserIDType	OrderUserID;
 	///客户号
 	TUstpFtdcClientIDType	ClientID;
 	///下单席位号
@@ -901,7 +953,7 @@ struct CUstpFtdcInputQuoteField
 	///拆分出来的卖方用户本地报单编号
 	TUstpFtdcUserOrderLocalIDType	AskUserOrderLocalID;
 };
-///报价录入
+///报价通知
 struct CUstpFtdcRtnQuoteField
 {
 	///经纪公司编号
@@ -981,7 +1033,7 @@ struct CUstpFtdcQuoteActionField
 	///用户自定义域
 	TUstpFtdcCustomType	UserCustom;
 };
-///询价输入
+///询价请求
 struct CUstpFtdcReqForQuoteField
 {
 	///询价编号
@@ -1253,7 +1305,7 @@ struct CUstpFtdcQryInvestorCombPositionField
 	///组合合约代码
 	TUstpFtdcInstrumentIDType	CombInstrumentID;
 };
-///交易编码组合持仓
+///交易编码组合持仓查询应答
 struct CUstpFtdcRspInvestorCombPositionField
 {
 	///经纪公司编号
@@ -1307,7 +1359,7 @@ struct CUstpFtdcQryInvestorLegPositionField
 	///单腿合约代码
 	TUstpFtdcInstrumentIDType	LegInstrumentID;
 };
-///交易编码单腿持仓
+///交易编码单腿持仓查询应答
 struct CUstpFtdcRspInvestorLegPositionField
 {
 	///经纪公司编号
