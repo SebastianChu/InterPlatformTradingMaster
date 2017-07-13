@@ -722,8 +722,8 @@ namespace TradingMaster
                     }
                     catch (Exception ex)
                     {
-                        Util.Log(ex.Message);
-                        Util.Log(ex.StackTrace);
+                        Util.Log_Error(ex.Message);
+                        Util.Log_Error(ex.StackTrace);
                     }
                 });
             }
@@ -768,8 +768,8 @@ namespace TradingMaster
                     }
                     catch (Exception ex)
                     {
-                        Util.Log(ex.Message);
-                        Util.Log(ex.StackTrace);
+                        Util.Log_Error(ex.Message);
+                        Util.Log_Error(ex.StackTrace);
                     }
                 });
             }
@@ -814,8 +814,8 @@ namespace TradingMaster
                     }
                     catch (Exception ex)
                     {
-                        Util.Log(ex.Message);
-                        Util.Log(ex.StackTrace);
+                        Util.Log_Error(ex.Message);
+                        Util.Log_Error(ex.StackTrace);
                     }
                 });
             }
@@ -1046,8 +1046,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log(ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error(ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
         }
 
@@ -1088,8 +1088,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log(ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error(ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             _MutualExclusion.ReleaseMutex();
         }

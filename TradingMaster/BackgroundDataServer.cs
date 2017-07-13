@@ -295,8 +295,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
             _Mutex.ReleaseMutex();
         }

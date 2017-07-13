@@ -143,8 +143,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
         }
 
@@ -180,8 +180,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
         }
 

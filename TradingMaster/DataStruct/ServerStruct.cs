@@ -324,7 +324,7 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log(ex.Message);
+                Util.Log_Error(ex.Message);
             }
             return -1;
 
@@ -344,7 +344,7 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log(ex.Message);
+                Util.Log_Error(ex.Message);
             }
         }
 
@@ -361,7 +361,7 @@ namespace TradingMaster
             }
             catch (System.Exception ex)
             {
-                Util.Log(ex.Message);
+                Util.Log_Error(ex.Message);
                 return false;
             }
 

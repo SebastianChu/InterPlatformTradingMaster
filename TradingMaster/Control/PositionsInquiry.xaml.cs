@@ -488,8 +488,8 @@ namespace TradingMaster.Control
                             }
                             catch (Exception ex)
                             {
-                                Util.Log(ex.Message);
-                                Util.Log(ex.StackTrace);
+                                Util.Log_Error(ex.Message);
+                                Util.Log_Error(ex.StackTrace);
                             }
                             //Util.Log("dg.SelectedItems.count=" + dg.SelectedItems.Count.ToString());
                         }

@@ -55,8 +55,8 @@ namespace TradingMaster
             {
                 StackFrame sf = st.GetFrame(i);
                 System.Reflection.MethodBase method = sf.GetMethod();
-                string lastcallmethod = method.DeclaringType.ToString() + "." + method.Name;
-                Console.WriteLine("lastCallMethod:" + i + "=" + lastcallmethod);
+                string lastCallMethod = method.DeclaringType.ToString() + "." + method.Name;
+                Console.WriteLine("lastCallMethod:" + i + "=" + lastCallMethod);
             }
         }
 
@@ -79,9 +79,19 @@ namespace TradingMaster
             StackTrace st = new StackTrace(true);
             StackFrame sf = st.GetFrame(1);
             MethodBase method = sf.GetMethod();
-            string lastcallmethod = string.Format("[{0}.{1}]", method.DeclaringType.ToString(), method.Name);
-            ILog log = LogManager.GetLogger(lastcallmethod);
+            string lastCallMethod = string.Format("[{0}.{1}]", method.DeclaringType.ToString(), method.Name);
+            ILog log = LogManager.GetLogger(lastCallMethod);
             log.Info(content);
+        }
+
+        public static void Log_Error(string content)
+        {
+            StackTrace st = new StackTrace(true);
+            StackFrame sf = st.GetFrame(1);
+            MethodBase method = sf.GetMethod();
+            string lastCallMethod = string.Format("[{0}.{1}]", method.DeclaringType.ToString(), method.Name);
+            ILog log = LogManager.GetLogger("ErrorLogger");
+            log.Error(content);
         }
 
         public static string GetMD5(string content)
@@ -145,7 +155,7 @@ namespace TradingMaster
             catch (Exception ex)
             {
                 Util.Log("exception" + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error(ex.StackTrace);
             }
             finally
             {
@@ -254,8 +264,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return new DateTime();
         }

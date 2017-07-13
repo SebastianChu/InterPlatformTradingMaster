@@ -36,7 +36,7 @@ namespace TradingMaster
             }
             catch (Exception e)
             {
-                Util.Log("exception: " + e.Message);
+                Util.Log_Error("exception: " + e.Message);
             }
 
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);

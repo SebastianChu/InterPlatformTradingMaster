@@ -831,8 +831,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return instItem;
         }
@@ -863,8 +863,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
         }
 
@@ -920,8 +920,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return logonStruct;
         }
@@ -939,8 +939,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return logoffStruct;
         }
@@ -958,8 +958,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return logoffStruct;
         }
@@ -983,8 +983,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return disStruct;
         }
@@ -1050,8 +1050,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return jyData;
         }
@@ -1083,8 +1083,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return tradeData;
         }
@@ -1127,8 +1127,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return posData;
         }
@@ -1187,8 +1187,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error(ex.StackTrace);
             }
             return qData;
         }
@@ -1586,8 +1586,8 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
             return femasRealData;
         }

@@ -149,8 +149,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
         }
 
@@ -190,8 +190,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
         }
 
@@ -223,8 +223,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
         }
 
@@ -264,8 +264,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
         }
 
@@ -298,8 +298,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
             return option;
         }
@@ -332,8 +332,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
             return futures;
         }
@@ -396,8 +396,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
         }
 

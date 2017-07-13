@@ -343,7 +343,7 @@ namespace TradingMaster
             catch (Exception ex)
             {
                 Util.Log("exception" + ex.Message);
-                Util.Log(ex.StackTrace);
+                Util.Log_Error(ex.StackTrace);
                 return 0;
             }
         }

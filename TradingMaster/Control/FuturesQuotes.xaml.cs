@@ -273,8 +273,8 @@ namespace TradingMaster.Control
                 }
                 catch (Exception ex)
                 {
-                    Util.Log("exception: " + ex.Message);
-                    Util.Log("exception: " + ex.StackTrace);
+                    Util.Log_Error("exception: " + ex.Message);
+                    Util.Log_Error("exception: " + ex.StackTrace);
                 }
             }
             //在请求新增的合约
@@ -1213,8 +1213,8 @@ namespace TradingMaster.Control
             }
             catch (Exception ex)
             {
-                Util.Log("exception: " + ex.Message);
-                Util.Log("exception: " + ex.StackTrace);
+                Util.Log_Error("exception: " + ex.Message);
+                Util.Log_Error("exception: " + ex.StackTrace);
             }
             return displayData;
         }

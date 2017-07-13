@@ -99,8 +99,8 @@ namespace TradingMaster
                         }
                         catch (System.Exception ex)
                         {
-                            Util.Log("exception: " + ex.Message);
-                            Util.Log("exception: " + ex.StackTrace);
+                            Util.Log_Error("exception: " + ex.Message);
+                            Util.Log_Error("exception: " + ex.StackTrace);
                         }
                         //要对userCodes进行处理，保证无重复的内容。
                         Dictionary<Contract, Boolean> codeDict = new Dictionary<Contract, bool>();

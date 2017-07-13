@@ -302,8 +302,8 @@ namespace TradingMaster
                 }
                 catch (Exception ex)
                 {
-                    Util.Log(ex.Message);
-                    Util.Log(ex.StackTrace);
+                    Util.Log_Error(ex.Message);
+                    Util.Log_Error(ex.StackTrace);
                     isRememberUserName = false;
                     return new List<UserNameInfo>();
                 }
@@ -337,7 +337,7 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log(ex.Message);
+                Util.Log_Error(ex.Message);
             }
             finally
             {
@@ -459,7 +459,7 @@ namespace TradingMaster
             }
             catch (Exception ex)
             {
-                Util.Log(ex.Message);
+                Util.Log_Error(ex.Message);
             }
             finally
             {
@@ -1011,7 +1011,7 @@ namespace TradingMaster
         //            catch (Exception ex)
         //            {
         //                Util.Log(ex.ToString());
-        //                Util.Log(ex.StackTrace);
+        //                Util.Log_Error(ex.StackTrace);
         //            }
         //        }
         //        );
@@ -1038,7 +1038,7 @@ namespace TradingMaster
         //            catch (Exception ex)
         //            {
         //                Util.Log(ex.ToString());
-        //                Util.Log(ex.StackTrace);
+        //                Util.Log_Error(ex.StackTrace);
         //            }
         //        }
         //        );
