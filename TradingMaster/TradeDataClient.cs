@@ -1982,9 +1982,11 @@ namespace TradingMaster
             //是否是模拟的
             //Boolean isSim = IsSim();
             //是否是上海的
-            Boolean isShanghai = CodeSetManager.IsCloseTodaySupport(tradedInfo.Code);
+            bool isShanghai = CodeSetManager.IsCloseTodaySupport(tradedInfo.Code);
+            bool isCffexRule = CodeSetManager.IsCffexCloseRule(tradedInfo.Code);
             List<PosInfoDetail> posInfoToDelete = new List<PosInfoDetail>();
             int yesterdayPosCount = 0;
+            int todayPosCount = 0;
             ///对于持仓明细中所有的记录，选出符合被平仓条件的记录
             //_ServerMutex.WaitOne();
             foreach (PosInfoDetail posInfoDetail in _PositionDetailDataLst)
@@ -1994,8 +1996,31 @@ namespace TradingMaster
                 if (posInfoDetail.BuySell.Contains("买") && isBuy == true) continue;
                 if (posInfoDetail.BuySell.Contains("卖") && isBuy == false) continue;
 
-
-                if (isShanghai == false)//|| isSim) TODO
+                if (isShanghai)
+                {
+                    if (isCloseYesterday && posInfoDetail.PositionType == "昨仓")
+                    {
+                        posInfoToDelete.Insert(0, posInfoDetail);
+                        yesterdayPosCount += 1;
+                    }
+                    else if (!isCloseYesterday && posInfoDetail.PositionType == "今仓")
+                    {
+                        posInfoToDelete.Insert(yesterdayPosCount, posInfoDetail);
+                    }
+                }
+                else if (isCffexRule)
+                {
+                    if (posInfoDetail.PositionType == "今仓")
+                    {
+                        posInfoToDelete.Insert(0, posInfoDetail);
+                        todayPosCount += 1;
+                    }
+                    else if (posInfoDetail.PositionType == "昨仓")
+                    {
+                        posInfoToDelete.Insert(todayPosCount, posInfoDetail);
+                    }
+                }
+                else
                 {
                     if (posInfoDetail.PositionType == "昨仓")
                     {
@@ -2007,18 +2032,7 @@ namespace TradingMaster
                         posInfoToDelete.Insert(yesterdayPosCount, posInfoDetail);
                     }
                 }
-                else
-                {
-                    if (isCloseYesterday && posInfoDetail.PositionType == "昨仓")
-                    {
-                        posInfoToDelete.Insert(0, posInfoDetail);
-                        yesterdayPosCount += 1;
-                    }
-                    else if (isCloseYesterday == false && posInfoDetail._PositionType == "今仓")
-                    {
-                        posInfoToDelete.Insert(yesterdayPosCount, posInfoDetail);
-                    }
-                }
+                
             }
 
             if (posInfoToDelete.Count == 0)

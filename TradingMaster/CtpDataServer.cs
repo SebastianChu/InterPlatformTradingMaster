@@ -1147,7 +1147,7 @@ namespace TradingMaster
 
         void CtpTraderApi_OnRspQryInvestorPosition(ref CThostFtdcInvestorPositionField pInvestorPosition, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
         {
-            if (bIsLast && QryPosDetailData.Count == 0 && pInvestorPosition.InstrumentID.Trim() == "" && pInvestorPosition.BrokerID == "") //排除交易日无委托时CTP推送的无用的初始化信息
+            if (pInvestorPosition.InstrumentID.Trim() == "" || pInvestorPosition.BrokerID == "" || pInvestorPosition.Position == 0) //排除交易日无委托时CTP推送的无用的初始化信息
             {
                 return;
             }
@@ -2476,6 +2476,7 @@ namespace TradingMaster
                 AddToTradeDataQryQueue(new RequestContent("ReqCapital", new List<object>()));
                 AddToTradeDataQryQueue(new RequestContent("ReqTrade", new List<object>()));
                 AddToTradeDataQryQueue(new RequestContent("QryBrokerTradingParams", new List<object>()));
+                AddToTradeDataQryQueue(new RequestContent("ReqPosition", new List<object>()));
                 AddToTradeDataQryQueue(new RequestContent("ReqPositionDetail", new List<object>()));
                 AddToTradeDataQryQueue(new RequestContent("ReqPositionCombineDetail", new List<object>()));
                 AddToTradeDataQryQueue(new RequestContent("ReqOrder", new List<object>()));
@@ -5858,42 +5859,42 @@ namespace TradingMaster
             RealData ctpRealData = new RealData();
             try
             {
-                ctpRealData.BidPrice[0] = pDepthMarketData.BidPrice1 >= Double.MaxValue ? 0.0 : pDepthMarketData.BidPrice1;
-                ctpRealData.BidPrice[1] = pDepthMarketData.BidPrice2 >= Double.MaxValue ? 0.0 : pDepthMarketData.BidPrice2;
-                ctpRealData.BidPrice[2] = pDepthMarketData.BidPrice3 >= Double.MaxValue ? 0.0 : pDepthMarketData.BidPrice3;
-                ctpRealData.BidPrice[3] = pDepthMarketData.BidPrice4 >= Double.MaxValue ? 0.0 : pDepthMarketData.BidPrice4;
-                ctpRealData.BidPrice[4] = pDepthMarketData.BidPrice5 >= Double.MaxValue ? 0.0 : pDepthMarketData.BidPrice5;
+                ctpRealData.BidPrice[0] = pDepthMarketData.BidPrice1 >= double.MaxValue ? 0.0 : pDepthMarketData.BidPrice1;
+                ctpRealData.BidPrice[1] = pDepthMarketData.BidPrice2 >= double.MaxValue ? 0.0 : pDepthMarketData.BidPrice2;
+                ctpRealData.BidPrice[2] = pDepthMarketData.BidPrice3 >= double.MaxValue ? 0.0 : pDepthMarketData.BidPrice3;
+                ctpRealData.BidPrice[3] = pDepthMarketData.BidPrice4 >= double.MaxValue ? 0.0 : pDepthMarketData.BidPrice4;
+                ctpRealData.BidPrice[4] = pDepthMarketData.BidPrice5 >= double.MaxValue ? 0.0 : pDepthMarketData.BidPrice5;
                 ctpRealData.BidHand[0] = (uint)pDepthMarketData.BidVolume1;
                 ctpRealData.BidHand[1] = (uint)pDepthMarketData.BidVolume2;
                 ctpRealData.BidHand[2] = (uint)pDepthMarketData.BidVolume3;
                 ctpRealData.BidHand[3] = (uint)pDepthMarketData.BidVolume4;
                 ctpRealData.BidHand[4] = (uint)pDepthMarketData.BidVolume5;
-                ctpRealData.AskPrice[0] = pDepthMarketData.AskPrice1 >= Double.MaxValue ? 0.0 : pDepthMarketData.AskPrice1;
-                ctpRealData.AskPrice[1] = pDepthMarketData.AskPrice2 >= Double.MaxValue ? 0.0 : pDepthMarketData.AskPrice2;
-                ctpRealData.AskPrice[2] = pDepthMarketData.AskPrice3 >= Double.MaxValue ? 0.0 : pDepthMarketData.AskPrice3;
-                ctpRealData.AskPrice[3] = pDepthMarketData.AskPrice4 >= Double.MaxValue ? 0.0 : pDepthMarketData.AskPrice4;
-                ctpRealData.AskPrice[4] = pDepthMarketData.AskPrice5 >= Double.MaxValue ? 0.0 : pDepthMarketData.AskPrice5;
+                ctpRealData.AskPrice[0] = pDepthMarketData.AskPrice1 >= double.MaxValue ? 0.0 : pDepthMarketData.AskPrice1;
+                ctpRealData.AskPrice[1] = pDepthMarketData.AskPrice2 >= double.MaxValue ? 0.0 : pDepthMarketData.AskPrice2;
+                ctpRealData.AskPrice[2] = pDepthMarketData.AskPrice3 >= double.MaxValue ? 0.0 : pDepthMarketData.AskPrice3;
+                ctpRealData.AskPrice[3] = pDepthMarketData.AskPrice4 >= double.MaxValue ? 0.0 : pDepthMarketData.AskPrice4;
+                ctpRealData.AskPrice[4] = pDepthMarketData.AskPrice5 >= double.MaxValue ? 0.0 : pDepthMarketData.AskPrice5;
                 ctpRealData.AskHand[0] = (uint)pDepthMarketData.AskVolume1;
                 ctpRealData.AskHand[1] = (uint)pDepthMarketData.AskVolume2;
                 ctpRealData.AskHand[2] = (uint)pDepthMarketData.AskVolume3;
                 ctpRealData.AskHand[3] = (uint)pDepthMarketData.AskVolume4;
                 ctpRealData.AskHand[4] = (uint)pDepthMarketData.AskVolume5;
-                ctpRealData.ClosePrice = pDepthMarketData.ClosePrice >= Double.MaxValue ? 0.0 : pDepthMarketData.ClosePrice;
+                ctpRealData.ClosePrice = pDepthMarketData.ClosePrice >= double.MaxValue ? 0.0 : pDepthMarketData.ClosePrice;
                 ctpRealData.CodeInfo = CodeSetManager.GetContractInfo(pDepthMarketData.InstrumentID);//Todo: No info in pDepthMarketData.ExchangeID field
                 //ctpRealData.hand = pDepthMarketData.;
-                ctpRealData.MaxPrice = pDepthMarketData.HighestPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.HighestPrice;
-                ctpRealData.NewPrice = pDepthMarketData.LastPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.LastPrice;
-                ctpRealData.LowerLimitPrice = pDepthMarketData.LowerLimitPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.LowerLimitPrice;
-                ctpRealData.MinPrice = pDepthMarketData.LowestPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.LowestPrice;
-                ctpRealData.OpenPrice = pDepthMarketData.OpenPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.OpenPrice;
+                ctpRealData.MaxPrice = pDepthMarketData.HighestPrice >= double.MaxValue ? 0.0 : pDepthMarketData.HighestPrice;
+                ctpRealData.NewPrice = pDepthMarketData.LastPrice >= double.MaxValue ? 0.0 : pDepthMarketData.LastPrice;
+                ctpRealData.LowerLimitPrice = pDepthMarketData.LowerLimitPrice >= double.MaxValue ? 0.0 : pDepthMarketData.LowerLimitPrice;
+                ctpRealData.MinPrice = pDepthMarketData.LowestPrice >= double.MaxValue ? 0.0 : pDepthMarketData.LowestPrice;
+                ctpRealData.OpenPrice = pDepthMarketData.OpenPrice >= double.MaxValue ? 0.0 : pDepthMarketData.OpenPrice;
                 ctpRealData.Position = (ulong)pDepthMarketData.OpenInterest;//?
-                ctpRealData.PrevClose = pDepthMarketData.PreClosePrice >= Double.MaxValue ? 0.0 : pDepthMarketData.PreClosePrice;
+                ctpRealData.PrevClose = pDepthMarketData.PreClosePrice >= double.MaxValue ? 0.0 : pDepthMarketData.PreClosePrice;
                 ctpRealData.PrevPosition = (ulong)pDepthMarketData.PreOpenInterest;//?
-                ctpRealData.PrevSettlementPrice = pDepthMarketData.PreSettlementPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.PreSettlementPrice;
-                ctpRealData.SettlmentPrice = pDepthMarketData.SettlementPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.SettlementPrice;
+                ctpRealData.PrevSettlementPrice = pDepthMarketData.PreSettlementPrice >= double.MaxValue ? 0.0 : pDepthMarketData.PreSettlementPrice;
+                ctpRealData.SettlmentPrice = pDepthMarketData.SettlementPrice >= double.MaxValue ? 0.0 : pDepthMarketData.SettlementPrice;
                 ctpRealData.Sum = pDepthMarketData.Turnover;
                 ctpRealData.UpdateTime = string.Format("{0}.{1:D3}", pDepthMarketData.UpdateTime, pDepthMarketData.UpdateMillisec);
-                ctpRealData.UpperLimitPrice = pDepthMarketData.UpperLimitPrice >= Double.MaxValue ? 0.0 : pDepthMarketData.UpperLimitPrice;
+                ctpRealData.UpperLimitPrice = pDepthMarketData.UpperLimitPrice >= double.MaxValue ? 0.0 : pDepthMarketData.UpperLimitPrice;
                 ctpRealData.Volumn = (ulong)pDepthMarketData.Volume;
             }
             catch (Exception ex)

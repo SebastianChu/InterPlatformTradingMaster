@@ -113,6 +113,18 @@ namespace TradingMaster.CodeSet
             return false;
         }
 
+        public static bool IsCffexCloseRule(string code)
+        {
+            foreach (string tempKey in ContractMap.Keys)
+            {
+                if (tempKey == code + "_CFFEX" || tempKey == code + "_CFFX")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static string CtpToIsoCode(string ctpName)
         {
             if (ctpName == "SHFE")
