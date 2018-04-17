@@ -18776,7 +18776,7 @@ namespace TradingMaster
         /// <summary>
         /// 资金不够仍允许行权
         /// </summary>
-       ExecOrderNoCheck = (byte)'M'
+        ExecOrderNoCheck = (byte)'M'
 
 
     }
@@ -22737,7 +22737,12 @@ namespace TradingMaster
         /// <summary>
         /// 中国金融期货交易所
         /// </summary>
-        CFFEX = (byte)'J'
+        CFFEX = (byte)'J',
+
+        /// <summary>
+        /// 上海国际能源交易中心股份有限公司
+        /// </summary>
+        INE = (byte)'N'
     }
 
     /// <summary>
@@ -23618,7 +23623,7 @@ namespace TradingMaster
     /// <summary>
     /// TFtdcStrikeOffsetTypeType是一个行权偏移类型类型
     /// </summary>
-    public enum EnumThostFtdcStrikeOffsetType: byte
+    public enum EnumThostFtdcStrikeOffsetType : byte
     {
         /// <summary>
         /// 实值额

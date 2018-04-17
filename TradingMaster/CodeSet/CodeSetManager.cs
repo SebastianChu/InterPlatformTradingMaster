@@ -179,6 +179,8 @@ namespace TradingMaster.CodeSet
                 return "大商所";
             else if (ctpName == "CFFEX")
                 return "中金所";
+            else if (ctpName == "INE")
+                return "上期能源";
             // Securities
             else if (ctpName == "SSE")
                 return "上证所";
@@ -229,6 +231,8 @@ namespace TradingMaster.CodeSet
                 return "SSE";
             else if (exName == "深交所")
                 return "SZE";
+            else if (exName == "上期能源")
+                return "INE";
             else
             {
                 Util.Log("Warning! Unknown Exchange Name：" + exName);

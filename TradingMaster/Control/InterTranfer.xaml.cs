@@ -48,12 +48,12 @@ namespace TradingMaster.Control
             _BankID = BankManager.GetBankIdFromName(cb_Banks.SelectedItem as string);
             if (string.IsNullOrEmpty(_BankID))
             {
-                //JYDataServer.getServerInstance().AddToQryQueue(new CTPRequestContent("QryTransferSerial", new List<object>() { BankID }));
+                Util.Log("Warning! Invalid Bank ID.");
+                return;
             }
             else
             {
-                Util.Log("Warning! Invalid Bank ID.");
-                return;
+                TradeDataClient.GetClientInstance().RequestTradeData(_UserAccount, BACKENDTYPE.CTP, new RequestContent("QryTransferSerial", new List<object>() { _BankID }));
             }
 
             _BankBrchID = BankManager.GetBankBranchIdFromName(cb_Banks.SelectedItem as string);
@@ -76,6 +76,10 @@ namespace TradingMaster.Control
         {
             string capitalPwd = pb_CapPwd.Password;
             string bankPwd = pb_BankPwd.Password;
+            if (string.IsNullOrEmpty(_BankBrchID))
+            {
+                _BankBrchID = BankManager.GetBankBranchIdFromName(cb_Banks.SelectedItem as string);
+            }
 
             if (string.IsNullOrEmpty(_Currency))
             {
@@ -101,13 +105,17 @@ namespace TradingMaster.Control
 
         private void btnToBank_Click(object sender, RoutedEventArgs e)
         {
-            string capitalPwd = pb_CapPwd.Password;
-            string bankPwd = pb_BankPwd.Password;
             double tranAmt = 0.0;
             bool isNum = double.TryParse(tb_Amount.Text.Trim(), out tranAmt);
 
             if (isNum)
             {
+                if (string.IsNullOrEmpty(_BankBrchID))
+                {
+                    _BankBrchID = BankManager.GetBankBranchIdFromName(cb_Banks.SelectedItem as string);
+                }
+                string capitalPwd = pb_CapPwd.Password;
+                string bankPwd = pb_BankPwd.Password;
                 TradeDataClient.GetClientInstance().RequestTradeData(_UserAccount, BACKENDTYPE.CTP, new RequestContent("TransferFromFutureToBankByFuture", new List<object>() { _BankID, _BankBrchID, capitalPwd, bankPwd, tranAmt, _Currency }));
             }
             else
@@ -121,13 +129,16 @@ namespace TradingMaster.Control
 
         private void btnToFut_Click(object sender, RoutedEventArgs e)
         {
-            string capitalPwd = pb_CapPwd.Password;
-            string bankPwd = pb_BankPwd.Password;
             double tranAmt = 0.0;
             bool isNum = double.TryParse(tb_Amount.Text.Trim(), out tranAmt);
-
             if (isNum)
             {
+                if (string.IsNullOrEmpty(_BankBrchID))
+                {
+                    _BankBrchID = BankManager.GetBankBranchIdFromName(cb_Banks.SelectedItem as string);
+                }
+                string capitalPwd = pb_CapPwd.Password;
+                string bankPwd = pb_BankPwd.Password;
                 TradeDataClient.GetClientInstance().RequestTradeData(_UserAccount, BACKENDTYPE.CTP, new RequestContent("TransferFromBankToFutureByFuture", new List<object>() { _BankID, _BankBrchID, capitalPwd, bankPwd, tranAmt, _Currency }));
             }
             else

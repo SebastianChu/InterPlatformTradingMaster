@@ -105,27 +105,29 @@ namespace TradingMaster.Control
             if (tb == tbZhongjinTime)
             {
                 //中金所
-                //if (time >= 9 * 3600 + 10 * 60 && time < 9 * 3600 + 14 * 60)  //9:10-9:14
-                if (time >= 9 * 3600 + 25 * 60 && time < 9 * 3600 + 29 * 60)    //9:25-9:29
+                //if (time >= 9 * 3600 + 25 * 60 && time < 9 * 3600 + 29 * 60)    //9:25-9:29
+                if (time >= 9 * 3600 + 10 * 60 && time < 9 * 3600 + 14 * 60)  //9:10-9:14
                 {
+                    //9:10-9:14
                     tb.Tag = "Trade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "集合竞价报单";
                 }
-                //else if (time >= 9 * 3600 + 14 * 60 && time < 9 * 3600 + 15 * 60)   //9:14-9:15
-                else if (time >= 9 * 3600 + 29 * 60 && time < 9 * 3600 + 30 * 60)   //9:29-9:30
+                //else if (time >= 9 * 3600 + 29 * 60 && time < 9 * 3600 + 30 * 60)   //9:29-9:30
+                else if (time >= 9 * 3600 + 14 * 60 && time < 9 * 3600 + 15 * 60)   //9:14-9:15
                 {
-
+                    //9:14-9:15
                     tb.Tag = "NonTrade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "集合竞价撮合";
                 }
-                //else if ((time >= 9 * 3600 + 15 * 60 && time < 11 * 3600 + 30 * 60) || (time >= 13 * 3600 && time < 15 * 3600 + 15 * 60))
-                else if ((time >= 9 * 3600 + 30 * 60 && time < 11 * 3600 + 30 * 60) || (time >= 13 * 3600 && time < 15 * 3600))
+                //else if ((time >= 9 * 3600 + 30 * 60 && time < 11 * 3600 + 30 * 60) || (time >= 13 * 3600 && time < 15 * 3600))
+                else if ((time >= 9 * 3600 + 15 * 60 && time < 11 * 3600 + 30 * 60) || (time >= 13 * 3600 && time < 15 * 3600 + 15 * 60))
                 {
+                    //9:15-11:30, 13:00-15:15
                     tb.Tag = "Trade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "连续交易";
                 }
-                //else if (time >= 15 * 3600 + 15 * 60)
-                else if (time >= 15 * 3600)
+                //else if (time >= 15 * 3600)
+                else if (time >= 15 * 3600 + 15 * 60)
                 {
                     tb.Tag = "NonTrade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "收盘";
@@ -136,22 +138,23 @@ namespace TradingMaster.Control
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "开盘前";
                 }
             }
-            else if (tb == tbShanghaiTime)//TODO: Temp solution for night trading
+            else if (tb == tbShanghaiTime || tb == tbEnergyTime)//TODO: Temp solution for night trading
             {
-                if (time >= 8 * 3600 + 55 * 60 && time < 8 * 3600 + 59 * 60)
+                if (time >= 20 * 3600 + 55 * 60 && time < 20 * 3600 + 59 * 60 || time >= 8 * 3600 + 55 * 60 && time < 8 * 3600 + 59 * 60)
                 {
-                    //8:55-8:59
+                    //20:55-20:59, 8:55-8:59
                     tb.Tag = "Trade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "集合竞价报单";
                 }
-                else if (time >= 8 * 3600 + 59 * 60 && time < 9 * 3600)
+                else if (time >= 20 * 3600 + 59 * 60 && time < 21 * 3600 || time >= 8 * 3600 + 59 * 60 && time < 9 * 3600)
                 {
-                    //8:59-9:00
+                    //20:59-21:00, 8:59-9:00
                     tb.Tag = "NonTrade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "集合竞价撮合";
                 }
                 else if ((time >= 21 * 3600 || time <= 2 * 3600 + 30 * 60) || (time >= 9 * 3600 && time < 10 * 3600 + 15 * 60) || (time >= 10 * 3600 + 30 * 60 && time < 11 * 3600 + 30 * 60) || (time >= 13 * 3600 + 30 * 60 && time < 15 * 3600))
                 {
+                    //21:00-2:30, 9:00-10:15, 10:30-11:30, 13:30-15:00
                     tb.Tag = "Trade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "连续交易";
                 }
@@ -168,20 +171,21 @@ namespace TradingMaster.Control
             }
             else if (tb == tbDalianTime || tb == tbZhengzhouTime)//TODO: Temp solution for night trading
             {
-                if (time >= 8 * 3600 + 55 * 60 && time < 8 * 3600 + 59 * 60)
+                if (time >= 20 * 3600 + 55 * 60 && time < 20 * 3600 + 59 * 60 || time >= 8 * 3600 + 55 * 60 && time < 8 * 3600 + 59 * 60)
                 {
-                    //8:55-8:59
+                    //20:55-20:59, 8:55-8:59
                     tb.Tag = "Trade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "集合竞价报单";
                 }
-                else if (time >= 8 * 3600 + 59 * 60 && time < 9 * 3600)
+                else if (time >= 20 * 3600 + 59 * 60 && time < 21 * 3600 || time >= 8 * 3600 + 59 * 60 && time < 9 * 3600)
                 {
-                    //8:59-9:00
+                    //20:59-21:00, 8:59-9:00
                     tb.Tag = "NonTrade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "集合竞价撮合";
                 }
                 else if ((time >= 21 * 3600 && time <= 23 * 3600 + 30 * 60) || (time >= 9 * 3600 && time < 10 * 3600 + 15 * 60) || (time >= 10 * 3600 + 30 * 60 && time < 11 * 3600 + 30 * 60) || (time >= 13 * 3600 + 30 * 60 && time < 15 * 3600))
                 {
+                    //21:00-23:30, 9:00-10:15, 10:30-11:30, 13:30-15:00
                     tb.Tag = "Trade";
                     tb.ToolTip = toolTip.Substring(0, toolTip.IndexOf("：") + 1) + "连续交易";
                 }

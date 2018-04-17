@@ -43,10 +43,11 @@
 
         <Label Content="交易所：" Grid.Row="1"  Grid.Column="0" Height="27" HorizontalAlignment="Right" VerticalAlignment="Center" Width="52" />
         <ComboBox Height="23" Grid.Row="1"  Grid.Column="1" HorizontalAlignment="Stretch" Name="cb_area" VerticalAlignment="Center" SelectedIndex="0" SelectionChanged="cb_area_SelectionChanged">
-            <ComboBoxItem Content="郑州交易所" Name="zhengArea"/>
-            <ComboBoxItem Content="大连交易所" Name="daArea"/>
-            <ComboBoxItem Content="上海交易所" Name="shangArea" />
-            <ComboBoxItem Content="中金交易所" Name="zhongArea" />
+            <ComboBoxItem Content="郑商所" Name="zhengArea"/>
+            <ComboBoxItem Content="大商所" Name="daArea"/>
+            <ComboBoxItem Content="上期所" Name="shangArea" />
+            <ComboBoxItem Content="中金所" Name="zhongArea" />
+            <ComboBoxItem Content="上期能源" Name="ineArea" />
         </ComboBox>
         <DataGrid x:Name="dgChooseCode" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ThemeDatagridStyle}" 
                 VerticalAlignment="Stretch" SelectionMode="Extended"

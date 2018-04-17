@@ -729,7 +729,7 @@ namespace TradingMaster
                 {
                     BankAcctDetail bankAcctDetail = data as BankAcctDetail;
                     itemCount++;
-                    if (_MainWindow != null)
+                    if (_MainWindow != null && bankAcctDetail.RequestID == 0)
                     {
                         _MainWindow.OnGotBankAmountDetail(bankAcctDetail);
                     }

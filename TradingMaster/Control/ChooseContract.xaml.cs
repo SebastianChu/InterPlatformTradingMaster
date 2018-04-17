@@ -208,6 +208,10 @@ namespace TradingMaster.Control
                 case 3:
                     GetContract("CFFEX");
                     break;
+                case 4:
+                    GetContract("INE");
+                    break;
+                case 0:
                 default:
                     GetContract("CZCE");
                     break;

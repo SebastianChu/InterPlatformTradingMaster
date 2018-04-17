@@ -47,6 +47,7 @@
       <host name="同信实盘二"         brokerID="9099"  ip="180.166.13.42"      port="41205" selected="False" />
       <host name="同信实盘三"         brokerID="9099"  ip="180.166.13.43"      port="41205" selected="False" />
       <host name="同信实盘四"         brokerID="9099"  ip="180.166.13.44"      port="41205" selected="False" />
+      <host name="中融汇信实盘"       brokerID="6868"  ip="222.68.181.198"     port="41205" selected="False" />
     </server>
     <server type="HQ">
       <host name="东航实盘一" brokerID="7070"  ip="ctp1.kiiik.com"     port="41213" selected="False" />
@@ -98,6 +99,7 @@
       <host name="同信实盘二"         brokerID="9099"  ip="180.166.13.42"      port="41213" selected="False" />
       <host name="同信实盘三"         brokerID="9099"  ip="180.166.13.43"      port="41213" selected="False" />
       <host name="同信实盘四"         brokerID="9099"  ip="180.166.13.44"      port="41213" selected="False" />
+      <host name="中融汇信实盘"       brokerID="6868"  ip="222.68.181.198"     port="41213" selected="False" />
     </server>
   </servers>
 </config>

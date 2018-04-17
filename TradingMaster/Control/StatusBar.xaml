@@ -69,7 +69,7 @@
                     <TextBlock Text="|" Margin="4 0 4 0"></TextBlock>
                     <TextBlock x:Name="tbZhongjinTime" Text="--:--:--" ToolTip="中金所："></TextBlock>
                     <TextBlock Text="|" Margin="4 0 4 0"></TextBlock>
-                    <TextBlock x:Name="tbEnergyTime" Text="--:--:--" ToolTip="能源中心："></TextBlock>
+                    <TextBlock x:Name="tbEnergyTime" Text="--:--:--" ToolTip="上期能源："></TextBlock>
                 </StackPanel>
             </StatusBarItem>
         </Grid>
