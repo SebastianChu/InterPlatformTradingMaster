@@ -164,7 +164,7 @@ namespace TradingMaster
         /// <summary>
         /// 基准中间价
         /// </summary>
-        public double MidBasePrice
+        public double MarketBasePrice
         {
             get
             {
