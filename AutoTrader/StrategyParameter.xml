@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Strategy>
+  <!--策略开始-->
+  <Code Value="if1906">
+    <!--策略名和开关，1为打开，0为关闭-->
+    <TargetTime Value="1">
+      <!--策略唯一标识，策略间不同-->
+      <StrategyId Value= "101" />
+
+      <!--初始入场方向，1为多，0为空-->
+      <EntryDirection Value= "1" />
+
+      <!--单次下单手数-->
+      <TargetVolume Value= "1" />
+
+      <!--最大允许 开仓数-->
+      <MaxVolume Value= "2" />
+
+      <!--保留挂单 最大间隔秒数-->
+      <CancelPendingSeconds Value= "20" />
+
+      <!--入场时间，格式HH:MM:SS-->
+      <OpenTime Value= "13:47:01" />
+
+      <!--出场时间，格式HH:MM:SS-->
+      <CloseTime Value= "13:59:02" />
+    </TargetTime>
+  </Code>
+  <!--策略结束-->
+
+  <Code Value="if1905">
+    <TargetTime Value="1">
+      <!--策略唯一标识，策略间不同-->
+      <StrategyId Value= "102" />
+      <!--初始入场方向，1为多，0为空-->
+      <EntryDirection Value= "0" />
+      <!--单次下单手数-->
+      <TargetVolume Value= "1" />
+      <!--最大允许 开仓数-->
+      <MaxVolume Value= "2" />
+      <!--保留挂单 最大间隔秒数-->
+      <CancelPendingSeconds Value= "20" />
+      <!--入场时间，格式HH:MM:SS-->
+      <OpenTime Value= "14:47:01" />
+      <!--出场时间，格式HH:MM:SS-->
+      <CloseTime Value= "14:29:02" />
+    </TargetTime>
+  </Code>
+</Strategy>
