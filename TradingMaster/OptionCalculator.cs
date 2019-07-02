@@ -858,7 +858,7 @@ namespace TradingMaster
         public static double GetImpliedVolatility(Contract option, double optPrice, double underlyingPrice, double q, double r, bool isBiTreeUsed = false)
         {
             double sigma = 0.0;
-            //Util.Log("Code:" + option.Code);
+            //Util.Log("Code: "  + option.Code);
             Contract futures = CodeSetManager.GetContractInfo(CodeSetManager.GetOptionUnderlyingCode(option, option.ExchCode), option.ExchCode);
             if (futures != null)
             {
@@ -879,7 +879,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                     }
                     else // B-S公式结果计算
@@ -894,7 +894,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                         return sigma;
                     }
@@ -911,7 +911,7 @@ namespace TradingMaster
                     }
                     else
                     {
-                        Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                        Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                     }
                 }
             }
@@ -965,7 +965,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                     }
                     else // B-S公式结果计算
@@ -982,7 +982,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                         return delta;
                     }
@@ -1001,7 +1001,7 @@ namespace TradingMaster
                     }
                     else
                     {
-                        Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                        Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                     }
                 }
 
@@ -1058,7 +1058,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                     }
                     else // B-S公式结果计算
@@ -1072,7 +1072,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                         return gamma;
                     }
@@ -1093,7 +1093,7 @@ namespace TradingMaster
                     }
                     else
                     {
-                        Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                        Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                     }
                 }
                 gamma = ((valueUp - value0) / (underlyingPrice * u * u - underlyingPrice) - (value0 - valueDown) / (underlyingPrice - underlyingPrice * d * d));// *option.Hycs / (h * futures.Hycs);
@@ -1138,7 +1138,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                     }
                     else // B-S公式结果计算
@@ -1152,7 +1152,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                         return vega;
                     }
@@ -1171,7 +1171,7 @@ namespace TradingMaster
                     }
                     else
                     {
-                        Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                        Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                     }
                 }
                 vega = (valueUp - value0) * 0.01 / (sigmaDelta); // 1%
@@ -1220,7 +1220,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                     }
                     else // B-S公式结果计算
@@ -1241,7 +1241,7 @@ namespace TradingMaster
                         }
                         else
                         {
-                            Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                            Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                         }
                         return theta;
                     }
@@ -1258,7 +1258,7 @@ namespace TradingMaster
                     }
                     else
                     {
-                        Util.Log("Warning! Invalid Option Type! Code:" + option.Code);
+                        Util.Log("Warning! Invalid Option Type! Code: "  + option.Code);
                     }
                 }
                 theta = (value0 - optPrice) / (2 * deltaT);

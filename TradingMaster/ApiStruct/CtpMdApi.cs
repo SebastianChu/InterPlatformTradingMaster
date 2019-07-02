@@ -52,7 +52,7 @@ namespace TradingMaster
         /// </summary>
         /// <param name="lpFileName"> DLL 文件名 </param>
         /// <returns> 函数库模块的句柄 </returns>
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr LoadLibrary(string lpFileName);
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace TradingMaster
         /// <param name="hModule"> 包含需调用函数的函数库模块的句柄 </param>
         /// <param name="lpProcName"> 调用函数的名称 </param>
         /// <returns> 函数指针 </returns>
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
 
         /// <summary>

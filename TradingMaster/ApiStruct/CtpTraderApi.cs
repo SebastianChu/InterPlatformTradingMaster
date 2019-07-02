@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Configuration;
 
 namespace TradingMaster
 {
@@ -62,6 +63,10 @@ namespace TradingMaster
         public int MaxOrderRef { get; set; }
 
         private string Password;
+
+        protected string UserProductInfo = ConfigurationManager.AppSettings["UserProductInfo"].Trim();
+        protected string AppID = ConfigurationManager.AppSettings["AppID"].Trim();
+        protected string AuthCode = ConfigurationManager.AppSettings["AuthCode"].Trim();
 
         /// <summary>
         /// 原型是 :HMODULE LoadLibrary(LPCTSTR lpFileName);
@@ -254,12 +259,38 @@ namespace TradingMaster
         static extern string getTradingDay();
 
         /// <summary>
+        /// 客户端认证请求
+        /// </summary>
+        //private delegate int reqAuthenticate(string pBroker, string pInvestor, string pAuthCode);
+        //public int ReqAuthenticate(string authCode)
+        //{
+        //    return ((reqAuthenticate)Invoke(this.PtrHandle, "ReqAuthenticate", typeof(reqAuthenticate)))(this.BrokerID, this.InvestorID, authCode);
+        //}
+
+        private delegate int reqAuthenticate(ref CThostFtdcReqAuthenticateField authenticateField);
+        public int ReqAuthenticate()
+        {
+            CThostFtdcReqAuthenticateField authenticateField = new CThostFtdcReqAuthenticateField();
+            authenticateField.BrokerID = BrokerID;
+            authenticateField.UserID = InvestorID;
+            authenticateField.AppID = AppID;
+            authenticateField.AuthCode = AuthCode;
+            authenticateField.UserProductInfo = UserProductInfo;
+            return ((reqAuthenticate)Invoke(this.PtrHandle, "ReqAuthenticate", typeof(reqAuthenticate)))(ref authenticateField);
+        }
+
+        /// <summary>
         /// 登入请求
         /// </summary>
-        private delegate int reqUserLogin(string pBroker, string pInvestor, string pPwd);
+        private delegate int reqUserLogin(ref CThostFtdcReqUserLoginField loginField);
         public int ReqUserLogin()
         {
-            return ((reqUserLogin)Invoke(this.PtrHandle, "ReqUserLogin", typeof(reqUserLogin)))(this.BrokerID, this.InvestorID, this.Password);
+            CThostFtdcReqUserLoginField loginField = new CThostFtdcReqUserLoginField();
+            loginField.BrokerID = BrokerID;
+            loginField.UserID = InvestorID;
+            loginField.Password = Password;
+            loginField.UserProductInfo = UserProductInfo;
+            return ((reqUserLogin)Invoke(this.PtrHandle, "ReqUserLogin", typeof(reqUserLogin)))(ref loginField);
         }
 
         /// <summary>
@@ -1285,6 +1316,25 @@ namespace TradingMaster
             }
         }
 
+        ///客户端认证响应
+        public delegate void RspAuthenticate(ref CThostFtdcRspAuthenticateField pRspAuthenticateField, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
+        private RspAuthenticate _OnRspAuthenticate;
+        /// <summary>
+        ///客户端认证响应
+        /// </summary>
+        public event RspAuthenticate OnRspAuthenticate
+        {
+            add
+            {
+                _OnRspAuthenticate += value;
+                (Invoke(this.PtrHandle, "RegRspAuthenticate", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspAuthenticate));
+            }
+            remove
+            {
+                _OnRspAuthenticate -= value;
+                (Invoke(this.PtrHandle, "RegRspAuthenticate", typeof(Reg)) as Reg)(Marshal.GetFunctionPointerForDelegate(_OnRspAuthenticate));
+            }
+        }
 
         public delegate void RspUserLogin(ref CThostFtdcRspUserLoginField pRspUserLogin, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast);
         private RspUserLogin _OnRspUserLogin;

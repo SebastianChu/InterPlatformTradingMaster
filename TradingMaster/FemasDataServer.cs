@@ -266,7 +266,7 @@ namespace TradingMaster
             else
             {
                 IsLoggedOn = false;
-                Util.Log("Error! TradeApiFemas FemasDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiFemas FemasDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 LogoffStruct logoffInfo = GetLogoffReport(pRspUserLogin, pRspInfo, "Trader");
                 TradeDataClient.GetClientInstance().RtnQueryEnqueue(logoffInfo);
                 //OnLogout(pRspInfo.ErrorMsg);
@@ -283,7 +283,7 @@ namespace TradingMaster
             IsLoggedOn = false;
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer Logout fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiFemas FemasDataServer Logout fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             else
             {
@@ -299,7 +299,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas OnRspQryTradingCode fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiFemas OnRspQryTradingCode fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             else
             {
@@ -326,7 +326,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnRspError! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnRspError! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
         }
@@ -350,7 +350,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiFemas FemasDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             if (bIsLast)
             {
@@ -375,7 +375,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnRspUserPasswordUpdate fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnRspUserPasswordUpdate fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
             else
@@ -521,7 +521,7 @@ namespace TradingMaster
             //交易所认为报单错误(平仓单)
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnOrderInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputOrder.InstrumentID + " UserOrderLocalID:" + pInputOrder.UserOrderLocalID);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnOrderInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: "  + pInputOrder.InstrumentID + " UserOrderLocalID: " + pInputOrder.UserOrderLocalID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputOrder.InstrumentID);
 
                 # region Clearing Remaining Re-opening Order
@@ -565,7 +565,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnRspOrderInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputOrder.InstrumentID + " UserOrderLocalID:" + pInputOrder.UserOrderLocalID);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnRspOrderInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: "  + pInputOrder.InstrumentID + " UserOrderLocalID: " + pInputOrder.UserOrderLocalID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputOrder.InstrumentID);
 
                 # region Clearing Remaining Re-opening Order
@@ -607,7 +607,7 @@ namespace TradingMaster
             //撤单报单错误
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnOrderAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", OrderId:" + pOrderAction.OrderSysID);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnOrderAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", OrderID: " + pOrderAction.OrderSysID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 报单号：" + pOrderAction.OrderSysID);
             }
         }
@@ -622,7 +622,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnRspOrderAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", OrderId:" + pInputOrderAction.OrderSysID);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnRspOrderAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", OrderID: " + pInputOrderAction.OrderSysID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 报单号：" + pInputOrderAction.OrderSysID);
             }
         }
@@ -631,7 +631,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnRspQryOrder! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pOrder.InstrumentID);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnRspQryOrder! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: "  + pOrder.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pOrder.InstrumentID);
             }
             else
@@ -696,7 +696,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnRspQryOrder! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pTrade.InstrumentID);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnRspQryOrder! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: "  + pTrade.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pTrade.InstrumentID);
             }
             else
@@ -776,7 +776,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnQuoteInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputQuote.InstrumentID);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnQuoteInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: "  + pInputQuote.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputQuote.InstrumentID);
             }
         }
@@ -785,7 +785,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnQuoteInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pQuoteInsert.InstrumentID);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnQuoteInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: "  + pQuoteInsert.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pQuoteInsert.InstrumentID);
             }
         }
@@ -798,7 +798,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnQuoteAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", QuoteSysID:" + pInputQuoteAction.QuoteSysID);
+                Util.Log("Error! TradeApiFemas FemasDataServer OnErrRtnQuoteAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", QuoteSysID: " + pInputQuoteAction.QuoteSysID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", QuoteSysID：" + pInputQuoteAction.QuoteSysID);
             }
         }
@@ -1449,7 +1449,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! MdApiFemas FemasDataServer OnRspError! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! MdApiFemas FemasDataServer OnRspError! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
         }
@@ -1481,7 +1481,7 @@ namespace TradingMaster
             else
             {
                 IsConnected = false;
-                Util.Log("Error! MdApiFemas FemasDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! MdApiFemas FemasDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 LogoffStruct logoffInfo = GetLogoffReport(pRspUserLogin, pRspInfo, "Md");
                 TradeDataClient.GetClientInstance().RtnQueryEnqueue(logoffInfo);
             }
@@ -1496,7 +1496,7 @@ namespace TradingMaster
             IsConnected = false;
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! MdApiFemas FemasDataServer Logout fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! MdApiFemas FemasDataServer Logout fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             else
             {
@@ -1517,7 +1517,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! MdApiFemas FemasDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
+                Util.Log("Error! MdApiFemas FemasDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
             }
         }
 
@@ -1530,7 +1530,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! MdApiFemas FemasDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
+                Util.Log("Error! MdApiFemas FemasDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
             }
         }
 

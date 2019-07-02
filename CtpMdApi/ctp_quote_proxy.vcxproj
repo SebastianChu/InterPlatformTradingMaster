@@ -75,7 +75,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>..\CtpMdApi\api\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>thostmduserapi.lib;log4cplus.lib;log4cplusD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>thostmduserapi_se.lib;log4cplus.lib;log4cplusD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\CtpMdApi\api\thostmduserapi.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -97,7 +97,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>..\CtpMdApi\api\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>thostmduserapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>thostmduserapi_se.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\CtpMdApi\api\thostmduserapi.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
