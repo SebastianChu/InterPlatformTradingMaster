@@ -204,7 +204,7 @@ namespace TradingMaster
             //    {
             //        if (zhuliCode[i] != null)
             //        {
-            //            Util.Log("主力Code:" + zhuliCode[i]);
+            //            Util.Log("主力Code: "  + zhuliCode[i]);
             //        }
             //        else
             //        {
@@ -220,7 +220,7 @@ namespace TradingMaster
             //    {
             //        if (codeInfos[i] != null)
             //        {
-            //            Util.Log("Code:" + codeInfos[i].Code);
+            //            Util.Log("Code: "  + codeInfos[i].Code);
             //        }
             //        else
             //        {
@@ -280,7 +280,7 @@ namespace TradingMaster
             //    {
             //        if (code != null)
             //        {
-            //            Util.Log("添加Code:" + code.ToString());
+            //            Util.Log("添加Code: "  + code.ToString());
             //        }
             //        else
             //        {

@@ -79,6 +79,10 @@ namespace TradingMaster
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 36)]
         public string LoginRemark;
+        /// <summary>
+        /// 终端IP端口
+        /// </summary>
+        public int ClientIPPort;
     }
 
     /// <summary>
@@ -212,6 +216,11 @@ namespace TradingMaster
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
         public string AuthCode;
+        /// <summary>
+        /// App代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+        public string AppID;
     };
 
     ///客户端认证响应
@@ -233,6 +242,16 @@ namespace TradingMaster
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
         public string UserProductInfo;
+        /// <summary>
+        /// App代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+        public string AppID;
+        /// <summary>
+        /// App类型
+        /// </summary>
+        public EnumThostFtdcAppType AppType;
+
     };
 
     ///客户端认证信息
@@ -262,7 +281,16 @@ namespace TradingMaster
         /// <summary>
         /// 是否为认证结果
         /// </summary>
-        public int IsResult;
+        public EnumThostBoolType IsResult;
+        /// <summary>
+        /// App代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+        public string AppID;
+        /// <summary>
+        /// App类型
+        /// </summary>
+        public EnumThostFtdcAppType AppType;
     };
 
     /// <summary>
@@ -23671,6 +23699,34 @@ namespace TradingMaster
         /// 无效请求
         /// </summary>
         Invalid = (byte)'4'
+
+    }
+
+
+    /// <summary>
+    /// TFtdcAppTypeType是一个用户App类型类型
+    /// </summary>
+    public enum EnumThostFtdcAppType : byte
+    {
+        /// <summary>
+        /// 直连的投资者
+        /// </summary>
+        Investor = (byte)'1',
+
+        /// <summary>
+        /// 为每个投资者都创建连接的中继
+        /// </summary>
+        InvestorRelay = (byte)'2',
+
+        /// <summary>
+        /// 所有投资者共享一个操作员连接的中继
+        /// </summary>
+        OperatorRelay = (byte)'3',
+
+        /// <summary>
+        /// 未知
+        /// </summary>
+        UnKnown = (byte)'4'
 
     }
 

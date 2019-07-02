@@ -17,6 +17,7 @@ void* _OnFrontConnected;	///当客户端与交易后台建立起通信连接时（还未登录前），该
 void* _OnFrontDisconnected;	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
 void* _OnHeartBeatWarning;	///心跳超时警告。当长时间未收到报文时，该方法被调用。
 void* _OnRspUserLogin;///登录请求响应
+void* _OnRspAuthenticate;///客户端认证响应
 void* _OnRspUserLogout;///登出请求响应
 void* _OnRspUserPasswordUpdate;///用户口令更新请求响应
 void* _OnRspTradingAccountPasswordUpdate;///资金账户口令更新请求响应
@@ -127,6 +128,8 @@ typedef int (WINAPI *DefOnFrontConnected)();
 typedef int (WINAPI *DefOnFrontDisconnected)(int nReason);
 ///心跳超时警告。当长时间未收到报文时，该方法被调用。
 typedef int (WINAPI *DefOnHeartBeatWarning)(int nTimeLapse);
+///登录请求响应
+typedef int (WINAPI *DefOnRspAuthenticate)(CThostFtdcRspAuthenticateField *pRspAuthenticateField, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 ///登录请求响应
 typedef int (WINAPI *DefOnRspUserLogin)(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) ;
 ///登出请求响应

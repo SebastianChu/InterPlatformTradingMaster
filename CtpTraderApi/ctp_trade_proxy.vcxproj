@@ -61,7 +61,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\CtpTraderApi\api\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>thosttraderapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>thosttraderapi_se.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>..\CtpTraderApi\api\thosttraderapi.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -82,7 +82,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\CtpTraderApi\api\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>..\CtpTraderApi\api\thosttraderapi.def</ModuleDefinitionFile>
-      <AdditionalDependencies>thosttraderapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>thosttraderapi_se.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -278,6 +278,7 @@ namespace TradingMaster
             Util.Log("TradeApiCTP CtpDataServer: InitTradeApi. Broker = " + _CtpTraderApi.BrokerID + ", IP = " + _CtpTraderApi.FrontAddr);
             _CtpTraderApi.OnFrontConnected += new CtpTraderApi.FrontConnected(CtpTraderApi_OnFrontConnected);
             _CtpTraderApi.OnFrontDisConnected += new CtpTraderApi.FrontDisConnected(CtpTraderApi_OnFrontDisConnected);
+            _CtpTraderApi.OnRspAuthenticate += new CtpTraderApi.RspAuthenticate(CtpTraderApi_OnRspAuthenticate);
             _CtpTraderApi.OnRspUserLogin += new CtpTraderApi.RspUserLogin(CtpTraderApi_OnRspUserLogin);
             _CtpTraderApi.OnRspUserLogout += new CtpTraderApi.RspUserLogout(CtpTraderApi_OnRspUserLogout);
             _CtpTraderApi.OnRspQryInvestor += new CtpTraderApi.RspQryInvestor(CtpTraderApi_OnRspQryInvestor);
@@ -398,7 +399,7 @@ namespace TradingMaster
         void CtpTraderApi_OnFrontConnected()
         {
             Util.Log("TradeApiCTP CtpDataServer: OnFrontConnected is received.");
-            AddToTradeDataQryQueue(new RequestContent("ClientLogin", new List<object>()));
+            AddToTradeDataQryQueue(new RequestContent("ClientAuthenticate", new List<object>() { }));
         }
 
         void CtpTraderApi_OnFrontDisConnected(int reason)
@@ -414,6 +415,21 @@ namespace TradingMaster
             TradeDataClient.GetClientInstance().RtnMessageEnqueue(disStruct);
         }
 
+        private void CtpTraderApi_OnRspAuthenticate(ref CThostFtdcRspAuthenticateField pRspAuthenticateField, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
+        {
+            if (pRspInfo.ErrorID == 0)
+            {
+                Util.Log("认证回报成功 Error = " + pRspInfo.ErrorID + " " + pRspInfo.ErrorMsg);
+                Util.Log(string.Format("认证回报信息: UserID {0}, AppID {1}", pRspAuthenticateField.UserID, pRspAuthenticateField.AppID));
+                AddToTradeDataQryQueue(new RequestContent("ClientLogin", new List<object>()));
+            }
+            else
+            {
+                Util.Log("认证回报失败 Error = " + pRspInfo.ErrorID + " " + pRspInfo.ErrorMsg);
+                MessageBox.Show("认证回报失败！\n" + pRspInfo.ErrorMsg + "\n请开启信息采集相关权限或联系经纪公司获取认证码", "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         void CtpTraderApi_OnRspUserLogin(ref CThostFtdcRspUserLoginField pRspUserLogin, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
         {
             if (!bIsLast)
@@ -422,14 +438,19 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID == 0)
             {
-                string msg = "TradeApiCTP CtpDataServer: User " + pRspUserLogin.UserID + ", Password " + _LogWindow.pb_passWord.Password.ToString();
+                string msg = "TradeApiCTP CtpDataServer: User " + pRspUserLogin.UserID;
                 Util.Log(msg);
+                msg = "TradeApiCTP CtpDataServer: Password " + _LogWindow.pb_passWord.Password.ToString();
+                Util.Log(msg);
+                Util.Log(string.Format("TradeApiCTP CtpDataServer:  FrontID: {0}, SessionID : {1}", pRspUserLogin.FrontID, pRspUserLogin.SessionID));
                 IsLoggedOn = true;
                 if (pRspUserLogin.TradingDay != null && pRspUserLogin.TradingDay.Trim() != "")
                 {
                     Util.Log("TradeApiCTP CtpDataServer: OnRspUserLogin - Current Trading Date: " + pRspUserLogin.TradingDay);
                     _TradingDay = pRspUserLogin.TradingDay;
                 }
+                Util.Log(string.Format("TradeApiCTP CtpDataServer:  CZCETime: {0}, DCETime : {1}, FFEXTime : {2}, INETime : {3}, SHFETime : {4}"
+                   , pRspUserLogin.CZCETime, pRspUserLogin.DCETime, pRspUserLogin.FFEXTime, pRspUserLogin.INETime, pRspUserLogin.SHFETime));
                 AddToTradeDataQryQueue(new RequestContent("QuerySettlementInfoConfirm", new List<object>()));
                 //OnLogon();
                 LogonStruct logInfo = GetLogonReport(pRspUserLogin, "Trader");
@@ -439,7 +460,7 @@ namespace TradingMaster
             else
             {
                 IsLoggedOn = false;
-                Util.Log("Error! TradeApiCTP CtpDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 LogoffStruct logoffInfo = GetLogoffReport(pRspUserLogin, pRspInfo, "Trader");
                 TradeDataClient.GetClientInstance().RtnQueryEnqueue(logoffInfo);
                 //OnLogout(pRspInfo.ErrorMsg);
@@ -456,7 +477,7 @@ namespace TradingMaster
             IsLoggedOn = false;
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer Logout fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer Logout fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             else
             {
@@ -472,7 +493,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP OnRspQryInvestor fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP OnRspQryInvestor fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             else
             {
@@ -495,7 +516,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP OnRspQryTradingCode fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP OnRspQryTradingCode fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             else
             {
@@ -515,7 +536,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQrySettlementInfoConfirm fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQrySettlementInfoConfirm fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             if (pSettlementInfoConfirm.ConfirmDate != "" && _TradingDay != String.Empty && int.Parse(pSettlementInfoConfirm.ConfirmDate) == int.Parse(_TradingDay))
             {
@@ -564,7 +585,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             if (bIsLast)
             {
@@ -583,7 +604,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryInstrumentMarginRate fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInstrumentMarginRate.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryInstrumentMarginRate fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInstrumentMarginRate.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInstrumentMarginRate.InstrumentID);
             }
             else
@@ -600,7 +621,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryInstrumentCommissionRate fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInstrumentCommissionRate.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryInstrumentCommissionRate fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInstrumentCommissionRate.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInstrumentCommissionRate.InstrumentID);
             }
             else
@@ -618,7 +639,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryInstrumentCommissionRate fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pOptionInstrCommRate.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryInstrumentCommissionRate fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pOptionInstrCommRate.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pOptionInstrCommRate.InstrumentID);
             }
             else
@@ -678,7 +699,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQrySettlementInfo fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQrySettlementInfo fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 return;
             }
 
@@ -717,7 +738,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspSettlementInfoConfirm fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspSettlementInfoConfirm fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
             else
@@ -740,7 +761,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspUserPasswordUpdate fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspUserPasswordUpdate fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
             else
@@ -760,7 +781,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQueryMaxOrderVolume fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQueryMaxOrderVolume fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             else
             {
@@ -786,7 +807,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspError! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspError! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
         }
@@ -794,8 +815,9 @@ namespace TradingMaster
         void CtpTraderApi_OnRtnOrder(ref CThostFtdcOrderField pOrder)
         {
             TradeOrderData jyData = OrderExecutionReport(pOrder);
-            Util.Log(string.Format("OnRtnOrder pOrder: Code {0}, BrokerOrderSeq {1}, OrderSysID {2}, OrderRef {3}, Status {4}, Hedge {5}",
-                jyData.Code, jyData.BrokerOrderSeq, jyData.OrderID, jyData.OrderRef, jyData.FeedBackInfo, jyData.Hedge));
+            Util.Log(string.Format("OnRtnOrder InvestorID: {6}, Code {0}, BrokerOrderSeq {1}, OrderSysID {2}, OrderRef {3}, SessionID {11}, BuySell {7}, OpenClose {8}, Price {9}, Volume {10}, Status {4}, Hedge {5}",
+                jyData.Code, jyData.BrokerOrderSeq, jyData.OrderID, jyData.OrderRef, jyData.FeedBackInfo, jyData.Hedge,
+                 jyData.InvestorID, jyData.BuySell, jyData.OpenClose, jyData.CommitPrice, jyData.CommitHandCount, jyData.SessionID));
             if (TempOrderFlag) //接收同步的报单回报
             {
                 TempOrderData.Add(jyData);
@@ -899,8 +921,9 @@ namespace TradingMaster
         void CtpTraderApi_OnRtnTrade(ref CThostFtdcTradeField pTrade)
         {
             TradeOrderData tradedData = TradeExecutionReport(pTrade);
-            Util.Log(string.Format("OnRtnTrade Code {0}, TradeID {1}, OrderSysID {2}, BrokerOrderSeq {3}, Volume {4}, Hedge {5}",
-                tradedData.Code, tradedData.TradeID, tradedData.OrderID, tradedData.BrokerOrderSeq, tradedData.TradeHandCount, tradedData.Hedge));
+            Util.Log(string.Format("OnRtnTrade InvestorID: {6}, Code {0}, TradeID {1}, OrderSysID {2}, BrokerOrderSeq {3}, BuySell {7}, OpenClose {8}, Price {9}, Volume {4}, Hedge {5}",
+                tradedData.Code, tradedData.TradeID, tradedData.OrderID, tradedData.BrokerOrderSeq, tradedData.TradeHandCount, tradedData.Hedge,
+                tradedData.InvestorID, tradedData.BuySell, tradedData.OpenClose, tradedData.AvgPx));
             if (TempTradeFlag)
             {
                 TempTradeData.Add(tradedData);
@@ -920,7 +943,7 @@ namespace TradingMaster
             //交易所认为报单错误(平仓单)
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnOrderInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputOrder.InstrumentID + " OrderRef:" + pInputOrder.OrderRef);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnOrderInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputOrder.InstrumentID + " OrderRef:" + pInputOrder.OrderRef);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputOrder.InstrumentID);
 
                 # region Clearing Remaining Re-opening Order
@@ -964,7 +987,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspOrderInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputOrder.InstrumentID + " OrderRef:" + pInputOrder.OrderRef);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspOrderInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputOrder.InstrumentID + " OrderRef:" + pInputOrder.OrderRef);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputOrder.InstrumentID);
 
                 # region Clearing Remaining Re-opening Order
@@ -1006,7 +1029,7 @@ namespace TradingMaster
             //撤单报单错误
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnOrderAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pOrderAction.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnOrderAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pOrderAction.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pOrderAction.InstrumentID);
             }
         }
@@ -1021,7 +1044,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspOrderAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputOrderAction.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspOrderAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputOrderAction.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputOrderAction.InstrumentID);
             }
         }
@@ -1039,7 +1062,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryOrder! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pOrder.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryOrder! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pOrder.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pOrder.InstrumentID);
             }
             else
@@ -1104,7 +1127,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryOrder! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pTrade.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryOrder! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pTrade.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pTrade.InstrumentID);
             }
             else
@@ -1248,7 +1271,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspParkedOrderAction fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspParkedOrderAction fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("操作失败！" + pRspInfo.ErrorMsg);
             }
         }
@@ -1276,7 +1299,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspParkedOrderInsert fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspParkedOrderInsert fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("操作失败！" + pRspInfo.ErrorMsg);
             }
         }
@@ -1332,7 +1355,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspRemoveParkedOrder fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspRemoveParkedOrder fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("操作失败！" + pRspInfo.ErrorMsg);
             }
             //foreach (TradeOrderData removePreOrder in preOrderData)
@@ -1358,7 +1381,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspRemoveParkedOrderAction fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspRemoveParkedOrderAction fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue("操作失败！" + pRspInfo.ErrorMsg);
             }
             Util.Log("TradeApiCTP CtpDataServer: OnRspRemoveParkedOrderAction is received.");
@@ -1376,7 +1399,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryContractBank fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryContractBank fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
             else
@@ -1398,7 +1421,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryAccountregister fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryAccountregister fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
             else
@@ -1423,7 +1446,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspTradingAccountPasswordUpdate fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspTradingAccountPasswordUpdate fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
             else
@@ -1443,7 +1466,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryTransferSerial fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryTransferSerial fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
             else
@@ -1466,7 +1489,7 @@ namespace TradingMaster
             Util.Log("TradeApiCTP CtpDataServer: OnRspQueryBankAccountMoneyByFuture is received.");
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQueryBankAccountMoneyByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQueryBankAccountMoneyByFuture fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
                 if (Application.Current != null)
@@ -1487,7 +1510,7 @@ namespace TradingMaster
         {
             if (pNotifyQueryAccount.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRtnQueryBankBalanceByFuture fails! pRspInfo: ID:" + pNotifyQueryAccount.ErrorID + " ErrorMsg:" + pNotifyQueryAccount.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRtnQueryBankBalanceByFuture fails! pRspInfo: ID: " + pNotifyQueryAccount.ErrorID + " ErrorMsg: " + pNotifyQueryAccount.ErrorMsg);
                 string msg = pNotifyQueryAccount.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
                 if (Application.Current != null)
@@ -1511,7 +1534,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQueryBankAccountMoneyByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQueryBankAccountMoneyByFuture fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(msg);
                 if (Application.Current != null)
@@ -1528,7 +1551,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspFromFutureToBankByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspFromFutureToBankByFuture fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 //if (pReqTransfer.FutureSerial > 0)
                 //{
                 //    TransferSingleRecord transferRec = NewIncomingTransferReport(pReqTransfer, pRspInfo);
@@ -1555,7 +1578,7 @@ namespace TradingMaster
         {
             if (pRspTransfer.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRtnQueryBankBalanceByFuture fails! pRspInfo: ID:" + pRspTransfer.ErrorID + " ErrorMsg:" + pRspTransfer.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRtnQueryBankBalanceByFuture fails! pRspInfo: ID: " + pRspTransfer.ErrorID + " ErrorMsg: " + pRspTransfer.ErrorMsg);
                 string msg = pRspTransfer.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspTransfer.ErrorMsg);
                 if (Application.Current != null)
@@ -1585,7 +1608,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnFutureToBankByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnFutureToBankByFuture fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
                 if (Application.Current != null)
@@ -1602,7 +1625,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspFromBankToFutureByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspFromBankToFutureByFuture fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 //if (pReqTransfer.FutureSerial > 0)
                 //{
                 //    TransferSingleRecord transferRec = NewIncomingTransferReport(pReqTransfer, pRspInfo);
@@ -1629,7 +1652,7 @@ namespace TradingMaster
         {
             if (pRspTransfer.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRtnFromBankToFutureByFuture fails! pRspInfo: ID:" + pRspTransfer.ErrorID + " ErrorMsg:" + pRspTransfer.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRtnFromBankToFutureByFuture fails! pRspInfo: ID: " + pRspTransfer.ErrorID + " ErrorMsg: " + pRspTransfer.ErrorMsg);
                 string msg = pRspTransfer.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspTransfer.ErrorMsg);
                 if (Application.Current != null)
@@ -1659,7 +1682,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnBankToFutureByFuture fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnBankToFutureByFuture fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 string msg = pRspInfo.ErrorMsg;
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
                 if (Application.Current != null)
@@ -1676,7 +1699,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryOptionInstrTradeCost! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pOptionInstrTradeCost.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryOptionInstrTradeCost! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pOptionInstrTradeCost.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pOptionInstrTradeCost.InstrumentID);
             }
             else
@@ -1692,7 +1715,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryExecOrder! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pExecOrder.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryExecOrder! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pExecOrder.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pExecOrder.InstrumentID);
             }
             else
@@ -1775,7 +1798,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspExecOrderInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputExecOrder.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspExecOrderInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputExecOrder.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputExecOrder.InstrumentID);
             }
         }
@@ -1784,7 +1807,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnExecOrderInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputExecOrder.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnExecOrderInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputExecOrder.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputExecOrder.InstrumentID);
             }
         }
@@ -1798,7 +1821,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspExecOrderAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputExecOrderAction.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspExecOrderAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputExecOrderAction.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputExecOrderAction.InstrumentID);
             }
         }
@@ -1807,7 +1830,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnExecOrderAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pExecOrderAction.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnExecOrderAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pExecOrderAction.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pExecOrderAction.InstrumentID);
             }
         }
@@ -1817,7 +1840,7 @@ namespace TradingMaster
             Util.Log("TradeApiCTP CtpDataServer: OnRspQryForQuote is received.");
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryForQuote! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pForQuote.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryForQuote! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pForQuote.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pForQuote.InstrumentID);
             }
         }
@@ -1838,7 +1861,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspForQuoteInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputForQuote.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspForQuoteInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputForQuote.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputForQuote.InstrumentID);
             }
         }
@@ -1847,7 +1870,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnForQuoteInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputForQuote.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnForQuoteInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputForQuote.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputForQuote.InstrumentID);
             }
         }
@@ -1856,7 +1879,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryQuote! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pQuote.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryQuote! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pQuote.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pQuote.InstrumentID);
             }
             else
@@ -1940,7 +1963,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnQuoteInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputQuote.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnQuoteInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputQuote.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputQuote.InstrumentID);
             }
         }
@@ -1949,7 +1972,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnQuoteInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pQuoteInsert.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnQuoteInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pQuoteInsert.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pQuoteInsert.InstrumentID);
             }
         }
@@ -1962,7 +1985,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnQuoteAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputQuoteAction.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnQuoteAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputQuoteAction.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputQuoteAction.InstrumentID);
             }
         }
@@ -1972,7 +1995,7 @@ namespace TradingMaster
             //撤单报价错误
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnQuoteAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pQuoteAction.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnQuoteAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pQuoteAction.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pQuoteAction.InstrumentID);
             }
         }
@@ -1995,7 +2018,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryCombAction! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pCombAction.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryCombAction! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pCombAction.InstrumentID);
             }
             else
             {
@@ -2007,7 +2030,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryCombInstrumentGuard! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pCombInstrumentGuard.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspQryCombInstrumentGuard! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pCombInstrumentGuard.InstrumentID);
             }
             else
             {
@@ -2023,7 +2046,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnRspCombActionInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputCombAction.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnRspCombActionInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputCombAction.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputCombAction.InstrumentID);
             }
         }
@@ -2032,7 +2055,7 @@ namespace TradingMaster
         {
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnCombActionInsert! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + ", Code:" + pInputCombAction.InstrumentID);
+                Util.Log("Error! TradeApiCTP CtpDataServer OnErrRtnCombActionInsert! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + ", Code: " + pInputCombAction.InstrumentID);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg + ", 合约：" + pInputCombAction.InstrumentID);
             }
         }
@@ -2751,6 +2774,34 @@ namespace TradingMaster
             return capitalFlag;
         }
 
+        public int ClientAuthenticate()
+        {
+            if (_CtpTraderApi == null)
+            {
+                Util.Log("Error! ClientAuthenticate: tradeApi is null!");
+                return DATASERVERERROR;
+            }
+            ExecQueue.ReqTime = DateTime.Now;
+            int logFlag = _CtpTraderApi.ReqAuthenticate();
+            Util.Log("TradeApiCTP CtpDataServer: ReqAuthenticate is Executed.");
+            if (logFlag == -1)
+            {
+                Util.Log("Warning! Network Connection Error. ReqAuthenticate() = " + logFlag);
+                TradeDataClient.GetClientInstance().RtnMessageEnqueue("网络连接失败");
+            }
+            else if (logFlag == -2)
+            {
+                Util.Log("Warning! The number of undealt requests has overlimit the permitted number. ReqAuthenticate() = " + logFlag);
+                TradeDataClient.GetClientInstance().RtnMessageEnqueue("未处理请求超过许可数");
+            }
+            else if (logFlag == -3)
+            {
+                Util.Log("Warning! The number of the requests sent per second has overlimit the permitted number. ReqAuthenticate() = " + logFlag);
+                TradeDataClient.GetClientInstance().RtnMessageEnqueue("每秒发送请求数超过许可数");
+            }
+            return logFlag;
+        }
+
         public int ClientLogin()
         {
             if (_CtpTraderApi == null)
@@ -2912,6 +2963,7 @@ namespace TradingMaster
             }
             ExecQueue.ReqTime = DateTime.Now;
             int cancelFlag = _CtpTraderApi.OrderAction(code, frontID, sessioID, orderRef, CodeSetManager.ExNameToCtp(exchange), orderId.Trim());
+            Util.Log("撤单: code=" + code + " frontID=" + frontID.ToString() + " sessioID=" + sessioID.ToString() + " orderRef=" + orderRef + " ExchangeID=" + CodeSetManager.ExNameToCtp(exchange) + " orderId=" + orderId);
             Util.Log("TradeApiCTP CtpDataServer: OrderAction is Executed.");
             if (cancelFlag == -1)
             {
@@ -4549,7 +4601,7 @@ namespace TradingMaster
 
         private PosInfoDetail PosDetailExecutionReport(CThostFtdcInvestorPositionDetailField pPosDetail)
         {
-            //Util.Log("pPosDetail ExecID:" + pPosDetail.TradeID);
+            //Util.Log("pPosDetail ExecID: " + pPosDetail.TradeID);
             PosInfoDetail posData = new PosInfoDetail();
             try
             {
@@ -5729,7 +5781,7 @@ namespace TradingMaster
             }
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! MdApiCTP CtpDataServer OnRspError! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! MdApiCTP CtpDataServer OnRspError! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 TradeDataClient.GetClientInstance().RtnMessageEnqueue(pRspInfo.ErrorMsg);
             }
         }
@@ -5761,7 +5813,7 @@ namespace TradingMaster
             else
             {
                 IsConnected = false;
-                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
                 LogoffStruct logoffInfo = GetLogoffReport(pRspUserLogin, pRspInfo, "Md");
                 TradeDataClient.GetClientInstance().RtnQueryEnqueue(logoffInfo);
             }
@@ -5776,7 +5828,7 @@ namespace TradingMaster
             IsConnected = false;
             if (pRspInfo.ErrorID != 0)
             {
-                Util.Log("Error! MdApiCTP CtpDataServer Logout fails! pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg);
+                Util.Log("Error! MdApiCTP CtpDataServer Logout fails! pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg);
             }
             else
             {
@@ -5797,7 +5849,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
+                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
             }
         }
 
@@ -5810,7 +5862,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
+                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
             }
         }
 
@@ -5819,6 +5871,10 @@ namespace TradingMaster
             RealData ctpRealData = MarketDataReport(pDepthMarketData);
             DataContainer.SetRealDataToContainer(ctpRealData);
             TradeDataClient.GetClientInstance().RtnDepthMarketDataEnqueue(ctpRealData);
+            //if (pDepthMarketData.InstrumentID == "AP810")
+            //{
+            //    Util.Log(string.Format("AP805:{0}, {1}", pDepthMarketData.UpdateTime, DateTime.Now.ToString("HH:mm:ss.fff")));
+            //}
         }
 
         void mdApi_OnRspSubForQuoteRsp(ref CThostFtdcSpecificInstrumentField pSpecificInstrument, ref CThostFtdcRspInfoField pRspInfo, int nRequestID, bool bIsLast)
@@ -5830,7 +5886,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
+                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
             }
         }
 
@@ -5843,7 +5899,7 @@ namespace TradingMaster
             }
             else
             {
-                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID:" + pRspInfo.ErrorID + " ErrorMsg:" + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
+                Util.Log("Error! MdApiCTP CtpDataServer pRspInfo: ID: " + pRspInfo.ErrorID + " ErrorMsg: " + pRspInfo.ErrorMsg + " Instrument:" + pSpecificInstrument.InstrumentID);
             }
         }
 

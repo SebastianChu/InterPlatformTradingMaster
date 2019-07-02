@@ -43,11 +43,16 @@
       <host name="华宝期权实验室环境" brokerID="2011"  ip="211.144.195.164"    port="24505" selected="False" />
       <host name="证券模拟一"         brokerID="2011"  ip="ctp24-front1.financial-trading-platform.com"    port="41205" selected="False" />
       <host name="证券模拟二"         brokerID="2011"  ip="ctp24-front2.financial-trading-platform.com"    port="41205" selected="False" />
-      <host name="同信实盘一"         brokerID="9099"  ip="180.166.13.41"      port="41205" selected="False" />
-      <host name="同信实盘二"         brokerID="9099"  ip="180.166.13.42"      port="41205" selected="False" />
-      <host name="同信实盘三"         brokerID="9099"  ip="180.166.13.43"      port="41205" selected="False" />
-      <host name="同信实盘四"         brokerID="9099"  ip="180.166.13.44"      port="41205" selected="False" />
-      <host name="中融汇信实盘"       brokerID="6868"  ip="222.68.181.198"     port="41205" selected="False" />
+      <host name="同信实盘一"         brokerID="9099"  ip="180.166.13.41"      port="51205" selected="False" />
+      <host name="同信实盘二"         brokerID="9099"  ip="180.166.13.42"      port="51205" selected="False" />
+      <host name="同信实盘三"         brokerID="9099"  ip="180.166.13.43"      port="51205" selected="False" />
+      <host name="同信实盘四"         brokerID="9099"  ip="180.166.13.44"      port="51205" selected="False" />
+      <host name="中融汇信实盘"       brokerID="6868"  ip="114.80.55.165"      port="51205" selected="False" />
+      <host name="simnow模拟盘"       brokerID="9999"  ip="180.168.146.187"    port="10000" selected="False" />
+      <host name="东财穿透模拟1"      brokerID="9099"  ip="180.166.217.141"    port="51205" selected="False" />
+      <host name="东财穿透模拟2"      brokerID="9099"  ip="180.166.217.142"    port="51205" selected="False" />
+      <host name="中融穿透模拟1"      brokerID="8888"  ip="180.167.80.146"     port="41207" selected="False" />
+      <host name="东方财富mini1"      brokerID="9099"  ip="180.166.13.24"      port="51205" selected="False" />
     </server>
     <server type="HQ">
       <host name="东航实盘一" brokerID="7070"  ip="ctp1.kiiik.com"     port="41213" selected="False" />
@@ -95,11 +100,16 @@
       <host name="华宝期权实验室环境" brokerID="2011"  ip="211.144.195.164"    port="24513" selected="False" />
       <host name="证券模拟三"         brokerID="2011"  ip="ctp24-front3.financial-trading-platform.com" port="41213" selected="False" />
       <host name="证券模拟四"         brokerID="2011"  ip="ctp24-front4.financial-trading-platform.com" port="41213" selected="False" />
-      <host name="同信实盘一"         brokerID="9099"  ip="180.166.13.41"      port="41213" selected="False" />
-      <host name="同信实盘二"         brokerID="9099"  ip="180.166.13.42"      port="41213" selected="False" />
-      <host name="同信实盘三"         brokerID="9099"  ip="180.166.13.43"      port="41213" selected="False" />
-      <host name="同信实盘四"         brokerID="9099"  ip="180.166.13.44"      port="41213" selected="False" />
-      <host name="中融汇信实盘"       brokerID="6868"  ip="222.68.181.198"     port="41213" selected="False" />
+      <host name="同信实盘一"         brokerID="9099"  ip="180.166.13.41"      port="51213" selected="False" />
+      <host name="同信实盘二"         brokerID="9099"  ip="180.166.13.42"      port="51213" selected="False" />
+      <host name="同信实盘三"         brokerID="9099"  ip="180.166.13.43"      port="51213" selected="False" />
+      <host name="同信实盘四"         brokerID="9099"  ip="180.166.13.44"      port="51213" selected="False" />
+      <host name="中融汇信实盘"       brokerID="6868"  ip="114.80.55.165"      port="51213" selected="False" />
+      <host name="simnow模拟盘"       brokerID="9999"  ip="180.168.146.187"    port="10010" selected="False" />
+      <host name="东财穿透模拟1"      brokerID="9099"  ip="180.166.217.141"    port="51213" selected="False" />
+      <host name="东财穿透模拟2"      brokerID="9099"  ip="180.166.217.142"    port="51213" selected="False" />
+      <host name="中融穿透模拟1"      brokerID="8888"  ip="180.167.80.146"     port="41221" selected="False" />
+      <host name="东方财富mini1"      brokerID="9099"  ip="180.166.13.24"      port="51213" selected="False" />
     </server>
   </servers>
 </config>
